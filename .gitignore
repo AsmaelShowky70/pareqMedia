@@ -24,6 +24,6 @@ database/*.sqlite
 !database/.gitkeep
 *.zip
 *.zip.*
-fix.php
+# fix.php
 unzip.php
 extract_media.py
