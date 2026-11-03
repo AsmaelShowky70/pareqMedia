@@ -47,3 +47,4 @@ class PariqExcelAccountingCategoriesSeeder extends Seeder
         }
     }
 }
+
