@@ -4,7 +4,8 @@
 /public/hot
 /public/storage
 /storage/*.key
-.env
+# .env included for automated Hostinger Git deployment
+!.env
 .env.*
 !.env.example
 !.env.infinityfree.example
