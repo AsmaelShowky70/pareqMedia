@@ -16,7 +16,7 @@ class ProductionInitialSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Create Core Administrative & Creative Team Users
+        // 1. Create General Manager Account (Saif Adel) ONLY
         $admin = User::updateOrCreate(
             ['email' => 'admin@pariqagency.com'],
             [
@@ -41,62 +41,6 @@ class ProductionInitialSeeder extends Seeder
                 'department' => 'management',
                 'job_title' => 'صاحب المنصة المدير العام',
                 'daily_quota' => 'الإشراف وتوزيع المهام واعتماد التسليمات',
-                'is_active' => true,
-            ]
-        );
-
-        $sara = User::firstOrCreate(
-            ['email' => 'sara.creator@pariqagency.com'],
-            [
-                'name' => 'سارة الشريف',
-                'password' => Hash::make('password'),
-                'phone' => '+201022334455',
-                'role' => User::ROLE_CONTENT_CREATOR,
-                'department' => 'design',
-                'job_title' => 'مديرة صناع المحتوى (Content Creator Lead)',
-                'daily_quota' => 'إدارة خطط المحتوى وتوزيع المهام',
-                'is_active' => true,
-            ]
-        );
-
-        $omar = User::firstOrCreate(
-            ['email' => 'omar.creator@pariqagency.com'],
-            [
-                'name' => 'عمر الناصر',
-                'password' => Hash::make('password'),
-                'phone' => '+201033445566',
-                'role' => User::ROLE_CONTENT_CREATOR,
-                'department' => 'video',
-                'job_title' => 'صانع محتوى أول (Senior Content Creator)',
-                'daily_quota' => 'إعداد السكريبتات ومتابعة ريلز السوشيال ميديا',
-                'is_active' => true,
-            ]
-        );
-
-        $photo = User::firstOrCreate(
-            ['email' => 'youssef.photo@pariqagency.com'],
-            [
-                'name' => 'يوسف المصور',
-                'password' => Hash::make('password'),
-                'phone' => '+201077889900',
-                'role' => User::ROLE_EMPLOYEE,
-                'department' => 'video',
-                'job_title' => 'مصور ميداني (Field Photographer)',
-                'daily_quota' => 'جلسات تصوير ميداني مع بصمة الحضور GPS',
-                'is_active' => true,
-            ]
-        );
-
-        $editor = User::firstOrCreate(
-            ['email' => 'karim.video@pariqagency.com'],
-            [
-                'name' => 'كريم إبراهيم',
-                'password' => Hash::make('password'),
-                'phone' => '+201011122334',
-                'role' => User::ROLE_EMPLOYEE,
-                'department' => 'editing',
-                'job_title' => 'كبير مونتيري الفيديو (Senior Video Editor)',
-                'daily_quota' => 'مونتاج ريلز وفيديوهات العملاء',
                 'is_active' => true,
             ]
         );

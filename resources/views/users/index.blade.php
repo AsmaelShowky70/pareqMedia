@@ -10,11 +10,13 @@
     <!-- Top Action Bar -->
     <div class="flex items-center justify-between">
         <div class="text-xs text-gray-400">إجمالي أعضاء الفريق: <span class="font-bold text-white">{{ $users->total() }}</span></div>
+        @if(auth()->user()->isAdmin())
         <button @click="createModalOpen = true" type="button" 
                 class="px-4 py-2 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 shadow flex items-center gap-2">
             <i class="fa-solid fa-user-plus"></i>
             <span>إضافة موظف جديد وتحديد صلاحياته</span>
         </button>
+        @endif
     </div>
 
     <!-- Team Members Cards -->
@@ -64,14 +66,27 @@
 
             <!-- Card Bottom Bar -->
             <div class="pt-3 border-t border-brand-border/60 flex items-center justify-between text-xs">
-                <span class="text-gray-400">المهام المسندة حالياً: <strong class="text-brand-gold">{{ $u->assigned_tasks_count }}</strong></span>
+                <span class="text-gray-400">المهام المسندة: <strong class="text-brand-gold">{{ $u->assigned_tasks_count }}</strong></span>
 
                 <div class="flex items-center gap-2">
+                    @if(auth()->user()->isAdmin())
                     <button @click="selectedUser = {{ json_encode($u) }}; editModalOpen = true;" 
-                            class="px-3 py-1.5 rounded-xl bg-brand-purple hover:bg-brand-hover text-brand-gold hover:text-white border border-brand-border text-xs font-bold transition flex items-center gap-1.5" title="تعديل الصلاحيات واليومية">
+                            class="px-2.5 py-1.5 rounded-xl bg-brand-purple hover:bg-brand-hover text-brand-gold hover:text-white border border-brand-border text-xs font-bold transition flex items-center gap-1.5" title="تعديل الصلاحيات واليومية">
                         <i class="fa-solid fa-user-pen text-xs"></i>
-                        <span>تعديل الصلاحيات</span>
+                        <span>تعديل</span>
                     </button>
+
+                    @if(!$u->isAdmin())
+                    <form action="{{ route('users.destroy', $u) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من رغبتك في حذف الموظف ({{ $u->name }}) نهائياً من فريق العمل؟');" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-2.5 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/30 text-xs font-bold transition flex items-center gap-1.5" title="حذف الموظف نهائياً">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                            <span>حذف</span>
+                        </button>
+                    </form>
+                    @endif
+                    @endif
                 </div>
             </div>
         </div>
