@@ -18,7 +18,7 @@ if (file_exists($envPath)) {
 }
 
 // 3. Test MySQL Connection
-$host = '127.0.0.1';
+$host = 'localhost';
 $db = 'u111359515_Pariq';
 $user = 'u111359515_pariq';
 $pass = 'Pariq#Db2026@Pass!';
