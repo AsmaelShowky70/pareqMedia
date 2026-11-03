@@ -28,6 +28,7 @@ class ResetForProduction extends Command
     {
         if (! $this->option('force') && ! $this->confirm('هل أنت متأكد من تفريغ كافة البيانات التجريبية وتجهيز قاعدة بيانات إنتاجية نظيفة للعميل؟')) {
             $this->info('تم إلغاء العملية.');
+
             return 0;
         }
 
