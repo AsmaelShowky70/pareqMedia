@@ -17,15 +17,29 @@ class ProductionInitialSeeder extends Seeder
     public function run(): void
     {
         // 1. Create Core Administrative & Creative Team Users
-        $admin = User::firstOrCreate(
+        $admin = User::updateOrCreate(
             ['email' => 'admin@pariqagency.com'],
             [
-                'name' => 'المدير العام (صاحب الوكالة)',
-                'password' => Hash::make('password'),
+                'name' => 'Saif Adel',
+                'password' => Hash::make('A123@#'),
                 'phone' => '+201062330838',
                 'role' => User::ROLE_ADMIN,
                 'department' => 'management',
-                'job_title' => 'المدير التنفيذي والمؤسس',
+                'job_title' => 'صاحب المنصة المدير العام',
+                'daily_quota' => 'الإشراف وتوزيع المهام واعتماد التسليمات',
+                'is_active' => true,
+            ]
+        );
+
+        $adminSaif = User::updateOrCreate(
+            ['email' => 'saif@pariqagency.com'],
+            [
+                'name' => 'Saif Adel',
+                'password' => Hash::make('A123@#'),
+                'phone' => '+201062330838',
+                'role' => User::ROLE_ADMIN,
+                'department' => 'management',
+                'job_title' => 'صاحب المنصة المدير العام',
                 'daily_quota' => 'الإشراف وتوزيع المهام واعتماد التسليمات',
                 'is_active' => true,
             ]
