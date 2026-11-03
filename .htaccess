@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Prevent direct access to sensitive files
+    RewriteRule ^(\.env|artisan|composer\.(json|lock)|package\.(json|lock)|phpunit\.xml) - [F,L]
+
+    # Allow direct access to standalone utility scripts
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(fix\.php|unzip\.php)$ - [L]
+
+    # Rewrite all other requests to public folder
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
