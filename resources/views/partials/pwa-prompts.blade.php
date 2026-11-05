@@ -55,6 +55,11 @@
                     <i class="fa-solid fa-download text-base"></i>
                     <span id="pwa-btn-label">تثبيت التطبيق على هاتفك الآن</span>
                 </button>
+                <div class="text-center pt-0.5">
+                    <a id="pwa-apk-direct-link" href="/pariq-media.apk" download="pariq-media.apk" class="inline-block text-[11px] text-amber-400/90 hover:text-amber-300 underline font-medium">
+                        <i class="fa-solid fa-file-arrow-down ml-1"></i> تحميل مباشر لملف التطبيق (APK خفيف 21 KB)
+                    </a>
+                </div>
             </div>
 
             <!-- Never Show Again Option & Dismiss -->
@@ -161,6 +166,14 @@
     window.openPwaModal = function() {
         const modal = document.getElementById('pwa-mobile-modal');
         const card = document.getElementById('pwa-mobile-modal-card');
+        const iosGuide = document.getElementById('pwa-ios-instructions');
+        const apkLink = document.getElementById('pwa-apk-direct-link');
+
+        if (isIOS) {
+            if (iosGuide) iosGuide.classList.remove('hidden');
+            if (apkLink) apkLink.style.display = 'none';
+        }
+
         if (modal && card) {
             modal.style.display = 'flex';
             setTimeout(() => {
@@ -214,81 +227,47 @@
             return;
         }
 
-        // 2. If inside In-App Browser (WhatsApp / Facebook) -> Launch real Chrome via Android Intent!
-        if (isInApp) {
-            const currentUrl = window.location.href.replace(/^https?:\/\//, '');
-            window.location.href = 'intent://' + currentUrl + '#Intent;scheme=https;package=com.android.chrome;end';
-            return;
-        }
-
-        // 3. Android Chrome Direct Trigger
+        // 2. If Chrome native PWA prompt is available, trigger it
         if (window.pariqDeferredPrompt) {
-            promptNativeInstall(window.pariqDeferredPrompt);
-            return;
-        }
-
-        // 4. If prompt event is still registering, wait seamlessly (DO NOT SHOW ALERT!)
-        if (btn && label) {
-            btn.disabled = true;
-            label.innerHTML = 'جاري التثبيت المباشر...';
-        }
-
-        let resolved = false;
-        // Register callback for when event arrives
-        if (window.pariqPromptReadyCallbacks) {
-            window.pariqPromptReadyCallbacks.push(function(promptEvent) {
-                if (!resolved) {
-                    resolved = true;
-                    restoreBtn();
-                    promptNativeInstall(promptEvent);
-                }
-            });
-        }
-
-        // Fast poll every 80ms for 3 seconds
-        let elapsed = 0;
-        const timer = setInterval(function() {
-            elapsed += 80;
-            if (window.pariqDeferredPrompt && !resolved) {
-                resolved = true;
-                clearInterval(timer);
-                restoreBtn();
-                promptNativeInstall(window.pariqDeferredPrompt);
-            } else if (elapsed >= 3000) {
-                clearInterval(timer);
-                if (!resolved) {
-                    resolved = true;
-                    restoreBtn();
-                    // Fallback without annoying alert:
-                    if (statusBox) {
-                        statusBox.innerHTML = '✨ المتصفح يقوم بتهيئة التطبيق، اضغط مرة أخرى للتثبيت';
-                        statusBox.classList.remove('hidden');
+            try {
+                window.pariqDeferredPrompt.prompt();
+                window.pariqDeferredPrompt.userChoice.then(function(choiceResult) {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('🎉 PWA Installation accepted!');
+                        localStorage.setItem('pariq_pwa_never_show', 'true');
+                        dismissPwaModal();
+                    } else {
+                        // If user canceled PWA, fallback to direct APK download
+                        window.location.href = '/pariq-media.apk';
                     }
-                }
-            }
-        }, 80);
-
-        function restoreBtn() {
-            if (btn && label) {
-                btn.disabled = false;
-                label.innerHTML = 'تثبيت التطبيق على هاتفك الآن';
-            }
+                    window.pariqDeferredPrompt = null;
+                }).catch(function() {
+                    window.location.href = '/pariq-media.apk';
+                });
+                return;
+            } catch(e) {}
         }
-    };
 
-    function promptNativeInstall(promptEvent) {
-        promptEvent.prompt();
-        promptEvent.userChoice.then(function(choiceResult) {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('🎉 PWA Installation accepted!');
-                localStorage.setItem('pariq_pwa_never_show', 'true');
-            }
-            window.pariqDeferredPrompt = null;
-            dismissPwaModal();
-        }).catch(function() {
-            dismissPwaModal();
-        });
-    }
+        // 3. Direct Android APK Installation (Guaranteed on Realme C11 and all Android versions)
+        if (btn && label) {
+            label.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري تنزيل التطبيق...';
+        }
+
+        if (statusBox) {
+            statusBox.innerHTML = '✅ بدأ تنزيل التطبيق بحجم خفيف (21 KB)! اضغط على ملف الإشعار في هاتفك لتثبيته فوراً 📲';
+            statusBox.classList.remove('hidden');
+        }
+
+        // Trigger direct APK download
+        setTimeout(function() {
+            window.location.href = '/pariq-media.apk';
+        }, 150);
+
+        setTimeout(function() {
+            if (label) label.innerHTML = '<i class="fa-solid fa-download"></i> تنزيل التطبيق مرة أخرى (APK)';
+            if (btn) btn.disabled = false;
+        }, 2500);
+    };
 
     // Global hook called from header buttons
     window.executePwaInstall = function() {
