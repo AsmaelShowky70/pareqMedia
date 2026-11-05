@@ -7,13 +7,7 @@
     <title>@yield('title', 'نظام إدارة الوكالة') | بريق للتسويق الإلكتروني</title>
 
     <!-- PWA & Mobile Web App Meta Tags (iPhone & Android) -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#F59E0B">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="بريق Pariq">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    @include('partials.pwa-meta')
 
     <!-- Google Fonts: Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -303,6 +297,15 @@
 
                 <div class="flex items-center gap-2 sm:gap-3">
                     
+                    <!-- PWA Quick Install Button -->
+                    <button type="button" 
+                            onclick="executePwaInstall()" 
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-brand-gold text-xs font-bold border border-brand-yellow/30 transition shadow" 
+                            title="تثبيت منصة بريق كتطبيق على هاتفك">
+                        <i class="fa-solid fa-mobile-screen-button text-brand-yellow"></i>
+                        <span class="hidden sm:inline">تثبيت التطبيق</span>
+                    </button>
+
                     <!-- Web Push Notification Enable Button -->
                     <button @click="requestNotificationPermission()" 
                             x-show="notificationPermission !== 'granted'" 
@@ -534,5 +537,6 @@
     </script>
 
     @stack('scripts')
+    @include('partials.pwa-prompts')
 </body>
 </html>

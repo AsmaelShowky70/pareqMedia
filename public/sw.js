@@ -1,22 +1,25 @@
-// Pariq Agency Progressive Web App (PWA) Service Worker
-const CACHE_NAME = 'pariq-cache-v2';
+// Pariq Agency Progressive Web App (PWA) Service Worker v3
+const CACHE_NAME = 'pariq-pwa-v3';
 const STATIC_ASSETS = [
-    '/dashboard',
+    '/',
     '/manifest.json',
-    '/images/logo.png'
+    '/images/icon-192.png',
+    '/images/icon-512.png'
 ];
 
-// 1. Install & Cache Shell
+// 1. Install & Cache Core Shell Assets
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(STATIC_ASSETS).catch(() => {});
+            return cache.addAll(STATIC_ASSETS).catch((err) => {
+                console.log('PWA Shell cache partial warning:', err);
+            });
         })
     );
     self.skipWaiting();
 });
 
-// 2. Activate & Clean Old Caches
+// 2. Activate & Clean Outdated Caches
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keys) => {
@@ -34,19 +37,21 @@ self.addEventListener('activate', (event) => {
 
 // 3. Fetch Strategy: Network First with Cache Fallback
 self.addEventListener('fetch', (event) => {
-    // Only handle GET requests
     if (event.request.method !== 'GET') return;
 
-    // Do not cache API polling or auth
     const url = new URL(event.request.url);
-    if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/logout')) {
+
+    // Bypass API calls, auth routes, and dynamic admin endpoints
+    if (url.pathname.startsWith('/api/') || 
+        url.pathname.startsWith('/logout') || 
+        url.pathname.startsWith('/admin') ||
+        url.pathname.endsWith('fix.php')) {
         return;
     }
 
     event.respondWith(
         fetch(event.request)
             .then((response) => {
-                // If valid response, clone to cache
                 if (response && response.status === 200 && response.type === 'basic') {
                     const responseClone = response.clone();
                     caches.open(CACHE_NAME).then((cache) => {
@@ -55,17 +60,24 @@ self.addEventListener('fetch', (event) => {
                 }
                 return response;
             })
-            .catch(() => caches.match(event.request))
+            .catch(() => {
+                return caches.match(event.request).then((cached) => {
+                    if (cached) return cached;
+                    if (event.request.mode === 'navigate') {
+                        return caches.match('/');
+                    }
+                });
+            })
     );
 });
 
-// 4. Handle Incoming Push Notifications (Web Push on iOS, Android & Desktop)
+// 4. Handle Incoming Push Notifications
 self.addEventListener('push', (event) => {
     let data = {
         title: 'وكالة بريق للتسويق',
-        body: 'لديك إشعار جديد في لوحة التحكم',
-        icon: '/images/logo.png',
-        badge: '/images/logo.png',
+        body: 'لديك إشعار جديد في منصة بريق',
+        icon: '/images/icon-192.png',
+        badge: '/images/icon-72.png',
         url: '/dashboard'
     };
 
@@ -80,8 +92,8 @@ self.addEventListener('push', (event) => {
 
     const options = {
         body: data.body,
-        icon: data.icon || '/images/logo.png',
-        badge: data.badge || '/images/logo.png',
+        icon: data.icon || '/images/icon-192.png',
+        badge: data.badge || '/images/icon-72.png',
         vibrate: [200, 100, 200],
         data: {
             url: data.url || '/dashboard'
@@ -109,7 +121,6 @@ self.addEventListener('notificationclick', (event) => {
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
-            // Check if there is already a window open
             for (let i = 0; i < windowClients.length; i++) {
                 const client = windowClients[i];
                 if (client.url.includes(self.location.origin) && 'focus' in client) {
@@ -123,4 +134,3 @@ self.addEventListener('notificationclick', (event) => {
         })
     );
 });
-

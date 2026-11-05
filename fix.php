@@ -105,6 +105,24 @@ foreach ($configs as $cfg) {
     @unlink($cfg);
 }
 
+// 6. Check PWA Assets
+echo "<h4>فحص ملفات تطبيق الهاتف (PWA):</h4><ul>";
+$pwaFiles = [
+    '/manifest.json' => 'ملف إعدادات التطبيق (manifest.json)',
+    '/sw.js' => 'محرك التطبيق في الخلفية (sw.js)',
+    '/images/icon-192.png' => 'أيقونة الهاتف (192x192)',
+    '/images/icon-512.png' => 'أيقونة الهاتف عالية الدقة (512x512)',
+];
+foreach ($pwaFiles as $file => $desc) {
+    $exists = file_exists(__DIR__ . $file) || file_exists(__DIR__ . '/public' . $file);
+    if ($exists) {
+        echo "<li style='color:green;'>✔️ {$desc}: جاهز وسليم.</li>";
+    } else {
+        echo "<li style='color:red;'>❌ {$desc}: غير موجود!</li>";
+    }
+}
+echo "</ul>";
+
 echo "<hr style='margin:20px 0;'>";
 echo "<p style='text-align:center;'><a href='/' style='display:inline-block; background:#10b981; color:white; padding:12px 25px; border-radius:8px; text-decoration:none; font-weight:bold;'>⬅️ اضغط هنا لفتح الصفحة الرئيسية</a></p>";
 echo "</div>";

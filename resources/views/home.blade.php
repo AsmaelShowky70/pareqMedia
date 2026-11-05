@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بريق للتسويق الإلكتروني | مفتاح نجاحك في التسويق - تصوير، مونتاج، تصاميم، وإعلانات ممولة</title>
     
+    @include('partials.pwa-meta')
+    
     <meta name="description" content="وكالة بريق حلول تسويق إلكتروني متكاملة مع تصوير ومونتاج فيديو احترافي، تصميم جرافيك، وإعلانات ممولة في مصر والسعودية والأردن والخليج.">
     <meta name="keywords" content="بريق, بريق للتسويق الالكتروني, مونتاج, تصوير فيديو, ريلز, اعلانات ممولة, تصميم جرافيك, pariq agency">
 
@@ -136,6 +138,14 @@
 
             <!-- Action Buttons -->
             <div class="hidden sm:flex items-center gap-3">
+                <button type="button" 
+                        onclick="executePwaInstall()" 
+                        class="px-3.5 py-2.5 rounded-xl bg-brand-card hover:bg-brand-hover text-brand-gold border border-brand-yellow/30 text-xs font-bold transition flex items-center gap-1.5 shadow" 
+                        title="تثبيت تطبيق بريق على جهازك">
+                    <i class="fa-solid fa-mobile-screen-button text-amber-400"></i>
+                    <span>تثبيت التطبيق</span>
+                </button>
+
                 <a href="#contact" 
                    class="px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 active:scale-95 transition shadow-lg flex items-center gap-2">
                     <i class="fa-solid fa-bolt"></i>
@@ -161,7 +171,11 @@
             <a href="#results" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">نتائج الحملات</a>
             <a href="#clients" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">عملاؤنا</a>
             <a href="#contact" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">تواصل معنا</a>
-            <div class="pt-3 border-t border-brand-border">
+            <div class="pt-3 border-t border-brand-border space-y-2">
+                <button type="button" onclick="mobileNav = false; executePwaInstall()" class="w-full py-2.5 text-center rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    <span>تثبيت تطبيق بريق على الهاتف</span>
+                </button>
                 <a href="#contact" @click="mobileNav = false" class="block py-2.5 text-center rounded-xl bg-brand-yellow text-brand-dark font-black text-xs">طلب استشارة</a>
             </div>
         </div>
@@ -634,5 +648,6 @@
         </div>
     </div>
 
+    @include('partials.pwa-prompts')
 </body>
 </html>

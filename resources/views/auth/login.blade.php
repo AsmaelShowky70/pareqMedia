@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول | نظام وكالة بريق للتسويق الإلكتروني</title>
+    @include('partials.pwa-meta')
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -131,5 +132,6 @@
 
     </div>
 
+    @include('partials.pwa-prompts')
 </body>
 </html>
