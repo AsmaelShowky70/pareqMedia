@@ -17,3 +17,30 @@
 <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/icon-192.png') }}">
 <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('images/icon-512.png') }}">
 
+<!-- Early PWA Registration & Prompt Capture in HEAD -->
+<script>
+    window.pariqDeferredPrompt = null;
+    window.pariqPromptReadyCallbacks = [];
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        window.pariqDeferredPrompt = e;
+        console.log('📱 [PWA-HEAD] beforeinstallprompt captured!');
+        if (window.pariqPromptReadyCallbacks && window.pariqPromptReadyCallbacks.length > 0) {
+            while (window.pariqPromptReadyCallbacks.length > 0) {
+                const cb = window.pariqPromptReadyCallbacks.shift();
+                try { cb(e); } catch(err) {}
+            }
+        }
+    });
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(function(reg) {
+                console.log('✅ [PWA-HEAD] Service Worker active:', reg.scope);
+            })
+            .catch(function(err) {
+                console.log('ServiceWorker info:', err);
+            });
+    }
+</script>

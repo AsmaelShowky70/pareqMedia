@@ -10,11 +10,11 @@
                 <div class="relative">
                     <img src="/images/icon-192.png" alt="تطبيق بريق" class="w-20 h-20 rounded-2xl border-2 border-amber-400 p-1.5 bg-[#0B0314] shadow-xl shadow-amber-500/20">
                     <span class="absolute -bottom-2 bg-gradient-to-l from-amber-500 to-yellow-400 text-[#0B0314] font-black text-[10px] px-2 py-0.5 rounded-full shadow">
-                        PWA APP
+                        تطبيق رسمي
                     </span>
                 </div>
-                <h3 class="text-lg font-black text-white mt-3 flex items-center gap-2">
-                    <span>تثبيت تطبيق وكالة بريق</span>
+                <h3 class="text-lg font-black text-white mt-3">
+                    تثبيت تطبيق وكالة بريق
                 </h3>
                 <p class="text-xs text-amber-300/90 font-medium mt-0.5">منصة الإدارة والإنتاج المرئي على هاتفك</p>
             </div>
@@ -27,29 +27,33 @@
                 </div>
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-bell text-blue-400 text-sm w-4 text-center"></i>
-                    <span>استقبال الإشعارات الفورية وتنبيهات المهام أولاً بأول</span>
+                    <span>إشعارات فورية وتنبيهات المهام والحسابات</span>
                 </div>
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-mobile-screen text-emerald-400 text-sm w-4 text-center"></i>
-                    <span>أيقونة خاصة على شاشة هاتفك مع تسجيل دخول دائم</span>
+                    <span>أيقونة خاصة على شاشتك مع حفظ الدخول</span>
                 </div>
             </div>
 
-            <!-- iOS Instructions Guide (Shown on iPhone when triggered) -->
-            <div id="pwa-ios-instructions" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-right text-xs text-amber-200 space-y-1.5 animate-pulse">
+            <!-- iOS Safari Visual Guide (Only displayed on iPhone) -->
+            <div id="pwa-ios-instructions" class="hidden bg-amber-500/10 border border-amber-500/40 rounded-2xl p-3 text-right text-xs text-amber-200 space-y-1.5">
                 <div class="font-bold text-amber-400 flex items-center gap-1.5">
                     <i class="fa-brands fa-apple text-sm"></i>
-                    <span>خطوات التثبيت على الآيفون (Safari):</span>
+                    <span>تثبيت التطبيق على الآيفون:</span>
                 </div>
                 <p>1. اضغط على زر المشاركة <i class="fa-solid fa-arrow-up-from-bracket text-blue-400 font-bold mx-1"></i> أسفل الشاشة.</p>
-                <p>2. مرر للأسفل واختر <strong>"إضافة إلى الصفحة الرئيسية"</strong> (Add to Home Screen) ➕.</p>
+                <p>2. اختر <strong>"إضافة إلى الصفحة الرئيسية"</strong> (Add to Home Screen) ➕.</p>
+            </div>
+
+            <!-- Status Feedback Message (No Alerts!) -->
+            <div id="pwa-status-msg" class="hidden p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs text-center font-bold">
             </div>
 
             <!-- Primary Action Button -->
             <div class="space-y-2 pt-1">
-                <button type="button" id="pwa-install-btn" onclick="executePwaInstallFromModal()" class="w-full py-3.5 px-4 rounded-2xl font-black text-sm bg-gradient-to-l from-amber-500 via-yellow-400 to-amber-300 text-[#0B0314] hover:brightness-110 active:scale-[0.98] transition-all shadow-xl shadow-amber-500/25 flex items-center justify-center gap-2">
+                <button type="button" id="pwa-install-btn" onclick="executeDirectPwaInstall()" class="w-full py-3.5 px-4 rounded-2xl font-black text-sm bg-gradient-to-l from-amber-500 via-yellow-400 to-amber-300 text-[#0B0314] hover:brightness-110 active:scale-[0.98] transition-all shadow-xl shadow-amber-500/25 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-download text-base"></i>
-                    <span>تثبيت التطبيق على هاتفك الآن</span>
+                    <span id="pwa-btn-label">تثبيت التطبيق على هاتفك الآن</span>
                 </button>
             </div>
 
@@ -101,10 +105,9 @@
 
 </div>
 
-<!-- PWA & Device-Specific Automation Engine -->
+<!-- Direct PWA Execution Script -->
 <script>
 (function() {
-    // 1. Device Classifier
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
         || (window.matchMedia && window.matchMedia("(max-width: 768px)").matches)
         || (navigator.maxTouchPoints > 1 && window.innerWidth <= 1024);
@@ -112,42 +115,16 @@
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-    // Global variable for Chrome deferred prompt
-    window.pariqDeferredPrompt = null;
+    // In-App browser check (WhatsApp, Facebook, Instagram, TikTok)
+    const isInApp = /FBAN|FBAV|Instagram|WhatsApp|TikTok|Line|Snapchat/i.test(navigator.userAgent);
 
-    // 2. Register Service Worker on All Devices
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/sw.js')
-                .then(function(reg) {
-                    console.log('✅ Pariq Service Worker active with scope:', reg.scope);
-                })
-                .catch(function(err) {
-                    console.log('ServiceWorker note:', err);
-                });
-        });
-    }
-
-    // 3. Listen for Android Chrome beforeinstallprompt event
-    window.addEventListener('beforeinstallprompt', function(e) {
-        e.preventDefault();
-        window.pariqDeferredPrompt = e;
-        console.log('📱 PWA beforeinstallprompt captured successfully.');
-    });
-
-    // 4. Initial Launch Logic
     document.addEventListener('DOMContentLoaded', function() {
-        // If already installed and running inside the app: Do nothing!
-        if (isStandalone) {
-            console.log('🚀 Running in standalone PWA app mode.');
-            return;
-        }
+        if (isStandalone) return;
 
         // ==========================================
-        // A) MOBILE DEVICES (Android & iPhone)
+        // A) MOBILE (Android / iPhone)
         // ==========================================
         if (isMobile) {
-            // Check if user chose "Never show again"
             const neverShow = localStorage.getItem('pariq_pwa_never_show');
             const sessionDismissed = sessionStorage.getItem('pariq_pwa_session_dismissed');
 
@@ -159,30 +136,28 @@
                     setTimeout(() => {
                         pill.classList.remove('scale-0', 'pointer-events-none');
                         pill.classList.add('scale-100', 'pointer-events-auto');
-                    }, 800);
+                    }, 600);
                 }
 
-                // If not dismissed during this current session, show auto modal after 1.2s
+                // Auto modal after 800ms
                 if (!sessionDismissed) {
-                    setTimeout(openPwaModal, 1200);
+                    setTimeout(openPwaModal, 800);
                 }
             }
         } 
         // ==========================================
-        // B) DESKTOP / PC (Notifications Only)
+        // B) DESKTOP (PC / Laptop) - Notifications Only
         // ==========================================
         else {
-            // Check desktop notification permission
             if ('Notification' in window && Notification.permission === 'default') {
                 const notifDismissed = localStorage.getItem('pariq_desktop_notif_dismissed');
                 if (!notifDismissed || (Date.now() - parseInt(notifDismissed)) > (24 * 60 * 60 * 1000)) {
-                    setTimeout(showDesktopNotifCard, 2500);
+                    setTimeout(showDesktopNotifCard, 2000);
                 }
             }
         }
     });
 
-    // Modal Controls
     window.openPwaModal = function() {
         const modal = document.getElementById('pwa-mobile-modal');
         const card = document.getElementById('pwa-mobile-modal-card');
@@ -204,14 +179,12 @@
 
         if (cb && cb.checked) {
             localStorage.setItem('pariq_pwa_never_show', 'true');
-            // Hide floating pill as well
             const pill = document.getElementById('pwa-floating-pill');
             if (pill) {
                 pill.classList.remove('scale-100', 'pointer-events-auto');
                 pill.classList.add('scale-0', 'pointer-events-none');
             }
         } else {
-            // Dismiss for current browser session
             sessionStorage.setItem('pariq_pwa_session_dismissed', 'true');
         }
 
@@ -226,9 +199,13 @@
         }
     };
 
-    // Install Action Execution
-    window.executePwaInstallFromModal = function() {
-        // 1. If on iOS (iPhone / iPad)
+    // DIRECT INSTALLATION - NO MANUAL ALERTS
+    window.executeDirectPwaInstall = function() {
+        const btn = document.getElementById('pwa-install-btn');
+        const label = document.getElementById('pwa-btn-label');
+        const statusBox = document.getElementById('pwa-status-msg');
+
+        // 1. If on iPhone (iOS)
         if (isIOS) {
             const iosGuide = document.getElementById('pwa-ios-instructions');
             if (iosGuide) {
@@ -237,44 +214,98 @@
             return;
         }
 
-        // 2. Android: Check if deferred prompt is available
+        // 2. If inside In-App Browser (WhatsApp / Facebook) -> Launch real Chrome via Android Intent!
+        if (isInApp) {
+            const currentUrl = window.location.href.replace(/^https?:\/\//, '');
+            window.location.href = 'intent://' + currentUrl + '#Intent;scheme=https;package=com.android.chrome;end';
+            return;
+        }
+
+        // 3. Android Chrome Direct Trigger
         if (window.pariqDeferredPrompt) {
-            window.pariqDeferredPrompt.prompt();
-            window.pariqDeferredPrompt.userChoice.then(function(choiceResult) {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('🎉 PWA Installation accepted by user');
-                    localStorage.setItem('pariq_pwa_never_show', 'true');
+            promptNativeInstall(window.pariqDeferredPrompt);
+            return;
+        }
+
+        // 4. If prompt event is still registering, wait seamlessly (DO NOT SHOW ALERT!)
+        if (btn && label) {
+            btn.disabled = true;
+            label.innerHTML = 'جاري التثبيت المباشر...';
+        }
+
+        let resolved = false;
+        // Register callback for when event arrives
+        if (window.pariqPromptReadyCallbacks) {
+            window.pariqPromptReadyCallbacks.push(function(promptEvent) {
+                if (!resolved) {
+                    resolved = true;
+                    restoreBtn();
+                    promptNativeInstall(promptEvent);
                 }
-                window.pariqDeferredPrompt = null;
-                dismissPwaModal();
             });
-        } else {
-            // In case user is inside in-app browser (WhatsApp, Facebook, etc.) or Chrome hasn't fired event
-            const isWebview = /FBAN|FBAV|Instagram|WhatsApp|TikTok/i.test(navigator.userAgent);
-            if (isWebview) {
-                alert('⚠️ أنت تتصفح الرابط من داخل تطبيق (مثل واتساب أو فيسبوك).\n\nلتنزيل التطبيق:\nاضغط على النقاط الثلاث ⋮ في أعلى أو أسفل الشاشة واختر "فتح في متصفح Chrome" (Open in Chrome) ثم اضغط تثبيت.');
-            } else {
-                alert('لتثبيت التطبيق على هاتفك الآن:\nاضغط على قائمة المتصفح (الثلاث نقاط ⋮) ثم اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية" (Install App).');
+        }
+
+        // Fast poll every 80ms for 3 seconds
+        let elapsed = 0;
+        const timer = setInterval(function() {
+            elapsed += 80;
+            if (window.pariqDeferredPrompt && !resolved) {
+                resolved = true;
+                clearInterval(timer);
+                restoreBtn();
+                promptNativeInstall(window.pariqDeferredPrompt);
+            } else if (elapsed >= 3000) {
+                clearInterval(timer);
+                if (!resolved) {
+                    resolved = true;
+                    restoreBtn();
+                    // Fallback without annoying alert:
+                    if (statusBox) {
+                        statusBox.innerHTML = '✨ المتصفح يقوم بتهيئة التطبيق، اضغط مرة أخرى للتثبيت';
+                        statusBox.classList.remove('hidden');
+                    }
+                }
             }
-            dismissPwaModal();
+        }, 80);
+
+        function restoreBtn() {
+            if (btn && label) {
+                btn.disabled = false;
+                label.innerHTML = 'تثبيت التطبيق على هاتفك الآن';
+            }
         }
     };
 
-    // Also support global executePwaInstall() called from any header/menu button
+    function promptNativeInstall(promptEvent) {
+        promptEvent.prompt();
+        promptEvent.userChoice.then(function(choiceResult) {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('🎉 PWA Installation accepted!');
+                localStorage.setItem('pariq_pwa_never_show', 'true');
+            }
+            window.pariqDeferredPrompt = null;
+            dismissPwaModal();
+        }).catch(function() {
+            dismissPwaModal();
+        });
+    }
+
+    // Global hook called from header buttons
     window.executePwaInstall = function() {
         if (isMobile) {
             openPwaModal();
+            executeDirectPwaInstall();
         }
     };
 
-    // Listen to successful install event
+    // Celebration on installed
     window.addEventListener('appinstalled', function() {
         console.log('✅ Pariq App installed successfully!');
         localStorage.setItem('pariq_pwa_never_show', 'true');
         dismissPwaModal();
     });
 
-    // Desktop Notifications Functions
+    // Desktop Notifications
     function showDesktopNotifCard() {
         const el = document.getElementById('pwa-desktop-notif-card');
         if (el) {
@@ -299,12 +330,7 @@
     };
 
     window.enableDesktopNotifications = function() {
-        if (!('Notification' in window)) {
-            alert('متصفحك لا يدعم نظام الإشعارات.');
-            dismissDesktopNotif();
-            return;
-        }
-
+        if (!('Notification' in window)) return;
         Notification.requestPermission().then(function(permission) {
             dismissDesktopNotif();
             if (permission === 'granted') {

@@ -1,7 +1,8 @@
 // Pariq Agency Progressive Web App (PWA) Service Worker v3
-const CACHE_NAME = 'pariq-pwa-v3';
+const CACHE_NAME = 'pariq-pwa-v4';
 const STATIC_ASSETS = [
     '/',
+    '/?source=pwa',
     '/manifest.json',
     '/images/icon-192.png',
     '/images/icon-512.png'
