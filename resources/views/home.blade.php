@@ -138,14 +138,6 @@
 
             <!-- Action Buttons -->
             <div class="hidden sm:flex items-center gap-3">
-                <button type="button" 
-                        onclick="executePwaInstall()" 
-                        class="px-3.5 py-2.5 rounded-xl bg-brand-card hover:bg-brand-hover text-brand-gold border border-brand-yellow/30 text-xs font-bold transition flex items-center gap-1.5 shadow" 
-                        title="تثبيت تطبيق بريق على جهازك">
-                    <i class="fa-solid fa-mobile-screen-button text-amber-400"></i>
-                    <span>تثبيت التطبيق</span>
-                </button>
-
                 <a href="#contact" 
                    class="px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 active:scale-95 transition shadow-lg flex items-center gap-2">
                     <i class="fa-solid fa-bolt"></i>

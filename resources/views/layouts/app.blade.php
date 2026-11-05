@@ -297,13 +297,13 @@
 
                 <div class="flex items-center gap-2 sm:gap-3">
                     
-                    <!-- PWA Quick Install Button -->
+                    <!-- PWA Quick Install Button (Mobile Only) -->
                     <button type="button" 
                             onclick="executePwaInstall()" 
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-brand-gold text-xs font-bold border border-brand-yellow/30 transition shadow" 
+                            class="inline-flex md:hidden items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-brand-gold text-xs font-bold border border-brand-yellow/30 transition shadow" 
                             title="تثبيت منصة بريق كتطبيق على هاتفك">
                         <i class="fa-solid fa-mobile-screen-button text-brand-yellow"></i>
-                        <span class="hidden sm:inline">تثبيت التطبيق</span>
+                        <span>تثبيت التطبيق</span>
                     </button>
 
                     <!-- Web Push Notification Enable Button -->
