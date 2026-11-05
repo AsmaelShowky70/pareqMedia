@@ -138,17 +138,43 @@
 
             <!-- Action Buttons -->
             <div class="hidden sm:flex items-center gap-3">
+                @auth
+                <a href="{{ route('dashboard') }}" 
+                   class="px-4 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 active:scale-95 transition shadow-lg flex items-center gap-2">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+                @else
+                <a href="{{ route('login') }}" 
+                   class="px-4 py-2.5 rounded-xl bg-[#240c42] border border-brand-yellow/40 text-brand-gold hover:bg-brand-yellow hover:text-brand-dark font-black text-xs transition flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-user-lock"></i>
+                    <span>دخول الإدارة والفريق</span>
+                </a>
+                @endauth
                 <a href="#contact" 
-                   class="px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 active:scale-95 transition shadow-lg flex items-center gap-2">
-                    <i class="fa-solid fa-bolt"></i>
-                    <span>طلب استشارة مجانية</span>
+                   class="px-4 py-2.5 rounded-xl bg-brand-card border border-brand-border text-gray-200 font-bold text-xs hover:text-white transition flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-brand-gold"></i>
+                    <span>طلب استشارة</span>
                 </a>
             </div>
 
-            <!-- Mobile Hamburger -->
-            <button @click="mobileNav = !mobileNav" class="lg:hidden text-gray-300 hover:text-white p-2">
-                <i class="fa-solid fa-bars text-xl"></i>
-            </button>
+            <!-- Mobile Actions & Hamburger -->
+            <div class="flex items-center gap-2 lg:hidden">
+                @auth
+                <a href="{{ route('dashboard') }}" class="px-3 py-1.5 rounded-xl bg-brand-yellow text-brand-dark font-black text-xs flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>اللوحة</span>
+                </a>
+                @else
+                <a href="{{ route('login') }}" class="px-3 py-1.5 rounded-xl bg-amber-500/20 border border-brand-yellow/40 text-brand-gold font-bold text-xs flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    <span>دخول النظام</span>
+                </a>
+                @endauth
+                <button @click="mobileNav = !mobileNav" class="text-gray-300 hover:text-white p-2">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Mobile Menu Dropdown -->
@@ -156,6 +182,20 @@
              @click.away="mobileNav = false" 
              x-transition 
              class="lg:hidden bg-brand-purple border-b border-brand-border px-5 py-4 space-y-3 text-sm font-bold">
+            
+            <!-- Quick Auth Action for Mobile -->
+            @auth
+            <a href="{{ route('dashboard') }}" @click="mobileNav = false" class="w-full py-2.5 px-3 rounded-xl bg-brand-yellow text-brand-dark font-black text-center flex items-center justify-center gap-2 shadow">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>الانتقال إلى لوحة التحكم والمهام</span>
+            </a>
+            @else
+            <a href="{{ route('login') }}" @click="mobileNav = false" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-center flex items-center justify-center gap-2 shadow">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>تسجيل دخول الإدارة وفريق العمل</span>
+            </a>
+            @endauth
+
             <a href="#hero" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">الرئيسية</a>
             <a href="#services" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">خدماتنا</a>
             <a href="#process" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">مراحل عملنا</a>
@@ -168,7 +208,7 @@
                     <i class="fa-solid fa-mobile-screen-button"></i>
                     <span>تثبيت تطبيق بريق على الهاتف</span>
                 </button>
-                <a href="#contact" @click="mobileNav = false" class="block py-2.5 text-center rounded-xl bg-brand-yellow text-brand-dark font-black text-xs">طلب استشارة</a>
+                <a href="#contact" @click="mobileNav = false" class="block py-2.5 text-center rounded-xl bg-brand-card border border-brand-border text-white font-bold text-xs">طلب استشارة مجانية</a>
             </div>
         </div>
     </header>

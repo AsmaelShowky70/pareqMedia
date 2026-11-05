@@ -64,6 +64,33 @@
             </span>
         </div>
 
+        <!-- GPS System Status & Live Pre-check for Photographers -->
+        <div class="p-3.5 rounded-xl bg-[#150a2e] border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-2.5 text-indigo-200">
+                <span class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-location-crosshairs text-base"></i>
+                </span>
+                <div>
+                    <div class="font-bold text-white flex items-center gap-2">
+                        <span>إذن الموقع الجغرافي (GPS) لبصمة الحضور</span>
+                        <span x-show="gpsReady" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                            <i class="fa-solid fa-check ml-1"></i>مفعل وجاهز
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-gray-300 mt-0.5" x-text="gpsMessage">
+                        اضغط للتحقق من تفعيل الـ GPS بدقة عالية لتسجيل الحضور بمواقع التصوير بسلاسة.
+                    </p>
+                </div>
+            </div>
+            <button @click="testAndEnableGps()" 
+                    type="button" 
+                    :disabled="gpsTesting"
+                    class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow transition flex items-center gap-1.5 whitespace-nowrap">
+                <i class="fa-solid" :class="gpsTesting ? 'fa-spinner fa-spin' : 'fa-location-dot'"></i>
+                <span x-text="gpsReady ? 'إعادة فحص الـ GPS' : 'فحص وتفعيل الـ GPS'"></span>
+            </button>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
             @foreach($photographyTasks as $pTask)
             <div class="p-5 rounded-2xl bg-brand-purple/70 border border-brand-border space-y-4 flex flex-col justify-between">
@@ -317,6 +344,46 @@
             deliverModalOpen: false,
             activeTask: null,
             loadingId: null,
+            gpsReady: false,
+            gpsTesting: false,
+            gpsMessage: 'اضغط للتحقق من تفعيل الـ GPS بدقة عالية لتسجيل الحضور بمواقع التصوير بسلاسة.',
+
+            init() {
+                if (navigator.geolocation && navigator.permissions && navigator.permissions.query) {
+                    navigator.permissions.query({ name: 'geolocation' }).then(result => {
+                        if (result.state === 'granted') {
+                            this.gpsReady = true;
+                            this.gpsMessage = '✅ الـ GPS مفعل وجاهز لتسجيل الحضور عند وصولك للموقع.';
+                        }
+                    }).catch(() => {});
+                }
+            },
+
+            testAndEnableGps() {
+                if (!navigator.geolocation) {
+                    alert('المتصفح أو الجهاز لا يدعم خاصية تحديد الموقع الجغرافي.');
+                    return;
+                }
+                this.gpsTesting = true;
+                this.gpsMessage = 'جاري الاتصال بالأقمار الصناعية وقراءة إحداثياتك الحالية...';
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        this.gpsTesting = false;
+                        this.gpsReady = true;
+                        this.gpsMessage = `✅ تم تفعيل الـ GPS بنجاح! دقة الإشارة: ${Math.round(pos.coords.accuracy)} متر. جهازك جاهز للبصمة.`;
+                    },
+                    (err) => {
+                        this.gpsTesting = false;
+                        this.gpsReady = false;
+                        if (err.code === 1) {
+                            this.gpsMessage = '⚠️ تم رفض إذن الموقع. يرجى تفعيل إذن الموقع للمتصفح من إعدادات الهاتف.';
+                        } else {
+                            this.gpsMessage = '⚠️ تعذر التقاط إشارة الـ GPS. تأكد من تشغيل خدمة الموقع (Location) بهاتفك.';
+                        }
+                    },
+                    { enableHighAccuracy: true, timeout: 12000 }
+                );
+            },
 
             openDeliverModal(id, title, link) {
                 this.activeTask = { id: id, title: title, delivery_link: link };

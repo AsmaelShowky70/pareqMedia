@@ -306,14 +306,14 @@
                         <span>تثبيت التطبيق</span>
                     </button>
 
-                    <!-- Web Push Notification Enable Button -->
+                    <!-- Web Push Notification Enable Button (Visible on Mobile & Desktop) -->
                     <button @click="requestNotificationPermission()" 
                             x-show="notificationPermission !== 'granted'" 
                             type="button" 
-                            class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-card hover:bg-brand-hover text-brand-gold text-xs font-bold border border-brand-yellow/30 transition shadow" 
-                            title="تفعيل الإشعارات على الهاتف واللابتوب">
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-card hover:bg-brand-hover text-brand-gold text-xs font-bold border border-brand-yellow/30 transition shadow" 
+                            title="تفعيل الإشعارات على الهاتف والكمبيوتر">
                         <i class="fa-solid fa-bell-ring animate-pulse text-brand-yellow"></i>
-                        <span>تفعيل الإشعارات</span>
+                        <span class="hidden sm:inline">تفعيل الإشعارات</span>
                     </button>
 
                     <!-- Notifications Dropdown -->
@@ -391,6 +391,27 @@
                 </div>
             </header>
 
+            <!-- Proactive Notification Prompt Banner (For GM and all Staff) -->
+            <div x-show="notificationPermission !== 'granted'" 
+                 x-transition
+                 class="bg-gradient-to-l from-amber-500/20 via-brand-purple to-amber-500/10 border-b border-amber-500/40 px-4 lg:px-8 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                <div class="flex items-center gap-2.5 text-amber-200">
+                    <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-bell-ring animate-pulse text-xs"></i>
+                    </span>
+                    <div>
+                        <strong class="text-white">تفعيل الإشعارات الفورية:</strong>
+                        <span>لتصلك تنبيهات المهام والمشروعات والأمور المالية أولاً بأول على هاتفك.</span>
+                    </div>
+                </div>
+                <button @click="requestNotificationPermission()" 
+                        type="button" 
+                        class="px-3.5 py-1.5 rounded-xl bg-gradient-to-l from-amber-500 to-yellow-400 text-brand-dark font-black text-xs hover:brightness-110 active:scale-95 transition shadow whitespace-nowrap flex items-center gap-1.5">
+                    <i class="fa-solid fa-check"></i>
+                    <span>تفعيل الإشعارات الآن</span>
+                </button>
+            </div>
+
             <!-- Alerts Banner -->
             <div class="px-4 lg:px-8 pt-4">
                 @if(session('success'))
@@ -456,10 +477,20 @@
                             });
                     }
 
-                    // 2. Fetch notifications initial feed
+                    // 2. Check and auto-prompt notification permission if not yet decided
+                    if ('Notification' in window) {
+                        this.notificationPermission = Notification.permission;
+                        if (Notification.permission === 'default') {
+                            setTimeout(() => {
+                                this.requestNotificationPermission();
+                            }, 2500);
+                        }
+                    }
+
+                    // 3. Fetch notifications initial feed
                     this.fetchNotifications();
 
-                    // 3. Periodic Polling for real-time notifications (every 15s)
+                    // 4. Periodic Polling for real-time notifications (every 15s)
                     setInterval(() => {
                         this.fetchNotifications();
                     }, 15000);

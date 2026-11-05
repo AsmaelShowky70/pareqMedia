@@ -9,48 +9,78 @@
             <div class="flex flex-col items-center">
                 <div class="relative">
                     <img src="/images/icon-192.png" alt="تطبيق بريق" class="w-20 h-20 rounded-2xl border-2 border-amber-400 p-1.5 bg-[#0B0314] shadow-xl shadow-amber-500/20">
-                    <span class="absolute -bottom-2 bg-gradient-to-l from-amber-500 to-yellow-400 text-[#0B0314] font-black text-[10px] px-2 py-0.5 rounded-full shadow">
-                        تطبيق رسمي
+                    <span id="pwa-platform-badge" class="absolute -bottom-2 bg-gradient-to-l from-amber-500 to-yellow-400 text-[#0B0314] font-black text-[10px] px-2.5 py-0.5 rounded-full shadow">
+                        تطبيق بريق الرسمي
                     </span>
                 </div>
-                <h3 class="text-lg font-black text-white mt-3">
+                <h3 id="pwa-modal-title" class="text-lg font-black text-white mt-3">
                     تثبيت تطبيق وكالة بريق
                 </h3>
-                <p class="text-xs text-amber-300/90 font-medium mt-0.5">منصة الإدارة والإنتاج المرئي على هاتفك</p>
+                <p class="text-xs text-amber-300/90 font-medium mt-0.5">منصة الإدارة والإنتاج وبصمة الحضور على هاتفك</p>
             </div>
 
             <!-- Features Highlights -->
             <div class="bg-[#240c42] border border-brand-border/60 rounded-2xl p-3 text-right space-y-2 text-xs text-gray-200">
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-bolt text-amber-400 text-sm w-4 text-center"></i>
-                    <span>أسرع بـ 3 أضعاف وبدون شريط المتصفح</span>
+                    <span>أسرع بـ 3 أضعاف وبكامل الشاشة بدون شريط المتصفح</span>
                 </div>
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-bell text-blue-400 text-sm w-4 text-center"></i>
-                    <span>إشعارات فورية وتنبيهات المهام والحسابات</span>
+                    <span>إشعارات فورية لصاحب الشركة وفريق العمل</span>
                 </div>
                 <div class="flex items-center gap-2.5">
-                    <i class="fa-solid fa-mobile-screen text-emerald-400 text-sm w-4 text-center"></i>
-                    <span>أيقونة خاصة على شاشتك مع حفظ الدخول</span>
+                    <i class="fa-solid fa-location-crosshairs text-emerald-400 text-sm w-4 text-center"></i>
+                    <span>بصمة الحضور الميداني للمصورين (GPS)</span>
                 </div>
             </div>
 
-            <!-- iOS Safari Visual Guide (Only displayed on iPhone) -->
-            <div id="pwa-ios-instructions" class="hidden bg-amber-500/10 border border-amber-500/40 rounded-2xl p-3 text-right text-xs text-amber-200 space-y-1.5">
-                <div class="font-bold text-amber-400 flex items-center gap-1.5">
-                    <i class="fa-brands fa-apple text-sm"></i>
-                    <span>تثبيت التطبيق على الآيفون:</span>
+            <!-- ============================================== -->
+            <!-- A. iPhone (iOS Safari) Dedicated Visual Guide -->
+            <!-- ============================================== -->
+            <div id="pwa-ios-section" class="hidden text-right space-y-2.5 bg-gradient-to-b from-blue-950/40 to-brand-card/90 border border-blue-500/40 rounded-2xl p-3.5 text-xs text-gray-200">
+                <div class="font-black text-amber-400 flex items-center gap-1.5 text-sm border-b border-brand-border/60 pb-2">
+                    <i class="fa-brands fa-apple text-base"></i>
+                    <span>خطوات التثبيت على الآيفون (iOS):</span>
                 </div>
-                <p>1. اضغط على زر المشاركة <i class="fa-solid fa-arrow-up-from-bracket text-blue-400 font-bold mx-1"></i> أسفل الشاشة.</p>
-                <p>2. اختر <strong>"إضافة إلى الصفحة الرئيسية"</strong> (Add to Home Screen) ➕.</p>
+                <div class="space-y-2">
+                    <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full bg-blue-500/30 text-blue-300 font-bold flex items-center justify-center text-[11px] flex-shrink-0 mt-0.5">1</span>
+                        <p class="leading-relaxed">
+                            اضغط على زر المشاركة <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold mx-1"><i class="fa-solid fa-arrow-up-from-bracket ml-1"></i> Share</span> في شريط Safari أسفل الشاشة.
+                        </p>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-500/30 text-emerald-300 font-bold flex items-center justify-center text-[11px] flex-shrink-0 mt-0.5">2</span>
+                        <p class="leading-relaxed">
+                            مرر القائمة واختر <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold mx-1"><i class="fa-solid fa-square-plus ml-1"></i> إضافة إلى الصفحة الرئيسية</span> (Add to Home Screen).
+                        </p>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full bg-amber-500/30 text-amber-300 font-bold flex items-center justify-center text-[11px] flex-shrink-0 mt-0.5">3</span>
+                        <p class="leading-relaxed">
+                            اضغط على كلمة <strong>"إضافة" (Add)</strong> في أعلى الزاوية.
+                        </p>
+                    </div>
+                </div>
+                <div class="pt-2 text-center text-[11px] text-amber-300 font-medium">
+                    📲 سيظهر تطبيق بريق كبرنامج رسمي على شاشتك مع الإشعارات وحفظ الدخول.
+                </div>
+                <!-- Bouncing Pointer to bottom Safari bar -->
+                <div class="pt-1 text-center animate-bounce text-blue-400 font-bold text-xs flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-arrow-down"></i>
+                    <span>زر المشاركة موجود أسفل شاشة سفاري</span>
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
             </div>
 
-            <!-- Status Feedback Message (No Alerts!) -->
-            <div id="pwa-status-msg" class="hidden p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs text-center font-bold">
-            </div>
+            <!-- ============================================== -->
+            <!-- B. Android Dedicated Action Buttons            -->
+            <!-- ============================================== -->
+            <div id="pwa-android-section" class="space-y-2 pt-1">
+                <!-- Status Feedback Message -->
+                <div id="pwa-status-msg" class="hidden p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs text-center font-bold"></div>
 
-            <!-- Primary Action Button -->
-            <div class="space-y-2 pt-1">
                 <button type="button" id="pwa-install-btn" onclick="executeDirectPwaInstall()" class="w-full py-3.5 px-4 rounded-2xl font-black text-sm bg-gradient-to-l from-amber-500 via-yellow-400 to-amber-300 text-[#0B0314] hover:brightness-110 active:scale-[0.98] transition-all shadow-xl shadow-amber-500/25 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-download text-base"></i>
                     <span id="pwa-btn-label">تثبيت التطبيق على هاتفك الآن</span>
@@ -81,7 +111,7 @@
     <div id="pwa-floating-pill" class="fixed bottom-5 left-4 z-[9999] transition-all duration-300 scale-0 pointer-events-none" style="display: none;">
         <button type="button" onclick="openPwaModal()" class="px-3.5 py-2 rounded-full bg-gradient-to-l from-amber-500 to-yellow-400 text-[#0B0314] font-black text-xs shadow-2xl flex items-center gap-2 border border-amber-300 hover:scale-105 transition-transform">
             <i class="fa-solid fa-mobile-screen-button"></i>
-            <span>تثبيت التطبيق</span>
+            <span id="pwa-floating-pill-label">تثبيت التطبيق</span>
         </button>
     </div>
 
@@ -120,9 +150,6 @@
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-    // In-App browser check (WhatsApp, Facebook, Instagram, TikTok)
-    const isInApp = /FBAN|FBAV|Instagram|WhatsApp|TikTok|Line|Snapchat/i.test(navigator.userAgent);
-
     document.addEventListener('DOMContentLoaded', function() {
         if (isStandalone) return;
 
@@ -136,7 +163,11 @@
             if (!neverShow) {
                 // Show floating pill
                 const pill = document.getElementById('pwa-floating-pill');
+                const pillLabel = document.getElementById('pwa-floating-pill-label');
                 if (pill) {
+                    if (isIOS && pillLabel) {
+                        pillLabel.innerText = 'تطبيق الآيفون';
+                    }
                     pill.style.display = 'block';
                     setTimeout(() => {
                         pill.classList.remove('scale-0', 'pointer-events-none');
@@ -166,12 +197,21 @@
     window.openPwaModal = function() {
         const modal = document.getElementById('pwa-mobile-modal');
         const card = document.getElementById('pwa-mobile-modal-card');
-        const iosGuide = document.getElementById('pwa-ios-instructions');
-        const apkLink = document.getElementById('pwa-apk-direct-link');
+        const iosSection = document.getElementById('pwa-ios-section');
+        const androidSection = document.getElementById('pwa-android-section');
+        const title = document.getElementById('pwa-modal-title');
+        const badge = document.getElementById('pwa-platform-badge');
 
         if (isIOS) {
-            if (iosGuide) iosGuide.classList.remove('hidden');
-            if (apkLink) apkLink.style.display = 'none';
+            if (iosSection) iosSection.classList.remove('hidden');
+            if (androidSection) androidSection.classList.add('hidden');
+            if (title) title.innerText = 'تطبيق بريق على الآيفون (iOS)';
+            if (badge) badge.innerText = 'تطبيق رسمي للآيفون';
+        } else {
+            if (iosSection) iosSection.classList.add('hidden');
+            if (androidSection) androidSection.classList.remove('hidden');
+            if (title) title.innerText = 'تثبيت تطبيق وكالة بريق (Android)';
+            if (badge) badge.innerText = 'تطبيق رسمي للأندرويد';
         }
 
         if (modal && card) {
@@ -212,22 +252,13 @@
         }
     };
 
-    // DIRECT INSTALLATION - NO MANUAL ALERTS
+    // DIRECT INSTALLATION (Android & PWA)
     window.executeDirectPwaInstall = function() {
         const btn = document.getElementById('pwa-install-btn');
         const label = document.getElementById('pwa-btn-label');
         const statusBox = document.getElementById('pwa-status-msg');
 
-        // 1. If on iPhone (iOS)
-        if (isIOS) {
-            const iosGuide = document.getElementById('pwa-ios-instructions');
-            if (iosGuide) {
-                iosGuide.classList.remove('hidden');
-            }
-            return;
-        }
-
-        // 2. If Chrome native PWA prompt is available, trigger it
+        // 1. If Chrome native PWA prompt is available, trigger it
         if (window.pariqDeferredPrompt) {
             try {
                 window.pariqDeferredPrompt.prompt();
@@ -237,7 +268,6 @@
                         localStorage.setItem('pariq_pwa_never_show', 'true');
                         dismissPwaModal();
                     } else {
-                        // If user canceled PWA, fallback to direct APK download
                         window.location.href = '/pariq-media.apk';
                     }
                     window.pariqDeferredPrompt = null;
@@ -248,32 +278,31 @@
             } catch(e) {}
         }
 
-        // 3. Direct Android APK Installation (Guaranteed on Realme C11 and all Android versions)
+        // 2. Direct Android APK Installation (Guaranteed on Realme C11 and all Android versions)
         if (btn && label) {
-            label.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري تنزيل التطبيق...';
+            label.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري تنزيل التطبيق...';
+            btn.disabled = true;
         }
 
         if (statusBox) {
-            statusBox.innerHTML = '✅ بدأ تنزيل التطبيق بحجم خفيف (21 KB)! اضغط على ملف الإشعار في هاتفك لتثبيته فوراً 📲';
+            statusBox.innerHTML = '✅ بدأ تنزيل التطبيق الخفيف (21 KB)! اضغط على إشعار التنزيل في هاتفك لتثبيته فوراً 📲';
             statusBox.classList.remove('hidden');
         }
 
-        // Trigger direct APK download
         setTimeout(function() {
             window.location.href = '/pariq-media.apk';
         }, 150);
 
         setTimeout(function() {
-            if (label) label.innerHTML = '<i class="fa-solid fa-download"></i> تنزيل التطبيق مرة أخرى (APK)';
+            if (label) label.innerHTML = '<i class="fa-solid fa-download ml-2"></i> تنزيل التطبيق مرة أخرى (APK)';
             if (btn) btn.disabled = false;
-        }, 2500);
+        }, 3000);
     };
 
     // Global hook called from header buttons
     window.executePwaInstall = function() {
         if (isMobile) {
             openPwaModal();
-            executeDirectPwaInstall();
         }
     };
 
