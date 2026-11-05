@@ -16,3 +16,4 @@
 <link rel="icon" type="image/png" sizes="72x72" href="{{ asset('images/icon-72.png') }}">
 <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/icon-192.png') }}">
 <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('images/icon-512.png') }}">
+
