@@ -223,11 +223,7 @@
             <a href="#testimonials" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">آراء العملاء</a>
             <a href="#faq" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">الأسئلة الشائعة</a>
             <a href="#contact" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">تواصل معنا</a>
-            <div class="pt-3 border-t border-brand-border space-y-2">
-                <button type="button" onclick="mobileNav = false; executePwaInstall()" class="w-full py-2.5 text-center rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                    <span>تثبيت تطبيق بريق على الهاتف</span>
-                </button>
+            <div class="pt-3 border-t border-brand-border">
                 <a href="#contact" @click="mobileNav = false" class="block py-2.5 text-center rounded-xl bg-brand-yellow text-brand-dark font-black text-xs">طلب استشارة مجانية</a>
             </div>
         </div>
