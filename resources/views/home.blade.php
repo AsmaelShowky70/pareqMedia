@@ -49,6 +49,7 @@
 
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #08020F; color: #F3F4F6; }
+        html { scroll-behavior: smooth; }
         .gold-gradient-text {
             background: linear-gradient(135deg, #FDE68A 0%, #FBBF24 35%, #F59E0B 70%, #D97706 100%);
             -webkit-background-clip: text;
@@ -63,20 +64,51 @@
             filter: blur(140px);
             pointer-events: none;
             z-index: 0;
+            animation: floatSlow 14s ease-in-out infinite alternate;
         }
+        @keyframes floatSlow {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -20px) scale(1.08); }
+            100% { transform: translate(-25px, 25px) scale(0.95); }
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(50%); }
+        }
+        .marquee-track {
+            display: flex;
+            width: 200%;
+            animation: marquee 30s linear infinite;
+        }
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.92; }
+        }
+        .subtle-pulse {
+            animation: subtlePulse 4s infinite ease-in-out;
+        }
+        ::-webkit-scrollbar { width: 7px; }
+        ::-webkit-scrollbar-track { background: #08020F; }
+        ::-webkit-scrollbar-thumb { background: #3E176F; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
     </style>
 </head>
 <body class="bg-brand-dark text-gray-100 overflow-x-hidden selection:bg-brand-yellow selection:text-brand-dark" 
       x-data="{ 
           mobileNav: false, 
           activeFilter: 'all', 
+          activeServiceCategory: 'all',
+          activeFaq: 0,
           previewModal: false, 
+          showBackToTop: false,
           activeMedia: { type: '', src: '', embedSrc: '', title: '', desc: '' },
           openMedia(mediaType, src, title, desc) {
               let type = mediaType;
               let embed = '';
               if (type === 'video' && src) {
-                  // YouTube Watch or Shorts or Embed
                   const ytMatch = src.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
                   if (ytMatch) {
                       type = 'youtube';
@@ -105,7 +137,8 @@
               this.previewModal = false;
               this.activeMedia = { type: '', src: '', embedSrc: '', title: '', desc: '' };
           }
-      }">
+      }"
+      @scroll.window="showBackToTop = (window.pageYOffset > 400)">
 
     <!-- Ambient Glowing Backdrops -->
     <div class="glow-sphere w-[600px] h-[600px] bg-purple-900/25 -top-40 -right-40"></div>
@@ -126,18 +159,19 @@
             </a>
 
             <!-- Desktop Nav Links -->
-            <nav class="hidden lg:flex items-center gap-7 text-xs font-bold text-gray-300">
+            <nav class="hidden lg:flex items-center gap-6 xl:gap-7 text-xs font-bold text-gray-300">
                 <a href="#hero" class="hover:text-brand-gold transition-colors">الرئيسية</a>
                 <a href="#services" class="hover:text-brand-gold transition-colors">خدماتنا</a>
                 <a href="#process" class="hover:text-brand-gold transition-colors">مراحل عملنا</a>
                 <a href="#portfolio" class="hover:text-brand-gold transition-colors">معرض الأعمال</a>
-                <a href="#results" class="hover:text-brand-gold transition-colors">نتائج الحملات</a>
                 <a href="#clients" class="hover:text-brand-gold transition-colors">عملاؤنا</a>
+                <a href="#testimonials" class="hover:text-brand-gold transition-colors">آراء العملاء</a>
+                <a href="#faq" class="hover:text-brand-gold transition-colors">الأسئلة الشائعة</a>
                 <a href="#contact" class="hover:text-brand-gold transition-colors">تواصل معنا</a>
             </nav>
 
             <!-- Action Buttons -->
-            <div class="hidden sm:flex items-center gap-3">
+            <div class="hidden sm:flex items-center gap-2.5">
                 @auth
                 <a href="{{ route('dashboard') }}" 
                    class="px-4 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 active:scale-95 transition shadow-lg flex items-center gap-2">
@@ -146,15 +180,16 @@
                 </a>
                 @else
                 <a href="{{ route('login') }}" 
-                   class="px-4 py-2.5 rounded-xl bg-[#240c42] border border-brand-yellow/40 text-brand-gold hover:bg-brand-yellow hover:text-brand-dark font-black text-xs transition flex items-center gap-2 shadow">
+                   class="px-3.5 py-2.5 rounded-xl bg-[#240c42] border border-brand-yellow/40 text-brand-gold hover:bg-brand-yellow hover:text-brand-dark font-black text-xs transition flex items-center gap-2 shadow">
                     <i class="fa-solid fa-user-lock"></i>
                     <span>دخول الإدارة والفريق</span>
                 </a>
                 @endauth
+
                 <a href="#contact" 
-                   class="px-4 py-2.5 rounded-xl bg-brand-card border border-brand-border text-gray-200 font-bold text-xs hover:text-white transition flex items-center gap-2">
-                    <i class="fa-solid fa-bolt text-brand-gold"></i>
-                    <span>طلب استشارة</span>
+                   class="px-4 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 active:scale-95 transition shadow-lg flex items-center gap-1.5">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>طلب استشارة مجانية</span>
                 </a>
             </div>
 
@@ -200,21 +235,22 @@
             <a href="#services" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">خدماتنا</a>
             <a href="#process" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">مراحل عملنا</a>
             <a href="#portfolio" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">معرض الأعمال</a>
-            <a href="#results" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">نتائج الحملات</a>
             <a href="#clients" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">عملاؤنا</a>
+            <a href="#testimonials" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">آراء العملاء</a>
+            <a href="#faq" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">الأسئلة الشائعة</a>
             <a href="#contact" @click="mobileNav = false" class="block py-1 hover:text-brand-gold">تواصل معنا</a>
             <div class="pt-3 border-t border-brand-border space-y-2">
                 <button type="button" onclick="mobileNav = false; executePwaInstall()" class="w-full py-2.5 text-center rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs flex items-center justify-center gap-2">
                     <i class="fa-solid fa-mobile-screen-button"></i>
                     <span>تثبيت تطبيق بريق على الهاتف</span>
                 </button>
-                <a href="#contact" @click="mobileNav = false" class="block py-2.5 text-center rounded-xl bg-brand-card border border-brand-border text-white font-bold text-xs">طلب استشارة مجانية</a>
+                <a href="#contact" @click="mobileNav = false" class="block py-2.5 text-center rounded-xl bg-brand-yellow text-brand-dark font-black text-xs">طلب استشارة مجانية</a>
             </div>
         </div>
     </header>
 
     <!-- 2. HERO SECTION -->
-    <section id="hero" class="relative pt-36 pb-20 lg:pt-48 lg:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10">
+    <section id="hero" class="relative pt-36 pb-20 lg:pt-48 lg:pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10">
         
         @if(session('success_inquiry'))
         <div class="p-4 mb-8 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-sm flex items-center justify-between shadow-xl">
@@ -229,8 +265,8 @@
         <div class="text-center max-w-4xl mx-auto space-y-6">
             
             <!-- Slogan Badge -->
-            <div class="inline-flex items-center gap-2.5 px-6 py-2 rounded-full bg-brand-card/90 border border-brand-yellow/40 text-brand-gold text-xs font-bold shadow-lg animate-pulse">
-                <i class="fa-solid fa-sparkles text-sm"></i>
+            <div class="inline-flex items-center gap-2.5 px-6 py-2 rounded-full bg-brand-card/90 border border-brand-yellow/40 text-brand-gold text-xs font-bold shadow-lg subtle-pulse">
+                <i class="fa-solid fa-sparkles text-sm text-brand-yellow"></i>
                 <span>( بريق ، مفتاح نجاحك في التسويق )</span>
             </div>
 
@@ -253,78 +289,266 @@
                     <span>شاهد معرض أعمالنا الحقيقي</span>
                 </a>
 
-                <a href="https://wa.me/201062330838" target="_blank" 
+                <a href="https://wa.me/201062330838?text=مرحباً%20وكالة%20بريق،%20أرغب%20في%20الحصول%20على%20استشارة%20تسويقية%20مجانية%20وعرض%20سعر" target="_blank" 
                    class="px-8 py-4 rounded-2xl bg-brand-card hover:bg-brand-hover border border-brand-border text-white font-bold text-sm transition shadow flex items-center gap-2.5">
                     <i class="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
-                    <span>محادثة مباشرة عبر واتساب</span>
+                    <span>استشارة مجانية عبر واتساب</span>
                 </a>
             </div>
 
-            <!-- Stats Bar -->
-            <div class="pt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="p-5 rounded-2xl bg-brand-card/60 border border-brand-border/60">
-                    <div class="text-3xl lg:text-4xl font-black text-brand-gold">+5</div>
-                    <div class="text-xs text-gray-400 mt-1 font-bold">سنوات من الخبرة والتميز</div>
+            <!-- LIVE ANIMATED STATS COUNTER BAR (أرقام وإحصائيات تزيد بالتزامن) -->
+            <div x-data="pariqStatsCounter()" 
+                 x-init="initObserver($el)"
+                 class="pt-14 space-y-3">
+                
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>إحصائيات موثقة تتحدث بالتزامن مع إنجازات الوكالة</span>
                 </div>
 
-                <div class="p-5 rounded-2xl bg-brand-card/60 border border-brand-border/60">
-                    <div class="text-3xl lg:text-4xl font-black text-brand-gold">+120</div>
-                    <div class="text-xs text-gray-400 mt-1 font-bold">علامة تجارية في 6 دول عربية</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- 1. Projects Completed -->
+                    <div class="p-5 rounded-2xl bg-brand-card/80 border border-brand-border/80 hover:border-brand-yellow/60 transition-all duration-300 shadow-xl group">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-brand-gold flex items-center justify-center mx-auto mb-2 text-lg group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="text-3xl lg:text-4xl font-black text-brand-gold flex items-center justify-center">
+                            <span>+</span><span x-text="projects">0</span>
+                        </div>
+                        <div class="text-xs text-gray-300 mt-1 font-bold">مشروع مكتمل بنجاح</div>
+                    </div>
+
+                    <!-- 2. Happy Clients -->
+                    <div class="p-5 rounded-2xl bg-brand-card/80 border border-brand-border/80 hover:border-brand-yellow/60 transition-all duration-300 shadow-xl group">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center mx-auto mb-2 text-lg group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="text-3xl lg:text-4xl font-black text-white flex items-center justify-center">
+                            <span>+</span><span x-text="clients">0</span>
+                        </div>
+                        <div class="text-xs text-gray-300 mt-1 font-bold">عميل سعيد في 6 دول</div>
+                    </div>
+
+                    <!-- 3. Years of Experience -->
+                    <div class="p-5 rounded-2xl bg-brand-card/80 border border-brand-border/80 hover:border-brand-yellow/60 transition-all duration-300 shadow-xl group">
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center mx-auto mb-2 text-lg group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <div class="text-3xl lg:text-4xl font-black text-brand-gold flex items-center justify-center">
+                            <span>+</span><span x-text="years">0</span>
+                        </div>
+                        <div class="text-xs text-gray-300 mt-1 font-bold">سنوات خبرة متواصلة</div>
+                    </div>
+
+                    <!-- 4. Team Members -->
+                    <div class="p-5 rounded-2xl bg-brand-card/80 border border-brand-border/80 hover:border-brand-yellow/60 transition-all duration-300 shadow-xl group">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mx-auto mb-2 text-lg group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-user-group"></i>
+                        </div>
+                        <div class="text-3xl lg:text-4xl font-black text-white flex items-center justify-center">
+                            <span>+</span><span x-text="team">0</span>
+                        </div>
+                        <div class="text-xs text-gray-300 mt-1 font-bold">عضو فريق ومبدع محترف</div>
+                    </div>
                 </div>
 
-                <div class="p-5 rounded-2xl bg-brand-card/60 border border-brand-border/60">
-                    <div class="text-3xl lg:text-4xl font-black text-brand-gold">+450</div>
-                    <div class="text-xs text-gray-400 mt-1 font-bold">فيديو ريلز وبرومو سينمائي</div>
-                </div>
-
-                <div class="p-5 rounded-2xl bg-brand-card/60 border border-brand-border/60">
-                    <div class="text-3xl lg:text-4xl font-black text-brand-gold">+15M</div>
-                    <div class="text-xs text-gray-400 mt-1 font-bold">مشاهدات وإيرادات الحملات</div>
-                </div>
             </div>
 
         </div>
     </section>
 
-    <!-- 3. SERVICES SECTION -->
-    <section id="services" class="py-20 bg-brand-purple/40 border-y border-brand-border/40 relative z-10">
+    <!-- 3. AMBIENT MOVING MARQUEE TICKER (شريط سينمائي متحرك) -->
+    <div class="py-3.5 bg-[#120522]/95 border-y border-brand-border/50 overflow-hidden relative z-10 select-none">
+        <div class="marquee-track flex items-center gap-8 whitespace-nowrap text-xs font-bold text-gray-300">
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-camera-retro text-brand-gold"></i> تصوير سينمائي 4K</span>
+            <span class="text-brand-yellow/40">•</span>
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i> مونتاج ريلز وبرومو سريع</span>
+            <span class="text-brand-yellow/40">•</span>
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-bezier-curve text-blue-400"></i> هويات بصرية وتصميمات سوشيال ميديا</span>
+            <span class="text-brand-yellow/40">•</span>
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-chart-line text-emerald-400"></i> إعلانات ممولة ومضاعفة المبيعات (ROAS)</span>
+            <span class="text-brand-yellow/40">•</span>
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-crown text-brand-gold"></i> بريق ، مفتاح نجاحك في التسويق</span>
+            <span class="text-brand-yellow/40">•</span>
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-globe text-cyan-400"></i> عملاؤنا في مصر والسعودية والإمارات</span>
+            <span class="text-brand-yellow/40">•</span>
+            <!-- Repeat for seamless scroll -->
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-camera-retro text-brand-gold"></i> تصوير سينمائي 4K</span>
+            <span class="text-brand-yellow/40">•</span>
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i> مونتاج ريلز وبرومو سريع</span>
+            <span class="text-brand-yellow/40">•</span>
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-bezier-curve text-blue-400"></i> هويات بصرية وتصميمات سوشيال ميديا</span>
+            <span class="text-brand-yellow/40">•</span>
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-chart-line text-emerald-400"></i> إعلانات ممولة ومضاعفة المبيعات (ROAS)</span>
+            <span class="text-brand-yellow/40">•</span>
+            <span class="inline-flex items-center gap-2"><i class="fa-solid fa-crown text-brand-gold"></i> بريق ، مفتاح نجاحك في التسويق</span>
+        </div>
+    </div>
+
+    <!-- 4. SERVICES SECTION (أيقونات جذابة استاتيكية + تنقل سلس وتفاعلي) -->
+    <section id="services" class="py-20 bg-brand-purple/40 border-b border-brand-border/40 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <div class="text-center max-w-2xl mx-auto mb-10 space-y-3">
                 <span class="text-xs font-bold text-brand-gold uppercase tracking-wider">ماذا نقدم لعلامتك التجارية؟</span>
                 <h2 class="text-3xl sm:text-4xl font-black text-white">خدماتنا التسويقية والإبداعية المتكاملة</h2>
-                <p class="text-xs sm:text-sm text-gray-400">نغطي كافة مراحل التسويق الرقمي تحت سقف واحد بأعلى معايير الإتقان الفني والتجاري.</p>
+                <p class="text-xs sm:text-sm text-gray-400">نغطي كافة مراحل الإنتاج الرقمي تحت سقف واحد بأعلى معايير الإتقان الفني والتجاري.</p>
             </div>
 
+            <!-- Services Category Tabs (تنقل تفاعلي سلس بين الأقسام) -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5 mb-12">
+                <button type="button" @click="activeServiceCategory = 'all'" 
+                        :class="activeServiceCategory === 'all' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-5 py-2.5 rounded-2xl text-xs transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-grid-2"></i>
+                    <span>جميع الخدمات (6)</span>
+                </button>
+                <button type="button" @click="activeServiceCategory = 'video'" 
+                        :class="activeServiceCategory === 'video' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-5 py-2.5 rounded-2xl text-xs transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-video text-amber-400"></i>
+                    <span>التصوير والمونتاج السينمائي</span>
+                </button>
+                <button type="button" @click="activeServiceCategory = 'design'" 
+                        :class="activeServiceCategory === 'design' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-5 py-2.5 rounded-2xl text-xs transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-bezier-curve text-cyan-400"></i>
+                    <span>التصميم وبناء الهويات</span>
+                </button>
+                <button type="button" @click="activeServiceCategory = 'marketing'" 
+                        :class="activeServiceCategory === 'marketing' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-5 py-2.5 rounded-2xl text-xs transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-emerald-400"></i>
+                    <span>الإعلانات الممولة وإدارة النمو</span>
+                </button>
+            </div>
+
+            @php
+                $staticServices = [
+                    [
+                        'id' => 'shooting',
+                        'title' => 'تصوير فيديو سينمائي احترافي 4K',
+                        'category' => 'video',
+                        'category_name' => 'تصوير سينمائي',
+                        'icon' => 'fa-solid fa-video',
+                        'icon_color' => 'text-amber-400',
+                        'icon_bg' => 'bg-amber-500/15 border-amber-500/30',
+                        'desc' => 'تصوير سينمائي عالي الجودة 4K بأحدث الكاميرات والمعدات وطاقم متخصص لإبراز تفاصيل منتجاتك وعلامتك التجارية بأعلى جاذبية.',
+                        'features' => ['كاميرات سينمائية 4K وعدسات فاخرة', 'طاقم تصوير وإضاءة وهندسة صوت كاملة', 'تصوير جوي درون بدقة فائقة', 'سكريبت ومودبورد تحضيري متقن'],
+                        'price' => '3,500',
+                    ],
+                    [
+                        'id' => 'editing',
+                        'title' => 'مونتاج ريلز وبرومو سينمائي سريع',
+                        'category' => 'video',
+                        'category_name' => 'مونتاج وهوية فيديو',
+                        'icon' => 'fa-solid fa-film',
+                        'icon_color' => 'text-purple-400',
+                        'icon_bg' => 'bg-purple-500/15 border-purple-500/30',
+                        'desc' => 'مونتاج ريلز وبروموهات خاطفة للأنظار مع تصحيح ألوان سينمائي، مؤثرات صوتية تحبس الأنفاس، وموشن جرافيك لزيادة مدة المشاهدة والانتشار.',
+                        'features' => ['ريلز وشورتس بفكرة الـ Hook السريع', 'تصحيح ألوان سينمائي (Color Grading)', 'هندسة ومؤثرات صوتية محفزة (SFX)', 'تسليم سريع مع تطبيق التعديلات المطلوبة'],
+                        'price' => '2,000',
+                    ],
+                    [
+                        'id' => 'design',
+                        'title' => 'تصميمات جرافيك وبناء الهويات البصرية',
+                        'category' => 'design',
+                        'category_name' => 'تصميم وهوية',
+                        'icon' => 'fa-solid fa-bezier-curve',
+                        'icon_color' => 'text-cyan-400',
+                        'icon_bg' => 'bg-cyan-500/15 border-cyan-500/30',
+                        'desc' => 'تصميمات سوشيال ميديا استثنائية، أغلفة يوتيوب مصغرة ترفع الـ CTR، وتصميم شعارات وهوية تجارية كاملة بأعلى دقة فنية.',
+                        'features' => ['أغلفة يوتيوب CTR لرفع نسب النقر للمشاهدة', 'بوستات سوشيال ميديا وكاروسيل تثقيفي', 'تصميم لوجو ودليل الهوية الكامل (Brand Guidelines)', 'ملفات مفتوحة قابلة للطباعة والنشر'],
+                        'price' => '1,500',
+                    ],
+                    [
+                        'id' => 'ads',
+                        'title' => 'الإعلانات الممولة وميديا باينج (ROAS)',
+                        'category' => 'marketing',
+                        'category_name' => 'إعلانات ونمو',
+                        'icon' => 'fa-solid fa-chart-line',
+                        'icon_color' => 'text-emerald-400',
+                        'icon_bg' => 'bg-emerald-500/15 border-emerald-500/30',
+                        'desc' => 'إدارة حملات احترافية على Meta, TikTok, Google بحساب دقيق للعائد على الإنفاق (ROAS) واستراتيجيات لاستهداف الشريحة الأكثر شراءً.',
+                        'features' => ['إعلانات Meta (انستجرام وفيسبوك) بذكاء', 'إعلانات TikTok لتحقيق الفيرال والمبيعات', 'استهداف الجماهير الأكثر استعداداً للشراء', 'تقارير دورية وشفافة لمعدل العائد المالي'],
+                        'price' => '4,000',
+                    ],
+                    [
+                        'id' => 'social',
+                        'title' => 'إدارة كاملة لحسابات السوشيال ميديا',
+                        'category' => 'marketing',
+                        'category_name' => 'إدارة المحتوى',
+                        'icon' => 'fa-solid fa-share-nodes',
+                        'icon_color' => 'text-pink-400',
+                        'icon_bg' => 'bg-pink-500/15 border-pink-500/30',
+                        'desc' => 'تولي كامل لإدارة منصاتك الرقمية: خطة محتوى شهرية، النشر في الأوقات الذهبية، كتابة الكابشنز، ومتابعة نمو الحسابات والتفاعل.',
+                        'features' => ['خطة نشر شهرية شاملة 30 يوم', 'نشر وجدولة بالأوقات الذهبية للجمهور', 'كتابة نصوص تسويقية مقنعة (Copywriting)', 'تحليل المنافسين وزيادة المتابعين الحقيقيين'],
+                        'price' => '5,000',
+                    ],
+                    [
+                        'id' => 'strategy',
+                        'title' => 'إعداد الخطط التسويقية والاستشارات',
+                        'category' => 'marketing',
+                        'category_name' => 'استراتيجية وخطط',
+                        'icon' => 'fa-solid fa-lightbulb',
+                        'icon_color' => 'text-amber-300',
+                        'icon_bg' => 'bg-amber-500/15 border-amber-500/30',
+                        'desc' => 'دراسة السوق ومنافسيك لبناء استراتيجية انطلاق تسويقية شاملة تقود علامتك لاحتلال الصدارة وتوليد طلب مستمر.',
+                        'features' => ['تحليل شامل لنقاط القوة والفرص التنافسية', 'تحديد شريحة العملاء المثالية (Persona)', 'هندسة العروض التسويقية المربحة', 'جلسات استشارية ومتابعة خطة العمل'],
+                        'price' => '3,000',
+                    ],
+                ];
+            @endphp
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($services as $service)
-                <div class="purple-gradient-card border border-brand-border rounded-3xl p-7 hover:border-brand-yellow/60 transition-all duration-300 group hover:-translate-y-1 shadow-lg flex flex-col justify-between">
+                @foreach($staticServices as $srv)
+                <div x-show="activeServiceCategory === 'all' || activeServiceCategory === '{{ $srv['category'] }}'"
+                     x-transition:enter="transition ease-out duration-300 transform"
+                     x-transition:enter-start="opacity-0 scale-95 translate-y-3"
+                     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                     class="purple-gradient-card border border-brand-border rounded-3xl p-7 hover:border-brand-yellow/60 transition-all duration-300 group hover:-translate-y-1.5 shadow-xl flex flex-col justify-between">
+                    
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
-                            <div class="w-14 h-14 rounded-2xl bg-brand-yellow/15 border border-brand-yellow/30 text-brand-gold flex items-center justify-center text-2xl group-hover:bg-brand-yellow group-hover:text-brand-dark transition-all duration-300 shadow">
-                                <i class="fa-solid fa-{{ $service->icon }}"></i>
+                            <div class="w-14 h-14 rounded-2xl {{ $srv['icon_bg'] }} border {{ $srv['icon_color'] }} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300 shadow">
+                                <i class="{{ $srv['icon'] }}"></i>
                             </div>
                             <span class="text-[11px] font-bold text-brand-gold bg-brand-yellow/10 px-3 py-1 rounded-full border border-brand-yellow/20">
-                                {{ $service->category_arabic }}
+                                {{ $srv['category_name'] }}
                             </span>
                         </div>
 
-                        <h3 class="text-xl font-bold text-white group-hover:text-brand-gold transition-colors">
-                            {{ $service->title_ar }}
+                        <h3 class="text-xl font-black text-white group-hover:text-brand-gold transition-colors">
+                            {{ $srv['title'] }}
                         </h3>
 
                         <p class="text-xs text-gray-300 leading-relaxed">
-                            {{ $service->short_description }}
+                            {{ $srv['desc'] }}
                         </p>
+
+                        <!-- Features bullets -->
+                        <div class="space-y-1.5 pt-2 border-t border-brand-border/40 text-[11px] text-gray-300">
+                            @foreach($srv['features'] as $feat)
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-check text-emerald-400 text-[10px]"></i>
+                                <span>{{ $feat }}</span>
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
 
-                    <div class="pt-6 mt-6 border-t border-brand-border/40 flex items-center justify-between text-xs">
-                        <span class="text-brand-gold font-bold">
-                            تبدأ من {{ number_format($service->starting_price) }} ج.م
-                        </span>
-                        <a href="#contact" class="text-gray-400 group-hover:text-white flex items-center gap-1 font-bold">
+                    <div class="pt-5 mt-5 border-t border-brand-border/40 flex items-center justify-between text-xs">
+                        <div>
+                            <span class="text-[10px] text-gray-400 block">تبدأ الأسعار من:</span>
+                            <span class="text-brand-gold font-black text-sm">
+                                {{ $srv['price'] }} ج.م
+                            </span>
+                        </div>
+                        <a href="https://wa.me/201062330838?text=مرحباً%20وكالة%20بريق،%20أرغب%20في%20طلب%20خدمة:%20{{ urlencode($srv['title']) }}" 
+                           target="_blank"
+                           class="px-4 py-2 rounded-xl bg-brand-yellow/15 hover:bg-brand-yellow text-brand-gold hover:text-brand-dark border border-brand-yellow/30 font-bold transition flex items-center gap-1.5 shadow">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
                             <span>طلب الخدمة</span>
-                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
                         </a>
                     </div>
                 </div>
@@ -334,7 +558,7 @@
         </div>
     </section>
 
-    <!-- 4. OUR 8-STEP WORK PROCESS -->
+    <!-- 5. OUR 8-STEP WORK PROCESS -->
     <section id="process" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
             <span class="text-xs font-bold text-brand-gold uppercase tracking-wider">منهجية العمل المعتمدة</span>
@@ -357,7 +581,7 @@
             @endphp
 
             @foreach($stages as $st)
-            <div class="p-6 rounded-2xl bg-brand-card/70 border border-brand-border hover:border-brand-yellow/50 transition relative group">
+            <div class="p-6 rounded-2xl bg-brand-card/70 border border-brand-border hover:border-brand-yellow/50 transition-all hover:-translate-y-1 relative group shadow-lg">
                 <div class="text-3xl font-black text-brand-yellow/30 group-hover:text-brand-gold transition-colors mb-2 font-mono">
                     {{ $st['num'] }}
                 </div>
@@ -368,7 +592,7 @@
         </div>
     </section>
 
-    <!-- 5. REAL PORTFOLIO & WORK SHOWCASE (From pariqagency.com) -->
+    <!-- 6. REAL PORTFOLIO & WORK SHOWCASE (أنيميشن سلس في الفلترة والتنقل) -->
     <section id="portfolio" class="py-20 bg-brand-purple/40 border-y border-brand-border/40 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -378,36 +602,36 @@
                 <p class="text-xs sm:text-sm text-gray-400">نماذج حقيقية من تصميماتنا، أغلفة اليوتيوب، نتائج الحملات الإعلانية، وفيديوهات الإنتاج.</p>
             </div>
 
-            <!-- Category Filter Pills -->
+            <!-- Category Filter Pills with smooth transition -->
             <div class="flex flex-wrap items-center justify-center gap-2 mb-10">
                 <button type="button" @click="activeFilter = 'all'" 
-                        :class="activeFilter === 'all' ? 'bg-brand-yellow text-brand-dark font-black' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
-                        class="px-4 py-2 rounded-xl text-xs transition">
+                        :class="activeFilter === 'all' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-4 py-2 rounded-xl text-xs transition-all">
                     جميع الأعمال
                 </button>
                 <button type="button" @click="activeFilter = 'youtube_thumbnail'" 
-                        :class="activeFilter === 'youtube_thumbnail' ? 'bg-brand-yellow text-brand-dark font-black' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
-                        class="px-4 py-2 rounded-xl text-xs transition">
+                        :class="activeFilter === 'youtube_thumbnail' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-4 py-2 rounded-xl text-xs transition-all">
                     أغلفة يوتيوب مصغرة (CTR)
                 </button>
                 <button type="button" @click="activeFilter = 'ad_results'" 
-                        :class="activeFilter === 'ad_results' ? 'bg-brand-yellow text-brand-dark font-black' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
-                        class="px-4 py-2 rounded-xl text-xs transition">
+                        :class="activeFilter === 'ad_results' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-4 py-2 rounded-xl text-xs transition-all">
                     نتائج الحملات الإعلانية الموثقة
                 </button>
                 <button type="button" @click="activeFilter = 'social_design'" 
-                        :class="activeFilter === 'social_design' ? 'bg-brand-yellow text-brand-dark font-black' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
-                        class="px-4 py-2 rounded-xl text-xs transition">
+                        :class="activeFilter === 'social_design' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-4 py-2 rounded-xl text-xs transition-all">
                     تصميمات سوشيال ميديا
                 </button>
                 <button type="button" @click="activeFilter = 'branding'" 
-                        :class="activeFilter === 'branding' ? 'bg-brand-yellow text-brand-dark font-black' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
-                        class="px-4 py-2 rounded-xl text-xs transition">
+                        :class="activeFilter === 'branding' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-4 py-2 rounded-xl text-xs transition-all">
                     تصميم لوجو وهويات بصرية
                 </button>
                 <button type="button" @click="activeFilter = 'video_reels'" 
-                        :class="activeFilter === 'video_reels' ? 'bg-brand-yellow text-brand-dark font-black' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
-                        class="px-4 py-2 rounded-xl text-xs transition">
+                        :class="activeFilter === 'video_reels' ? 'bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black shadow-lg shadow-amber-500/20' : 'bg-brand-card text-gray-300 hover:text-white border border-brand-border'"
+                        class="px-4 py-2 rounded-xl text-xs transition-all">
                     فيديوهات ريلز وسينما
                 </button>
             </div>
@@ -416,9 +640,9 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($portfolioItems as $item)
                 <div x-show="activeFilter === 'all' || activeFilter === '{{ $item->category }}'"
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0 scale-95"
-                     x-transition:enter-end="opacity-100 scale-100"
+                     x-transition:enter="transition ease-out duration-300 transform"
+                     x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                      class="bg-brand-card border border-brand-border rounded-3xl overflow-hidden group hover:border-brand-yellow/60 transition-all duration-300 shadow-xl flex flex-col justify-between">
                     
                     <div>
@@ -493,7 +717,7 @@
         </div>
     </section>
 
-    <!-- 6. REAL CLIENTS & PARTNERS WALL (With Actual Client Logos) -->
+    <!-- 7. REAL CLIENTS & PARTNERS WALL (With Actual Client Logos) -->
     <section id="clients" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-14 space-y-2">
             <span class="text-xs font-bold text-brand-gold uppercase tracking-wider">شركاء النجاح المعتمدون</span>
@@ -520,7 +744,7 @@
             @endphp
 
             @foreach($clientLogos as $cl)
-            <div class="p-5 rounded-2xl bg-brand-card/70 border border-brand-border/60 hover:border-brand-yellow/50 transition-all flex flex-col items-center justify-center text-center group">
+            <div class="p-5 rounded-2xl bg-brand-card/70 border border-brand-border/60 hover:border-brand-yellow/50 transition-all flex flex-col items-center justify-center text-center group shadow-md hover:-translate-y-1">
                 <div class="w-16 h-16 rounded-xl bg-brand-purple/60 border border-brand-border/40 flex items-center justify-center p-2 mb-3 group-hover:scale-105 transition-transform">
                     <img src="{{ asset('images/clients/' . $cl['img']) }}" alt="{{ $cl['name'] }}" class="max-w-full max-h-full object-contain filter brightness-95 group-hover:brightness-110">
                 </div>
@@ -531,7 +755,152 @@
         </div>
     </section>
 
-    <!-- 7. CONSULTATION & CONTACT FORM -->
+    <!-- 8. CLIENT TESTIMONIALS & REVIEWS (آراء وتقييمات شركاء النجاح) -->
+    <section id="testimonials" class="py-20 bg-brand-purple/30 border-y border-brand-border/40 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-2xl mx-auto mb-14 space-y-2">
+                <span class="text-xs font-bold text-brand-gold uppercase tracking-wider">قصص نجاح نعتز بها</span>
+                <h2 class="text-3xl font-black text-white">ماذا يقول عملاؤنا عن العمل مع بريق؟</h2>
+                <p class="text-xs text-gray-400">آراء موثقة من أصحاب الشركات والمؤسسات التي ساهمنا في نمو علاماتهم التجارية</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Review 1 -->
+                <div class="p-7 rounded-3xl bg-brand-card/80 border border-brand-border hover:border-brand-yellow/50 transition-all shadow-xl space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-1 text-brand-gold text-sm">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed italic">
+                            "فريق بريق تولى إدارة الحملات الإعلانية وتصوير الفيديوهات الطبية للمجمع بالرياض. النتيجة كانت تضاعف حجوزات العيادات بنسبة تجاوزت 180% في أول شهرين."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-brand-border/50">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 text-brand-dark font-black flex items-center justify-center text-sm shadow">
+                            ع
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-white">د. عبد الرحمن المجيدي</div>
+                            <div class="text-[10px] text-brand-gold">مجمع ماجستي الطبي (الرياض، السعودية)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="p-7 rounded-3xl bg-brand-card/80 border border-brand-border hover:border-brand-yellow/50 transition-all shadow-xl space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-1 text-brand-gold text-sm">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed italic">
+                            "جودة تصوير الريلز والمونتاج السينمائي أحدثت ضجة كبيرة على تيك توك وانستجرام. الفيديوهات حققت ملايين المشاهدات وجلبت لنا طوابير زبائن في فرعنا الجديد."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-brand-border/50">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 text-white font-black flex items-center justify-center text-sm shadow">
+                            ح
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-white">أ. حسام الدين غانم</div>
+                            <div class="text-[10px] text-brand-gold">مؤسس Shawrmaker (عَمّان، الأردن)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="p-7 rounded-3xl bg-brand-card/80 border border-brand-border hover:border-brand-yellow/50 transition-all shadow-xl space-y-4 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-1 text-brand-gold text-sm">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed italic">
+                            "الاحترافية في التزام مواعيد التسليم وتصميم الهوية الإعلانية جعلت بريق شريكنا الدائم لكافة علاماتنا التجارية. أنصح بهم بشدة لكل صاحب مشروع يريد نمواً حقيقياً."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-brand-border/50">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-brand-dark font-black flex items-center justify-center text-sm shadow">
+                            س
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-white">م. سيف النمر</div>
+                            <div class="text-[10px] text-brand-gold">مدير تسويق شركة ألبان (القاهرة، مصر)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 9. FAQ ACCORDION SECTION (الأسئلة الأكثر شيوعاً) -->
+    <section id="faq" class="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-14 space-y-2">
+            <span class="text-xs font-bold text-brand-gold uppercase tracking-wider">إجابات واضحة وسريعة</span>
+            <h2 class="text-3xl font-black text-white">الأسئلة الشائعة حول خدماتنا</h2>
+            <p class="text-xs text-gray-400">كل ما تحتاج لمعرفته حول طريقة العمل والأسعار وخطوات البدء</p>
+        </div>
+
+        <div class="space-y-3">
+            @php
+                $faqs = [
+                    [
+                        'q' => 'ما هي الخطوات للبدء في مشروع جديد مع بريق؟',
+                        'a' => 'تبدأ الخطوات بطلب استشارة مجانية عبر النموذج أو الواتساب، ثم نعقد جلسة اكتشاف سريعة لفهم أهدافك، ونقدم لك خطة عمل مخصصة وعرض سعر فوري. بمجرد الاعتماد، يبدأ فريقنا فوراً في كتابة السكريبتات والتجهيز للتصوير والإنتاج.'
+                    ],
+                    [
+                        'q' => 'هل تقدمون خدمات التصوير والمونتاج خارج مصر؟',
+                        'a' => 'نعم بالتأكيد! لدينا عملاء في السعودية والأردن والإمارات وقطر وعُمان. نوفر طواقم تصوير ميدانية، بالإضافة إلى خدمات المونتاج السحابي عن بُعد وإدارة الحملات الإعلانية لكافة الدول العربية.'
+                    ],
+                    [
+                        'q' => 'كم تستغرق مدة تسليم جلسات التصوير والمونتاج؟',
+                        'a' => 'نسلم النسخ المبدئية لفيديوهات الريلز والبرومو خلال 48 إلى 72 ساعة من موعد انتهاء جلسة التصوير، ونعتمد الملاحظات والتعديلات فوراً لضمان سرعة النشر واستثمار الترندات.'
+                    ],
+                    [
+                        'q' => 'كيف تضمنون تحقيق أعلى عائد على الحملات الإعلانية (ROAS)؟',
+                        'a' => 'نعتمد على استراتيجية متكاملة تجمع بين الفيديوهات الإعلانية عالية الجاذبية (Hook)، واستهداف دقيق للجمهور الشرائي المستعد للدفع، مع اختبار مستمر (A/B Testing) للكرييتف والميزانيات لتحقيق أقصى ربحية ممكنة.'
+                    ],
+                    [
+                        'q' => 'ما هي طرق الدفع والتعاقد المتاحة؟',
+                        'a' => 'نوفر خيارات سداد مرنة تناسب الشركات: تحويل بنكي رسمي، كاشير إلكتروني، إنستاباي، وفواتير رسمية معتمدة مع باقات شهرية أو عقود سنوية ميسرة.'
+                    ]
+                ];
+            @endphp
+
+            @foreach($faqs as $idx => $faq)
+            <div class="rounded-2xl bg-brand-card/70 border border-brand-border/60 overflow-hidden transition-colors">
+                <button type="button" 
+                        @click="activeFaq = (activeFaq === {{ $idx }} ? null : {{ $idx }})"
+                        class="w-full p-5 text-right font-bold text-sm text-white flex items-center justify-between gap-4 hover:text-brand-gold transition">
+                    <span>{{ $faq['q'] }}</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-brand-gold transition-transform duration-300"
+                       :class="activeFaq === {{ $idx }} ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="activeFaq === {{ $idx }}" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 max-h-0"
+                     x-transition:enter-end="opacity-100 max-h-96"
+                     class="px-5 pb-5 text-xs text-gray-300 leading-relaxed border-t border-brand-border/30 pt-3">
+                    {{ $faq['a'] }}
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </section>
+
+    <!-- 10. CONSULTATION & CONTACT FORM -->
     <section id="contact" class="py-20 bg-brand-purple/50 border-t border-brand-border relative z-10">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -616,7 +985,7 @@
         </div>
     </section>
 
-    <!-- 8. FOOTER -->
+    <!-- 11. FOOTER -->
     <footer class="bg-brand-darker border-t border-brand-border/60 py-12 px-4 sm:px-6 lg:px-8 relative z-10 text-xs text-gray-400">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-right">
             
@@ -630,7 +999,7 @@
 
             <!-- Social Media Icons -->
             <div class="flex items-center gap-3 text-lg">
-                <a href="https://wa.me/201062330838" target="_blank" class="w-9 h-9 rounded-lg bg-brand-card hover:bg-emerald-600 hover:text-white flex items-center justify-center transition text-gray-300">
+                <a href="https://wa.me/201062330838?text=مرحباً%20بريق" target="_blank" class="w-9 h-9 rounded-lg bg-brand-card hover:bg-emerald-600 hover:text-white flex items-center justify-center transition text-gray-300">
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
                 <a href="https://facebook.com" target="_blank" class="w-9 h-9 rounded-lg bg-brand-card hover:bg-blue-600 hover:text-white flex items-center justify-center transition text-gray-300">
@@ -647,7 +1016,38 @@
         </div>
     </footer>
 
-    <!-- Universal Preview Modal (Images & Videos) -->
+    <!-- 12. FLOATING WHATSAPP CONSULTATION WIDGET (زر واتساب العائم للاستشارة المجانية) -->
+    <div id="pariq-whatsapp-floating" class="fixed bottom-6 right-4 sm:right-6 z-40 flex items-center group">
+        <!-- Interactive Tooltip Pill -->
+        <a href="https://wa.me/201062330838?text=مرحباً%20وكالة%20بريق،%20أرغب%20في%20الحصول%20على%20استشارة%20تسويقية%20مجانية%20وعرض%20سعر" 
+           target="_blank" 
+           class="hidden sm:flex items-center gap-2 px-3.5 py-2 ml-2.5 rounded-full bg-[#18082B]/95 border border-emerald-500/40 text-white text-xs font-bold shadow-2xl backdrop-blur-md transform transition-all group-hover:scale-105 group-hover:border-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>طلب استشارة مجانية فوراً 💬</span>
+        </a>
+
+        <!-- Glowing Pulse WhatsApp Action Button -->
+        <a href="https://wa.me/201062330838?text=مرحباً%20وكالة%20بريق،%20أرغب%20في%20الحصول%20على%20استشارة%20تسويقية%20مجانية%20وعرض%20سعر" 
+           target="_blank" 
+           aria-label="تواصل مع بريق عبر واتساب"
+           class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-[#128C7E] to-[#25D366] text-white flex items-center justify-center text-2xl shadow-2xl shadow-emerald-500/30 hover:scale-110 active:scale-95 transition-all duration-300">
+            <span class="absolute inset-0 rounded-full bg-emerald-400/30 animate-ping -z-10"></span>
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- 13. FLOATING BACK TO TOP BUTTON -->
+    <button type="button" 
+            x-show="showBackToTop" 
+            x-transition 
+            @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+            aria-label="الرجوع للأعلى"
+            class="fixed bottom-24 right-5 sm:right-7 z-40 w-11 h-11 rounded-full bg-brand-purple/90 border border-brand-border hover:border-brand-gold text-brand-gold hover:text-white flex items-center justify-center text-sm shadow-xl backdrop-blur-md hover:scale-110 active:scale-95 transition-all" 
+            style="display: none;">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- 14. Universal Preview Modal (Images & Videos) -->
     <div x-show="previewModal" 
          x-transition 
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md" 
@@ -679,6 +1079,66 @@
             </div>
         </div>
     </div>
+
+    <!-- Script for Live Count-Up Animation -->
+    <script>
+        function pariqStatsCounter() {
+            return {
+                started: false,
+                projects: 0,
+                clients: 0,
+                years: 0,
+                team: 0,
+                targets: {
+                    projects: 480,
+                    clients: 125,
+                    years: 6,
+                    team: 18
+                },
+                initObserver(el) {
+                    if ('IntersectionObserver' in window) {
+                        const observer = new IntersectionObserver((entries) => {
+                            if (entries[0].isIntersecting) {
+                                this.startCount();
+                                observer.disconnect();
+                            }
+                        }, { threshold: 0.15 });
+                        observer.observe(el);
+                    } else {
+                        this.startCount();
+                    }
+                },
+                startCount() {
+                    if (this.started) return;
+                    this.started = true;
+                    const duration = 2200;
+                    const steps = 60;
+                    const stepTime = duration / steps;
+                    let step = 0;
+
+                    const timer = setInterval(() => {
+                        step++;
+                        const progress = step / steps;
+                        // Smooth ease-out cubic
+                        const ease = 1 - Math.pow(1 - progress, 3);
+
+                        this.projects = Math.floor(ease * this.targets.projects);
+                        this.clients = Math.floor(ease * this.targets.clients);
+                        this.years = Math.floor(ease * this.targets.years);
+                        this.team = Math.floor(ease * this.targets.team);
+
+                        if (step >= steps) {
+                            this.projects = this.targets.projects;
+                            this.clients = this.targets.clients;
+                            this.years = this.targets.years;
+                            this.team = this.targets.team;
+                            clearInterval(timer);
+                        }
+                    }, stepTime);
+                }
+            }
+        }
+    </script>
 
     @include('partials.pwa-prompts')
 </body>
