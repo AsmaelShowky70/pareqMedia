@@ -178,16 +178,10 @@
                     <i class="fa-solid fa-gauge-high"></i>
                     <span>لوحة التحكم</span>
                 </a>
-                @else
-                <a href="{{ route('login') }}" 
-                   class="px-3.5 py-2.5 rounded-xl bg-[#240c42] border border-brand-yellow/40 text-brand-gold hover:bg-brand-yellow hover:text-brand-dark font-black text-xs transition flex items-center gap-2 shadow">
-                    <i class="fa-solid fa-user-lock"></i>
-                    <span>دخول الإدارة والفريق</span>
-                </a>
                 @endauth
 
                 <a href="#contact" 
-                   class="px-4 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 active:scale-95 transition shadow-lg flex items-center gap-1.5">
+                   class="px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 active:scale-95 transition shadow-lg flex items-center gap-1.5">
                     <i class="fa-solid fa-bolt"></i>
                     <span>طلب استشارة مجانية</span>
                 </a>
@@ -199,11 +193,6 @@
                 <a href="{{ route('dashboard') }}" class="px-3 py-1.5 rounded-xl bg-brand-yellow text-brand-dark font-black text-xs flex items-center gap-1.5 shadow">
                     <i class="fa-solid fa-gauge-high"></i>
                     <span>اللوحة</span>
-                </a>
-                @else
-                <a href="{{ route('login') }}" class="px-3 py-1.5 rounded-xl bg-amber-500/20 border border-brand-yellow/40 text-brand-gold font-bold text-xs flex items-center gap-1.5 shadow">
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                    <span>دخول النظام</span>
                 </a>
                 @endauth
                 <button @click="mobileNav = !mobileNav" class="text-gray-300 hover:text-white p-2">
@@ -218,16 +207,11 @@
              x-transition 
              class="lg:hidden bg-brand-purple border-b border-brand-border px-5 py-4 space-y-3 text-sm font-bold">
             
-            <!-- Quick Auth Action for Mobile -->
+            <!-- Quick Auth Action for Mobile (Only when authenticated) -->
             @auth
             <a href="{{ route('dashboard') }}" @click="mobileNav = false" class="w-full py-2.5 px-3 rounded-xl bg-brand-yellow text-brand-dark font-black text-center flex items-center justify-center gap-2 shadow">
                 <i class="fa-solid fa-gauge-high"></i>
                 <span>الانتقال إلى لوحة التحكم والمهام</span>
-            </a>
-            @else
-            <a href="{{ route('login') }}" @click="mobileNav = false" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-center flex items-center justify-center gap-2 shadow">
-                <i class="fa-solid fa-user-shield"></i>
-                <span>تسجيل دخول الإدارة وفريق العمل</span>
             </a>
             @endauth
 

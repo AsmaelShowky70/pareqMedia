@@ -88,7 +88,7 @@
                         <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-gray-400">
                             <i class="fa-solid fa-envelope text-sm"></i>
                         </div>
-                        <input type="email" name="email" value="{{ old('email', 'admin@pariqagency.com') }}" required 
+                        <input type="email" name="email" value="{{ old('email') }}" required autocomplete="email"
                                class="w-full pr-10 pl-4 py-3 bg-brand-purple/70 border border-brand-border rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition"
                                placeholder="yourname@pariqagency.com">
                     </div>
