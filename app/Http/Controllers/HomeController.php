@@ -20,6 +20,43 @@ class HomeController extends Controller
         return view('home', compact('services', 'portfolioItems', 'featuredItems', 'clients'));
     }
 
+    public function services()
+    {
+        $services = Service::where('is_active', true)->orderBy('sort_order')->get();
+        $clients = Client::where('status', 'active')->take(12)->get();
+
+        return view('pages.services', compact('services', 'clients'));
+    }
+
+    public function portfolio(Request $request)
+    {
+        $query = PortfolioItem::with('service')->orderBy('sort_order')->latest();
+
+        if ($request->filled('category') && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+
+        $portfolioItems = $query->get();
+        $featuredItems = PortfolioItem::where('is_featured', true)->get();
+        $clients = Client::where('status', 'active')->take(12)->get();
+
+        return view('pages.portfolio', compact('portfolioItems', 'featuredItems', 'clients'));
+    }
+
+    public function process()
+    {
+        $clients = Client::where('status', 'active')->take(12)->get();
+
+        return view('pages.process', compact('clients'));
+    }
+
+    public function contact()
+    {
+        $services = Service::where('is_active', true)->orderBy('sort_order')->get();
+
+        return view('pages.contact', compact('services'));
+    }
+
     public function submitInquiry(Request $request)
     {
         $validated = $request->validate([

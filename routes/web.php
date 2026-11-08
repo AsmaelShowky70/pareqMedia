@@ -18,10 +18,15 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Public Routes
+| Public Multi-Page Routes
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/services', [HomeController::class, 'services'])->name('public.services');
+Route::get('/portfolio', [HomeController::class, 'portfolio'])->name('public.portfolio');
+Route::get('/process', [HomeController::class, 'process'])->name('public.process');
+Route::get('/about', [HomeController::class, 'process'])->name('public.about');
+Route::get('/contact', [HomeController::class, 'contact'])->name('public.contact');
 Route::post('/inquiries', [HomeController::class, 'submitInquiry'])->name('inquiries.store');
 
 // Admin Panel Access (/admin) & Login
