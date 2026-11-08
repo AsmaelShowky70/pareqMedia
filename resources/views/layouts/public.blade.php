@@ -649,3 +649,4 @@
     @stack('scripts')
 </body>
 </html>
+
