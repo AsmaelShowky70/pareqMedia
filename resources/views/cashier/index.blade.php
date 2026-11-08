@@ -282,20 +282,25 @@
                             <div class="flex items-center justify-end gap-1.5">
                                 <!-- View / Print Receipt -->
                                 <a href="{{ route('cashier.receipt', $p->id) }}" target="_blank"
-                                   class="px-2.5 py-1 rounded-lg bg-brand-yellow/15 text-brand-gold hover:bg-brand-yellow hover:text-brand-dark font-bold text-xs transition flex items-center gap-1">
-                                    <i class="fa-solid fa-receipt"></i>
-                                    <span>عرض وطباعة</span>
+                                   class="px-2.5 py-1 rounded-lg bg-brand-yellow/15 text-brand-gold hover:bg-brand-yellow hover:text-brand-dark font-bold text-xs transition flex items-center gap-1" title="معاينة وتحميل الفاتورة PDF">
+                                    <i class="fa-solid fa-file-pdf text-red-400"></i>
+                                    <span>فاتورة PDF</span>
                                 </a>
 
-                                <!-- WhatsApp direct share -->
+                                <!-- WhatsApp direct share with PDF link -->
                                 @if($p->client && $p->client->phone)
                                 @php
                                     $cleanPhone = preg_replace('/[^0-9]/', '', $p->client->phone);
-                                    $msg = urlencode("مرحباً {$p->client->name}، مرفق لحضرتك إيصال استلام دفعة من شركة بريق للتسويق الإلكتروني برقم {$p->receipt_number} بمبلغ " . number_format($p->amount) . " ج.م. نشكر ثقتكم بنا!");
+                                    if (str_starts_with($cleanPhone, '01') && strlen($cleanPhone) === 11) {
+                                        $cleanPhone = '2' . $cleanPhone;
+                                    }
+                                    $publicUrl = route('public.receipt', $p->receipt_number);
+                                    $msg = urlencode("مرحباً {$p->client->name}، مرفق لحضرتك إيصال استلام دفعة رسمية من شركة بريق للتسويق الإلكتروني برقم {$p->receipt_number} بمبلغ " . number_format($p->amount) . " ج.م.\n\n📄 لتحميل الفاتورة الرسمية بصيغة PDF:\n{$publicUrl}\n\nنشكر ثقتكم بوكالة بريق!");
                                 @endphp
                                 <a href="https://wa.me/{{ $cleanPhone }}?text={{ $msg }}" target="_blank"
-                                   class="px-2 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-white text-xs transition" title="إرسال إشعار للعميل عبر واتساب">
+                                   class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-white font-bold text-xs transition flex items-center gap-1" title="مشاركة الفاتورة مع العميل عبر واتساب">
                                     <i class="fa-brands fa-whatsapp text-sm"></i>
+                                    <span>مشاركة PDF</span>
                                 </a>
                                 @endif
                             </div>

@@ -285,9 +285,25 @@
                         <td class="py-3 px-3 text-gray-300">{{ $pmt->cashier->name ?? '-' }}</td>
                         <td class="py-3 px-3 text-gray-400">{{ $pmt->created_at->format('Y-m-d') }}</td>
                         <td class="py-3 px-3 text-left">
-                            <a href="{{ route('cashier.receipt', $pmt->id) }}" target="_blank" class="px-2.5 py-1 rounded bg-brand-purple hover:bg-brand-hover text-brand-gold font-bold">
-                                الإيصال
-                            </a>
+                            <div class="flex items-center justify-end gap-1.5">
+                                <a href="{{ route('cashier.receipt', $pmt->id) }}" target="_blank" class="px-2.5 py-1 rounded bg-brand-purple hover:bg-brand-hover text-brand-gold font-bold flex items-center gap-1" title="معاينة وتحميل الفاتورة PDF">
+                                    <i class="fa-solid fa-file-pdf text-red-400"></i>
+                                    <span>فاتورة PDF</span>
+                                </a>
+                                @if($client->phone)
+                                @php
+                                    $cleanClientPhone = preg_replace('/[^0-9]/', '', $client->phone);
+                                    if (str_starts_with($cleanClientPhone, '01') && strlen($cleanClientPhone) === 11) {
+                                        $cleanClientPhone = '2' . $cleanClientPhone;
+                                    }
+                                    $publicRecUrl = route('public.receipt', $pmt->receipt_number);
+                                    $recMsg = urlencode("مرحباً {$client->name}، مرفق لحضرتك إيصال استلام دفعة رسمية من شركة بريق برقم {$pmt->receipt_number} بمبلغ " . number_format($pmt->amount) . " ج.م.\n\n📄 لتحميل الفاتورة PDF:\n{$publicRecUrl}\n\nنشكر ثقتكم بوكالة بريق!");
+                                @endphp
+                                <a href="https://wa.me/{{ $cleanClientPhone }}?text={{ $recMsg }}" target="_blank" class="p-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-white transition" title="مشاركة الفاتورة مع العميل عبر واتساب">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                                </a>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty

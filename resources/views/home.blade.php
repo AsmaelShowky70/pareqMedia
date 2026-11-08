@@ -475,15 +475,18 @@
         <!-- Featured Portfolio Cards Grid (Shows Top 6 items) -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($portfolioItems->take(6) as $item)
+            @php
+                $thumbUrl = $item->thumbnail;
+                $finalThumb = $thumbUrl ? (str_starts_with($thumbUrl, 'http') ? $thumbUrl : asset(ltrim($thumbUrl, '/'))) : asset('images/portfolio/social_1.webp');
+                $finalMedia = $item->video_url ?: $finalThumb;
+            @endphp
             <div class="glass-card-purple rounded-[2rem] overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-2xl flex flex-col justify-between">
                 <div>
                     <div class="relative aspect-video bg-black/60 flex items-center justify-center overflow-hidden cursor-pointer"
-                         @click="openMedia('{{ $item->video_url ? 'video' : 'image' }}', '{{ $item->video_url ?: asset($item->thumbnail) }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}')">
+                         @click="openMedia('{{ $item->video_url ? 'video' : 'image' }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}')">
                         
-                        @if($item->thumbnail)
-                        <img src="{{ asset($item->thumbnail) }}" alt="{{ $item->title }}" 
+                        <img src="{{ $finalThumb }}" alt="{{ $item->title }}" 
                              class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
-                        @endif
 
                         <div class="absolute inset-0 bg-gradient-to-t from-[#140626] via-black/25 to-transparent z-10"></div>
                         
@@ -525,7 +528,7 @@
                         </div>
                         @endif
 
-                        <p class="text-xs text-gray-300 leading-relaxed pt-1 font-normal">
+                        <p class="text-xs text-gray-300 leading-relaxed pt-1 font-normal line-clamp-2">
                             {{ $item->description }}
                         </p>
                     </div>
@@ -533,7 +536,7 @@
 
                 <div class="p-6 pt-0">
                     <button type="button"
-                            @click="openMedia('{{ $item->video_url ? 'video' : 'image' }}', '{{ $item->video_url ?: asset($item->thumbnail) }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}')"
+                            @click="openMedia('{{ $item->video_url ? 'video' : 'image' }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}')"
                             class="w-full py-2.5 rounded-xl bg-purple-900/40 hover:bg-gradient-to-l hover:from-brand-orange hover:to-brand-amber hover:text-brand-dark text-brand-gold font-bold text-xs border border-purple-600/40 hover:border-transparent transition flex items-center justify-center gap-2 shadow">
                         <i class="fa-solid {{ $item->video_url ? 'fa-play' : 'fa-expand' }}"></i>
                         <span>{{ $item->video_url ? 'تشغيل ومعاينة الفيديو' : 'معاينة بالحجم الكامل' }}</span>

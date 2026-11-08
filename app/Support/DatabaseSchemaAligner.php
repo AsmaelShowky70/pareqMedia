@@ -197,6 +197,12 @@ class DatabaseSchemaAligner
             if (!Schema::hasColumn('portfolio_items', 'metrics')) {
                 $columnsToAdd[] = "ADD COLUMN `metrics` varchar(255) DEFAULT NULL";
             }
+            if (!Schema::hasColumn('portfolio_items', 'is_featured')) {
+                $columnsToAdd[] = "ADD COLUMN `is_featured` tinyint(1) NOT NULL DEFAULT 0";
+            }
+            if (!Schema::hasColumn('portfolio_items', 'sort_order')) {
+                $columnsToAdd[] = "ADD COLUMN `sort_order` int(11) NOT NULL DEFAULT 0";
+            }
 
             if (!empty($columnsToAdd)) {
                 DB::statement("ALTER TABLE `portfolio_items` " . implode(', ', $columnsToAdd));

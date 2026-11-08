@@ -13,8 +13,11 @@ class HomeController extends Controller
     public function index()
     {
         $services = Service::where('is_active', true)->orderBy('sort_order')->get();
-        $portfolioItems = PortfolioItem::with('service')->orderBy('sort_order')->get();
-        $featuredItems = PortfolioItem::where('is_featured', true)->get();
+        $portfolioItems = PortfolioItem::with('service')->orderBy('sort_order')->latest()->get();
+        $featuredItems = PortfolioItem::with('service')->where('is_featured', true)->orderBy('sort_order')->latest()->get();
+        if ($featuredItems->isEmpty()) {
+            $featuredItems = $portfolioItems->take(6);
+        }
         $clients = Client::where('status', 'active')->take(12)->get();
 
         return view('home', compact('services', 'portfolioItems', 'featuredItems', 'clients'));

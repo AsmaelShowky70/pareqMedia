@@ -162,6 +162,17 @@ class CashierController extends Controller
         return view('cashier.receipt', compact('payment'));
     }
 
+    public function publicReceipt($receiptNumber)
+    {
+        $payment = Payment::where('receipt_number', $receiptNumber)
+            ->orWhere('id', $receiptNumber)
+            ->firstOrFail();
+
+        $payment->load(['client', 'cashier', 'project', 'invoice']);
+
+        return view('cashier.receipt', compact('payment'));
+    }
+
     public function settlement(Request $request)
     {
         $date = $request->get('date', Carbon::today()->toDateString());

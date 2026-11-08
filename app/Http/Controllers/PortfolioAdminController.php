@@ -80,14 +80,42 @@ class PortfolioAdminController extends Controller
             'category' => 'required|string',
             'video_url' => 'nullable|string',
             'thumbnail' => 'nullable|string',
+            'thumbnail_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:12288',
+            'video_file' => 'nullable|mimes:mp4,webm,mov,ogg|max:51200',
             'metrics' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
+
+        // Handle uploaded image file
+        if ($request->hasFile('thumbnail_file')) {
+            $file = $request->file('thumbnail_file');
+            $uploadPath = public_path('uploads/portfolio');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['thumbnail'] = '/uploads/portfolio/' . $filename;
+        }
+
+        // Handle uploaded video file
+        if ($request->hasFile('video_file')) {
+            $file = $request->file('video_file');
+            $uploadPath = public_path('uploads/videos');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['video_url'] = '/uploads/videos/' . $filename;
+        }
 
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['thumbnail'] = $validated['thumbnail'] ?? '/images/portfolio/social_1.webp';
         $validated['media_url'] = $validated['video_url'] ?? $validated['thumbnail'];
         $validated['thumbnail_url'] = $validated['thumbnail'];
+        $validated['media_type'] = !empty($validated['video_url']) ? 'video' : 'image';
+        $validated['sort_order'] = PortfolioItem::count() + 1;
 
         \App\Support\DatabaseSchemaAligner::alignPortfolioItems();
         try {
@@ -99,7 +127,7 @@ class PortfolioAdminController extends Controller
 
         PortfolioItem::create($validated);
 
-        return back()->with('success', 'تمت إضافة العمل إلى معرض أعمال الموقع بنجاح.');
+        return back()->with('success', 'تمت إضافة العمل إلى معرض أعمال الموقع بنجاح ويظهر الآن للزوار فوراً.');
     }
 
     public function updatePortfolioItem(Request $request, PortfolioItem $portfolioItem)
@@ -112,15 +140,54 @@ class PortfolioAdminController extends Controller
             'category' => 'required|string',
             'video_url' => 'nullable|string',
             'thumbnail' => 'nullable|string',
+            'thumbnail_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:12288',
+            'video_file' => 'nullable|mimes:mp4,webm,mov,ogg|max:51200',
             'metrics' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
 
+        // Handle uploaded image file
+        if ($request->hasFile('thumbnail_file')) {
+            $file = $request->file('thumbnail_file');
+            $uploadPath = public_path('uploads/portfolio');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['thumbnail'] = '/uploads/portfolio/' . $filename;
+            $validated['thumbnail_url'] = $validated['thumbnail'];
+        }
+
+        // Handle uploaded video file
+        if ($request->hasFile('video_file')) {
+            $file = $request->file('video_file');
+            $uploadPath = public_path('uploads/videos');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['video_url'] = '/uploads/videos/' . $filename;
+            $validated['media_url'] = $validated['video_url'];
+        }
+
         $validated['is_featured'] = $request->boolean('is_featured');
+        if (isset($validated['video_url'])) {
+            $validated['media_type'] = !empty($validated['video_url']) ? 'video' : 'image';
+            $validated['media_url'] = $validated['video_url'] ?? ($validated['thumbnail'] ?? $portfolioItem->thumbnail);
+        }
+
+        try {
+            $availableCols = \Illuminate\Support\Facades\Schema::getColumnListing('portfolio_items');
+            if (!empty($availableCols)) {
+                $validated = array_intersect_key($validated, array_flip($availableCols));
+            }
+        } catch (\Throwable $e) {}
 
         $portfolioItem->update($validated);
 
-        return back()->with('success', 'تم تحديث بيانات العمل بنجاح.');
+        return back()->with('success', 'تم تحديث بيانات العمل في معرض الموقع بنجاح.');
     }
 
     public function destroyPortfolioItem(PortfolioItem $portfolioItem)

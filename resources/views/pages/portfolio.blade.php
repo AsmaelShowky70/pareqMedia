@@ -73,13 +73,27 @@
         <button type="button" @click="activeFilter = 'video_reels'" 
                 :class="activeFilter === 'video_reels' ? 'bg-gradient-to-l from-brand-orange to-brand-amber text-brand-dark font-black shadow-lg shadow-amber-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200">
-            فيديوهات ريلز وإنتاج سينمائي
+            فيديوهات ريلز وقصيرة
+        </button>
+        <button type="button" @click="activeFilter = 'promo_video'" 
+                :class="activeFilter === 'promo_video' ? 'bg-gradient-to-l from-brand-orange to-brand-amber text-brand-dark font-black shadow-lg shadow-amber-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200">
+            برومو وفيديوهات سينمائية
         </button>
     </div>
 
     <!-- Portfolio Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($portfolioItems as $item)
+        @php
+            $thumbUrl = $item->thumbnail;
+            if ($thumbUrl) {
+                $finalThumb = str_starts_with($thumbUrl, 'http') ? $thumbUrl : asset(ltrim($thumbUrl, '/'));
+            } else {
+                $finalThumb = asset('images/portfolio/social_1.webp');
+            }
+            $finalMedia = $item->video_url ?: $finalThumb;
+        @endphp
         <div x-show="activeFilter === 'all' || activeFilter === '{{ $item->category }}'"
              x-transition:enter="transition ease-out duration-300 transform"
              x-transition:enter-start="opacity-0 scale-95 translate-y-4"
@@ -89,12 +103,10 @@
             <div>
                 <!-- Thumbnail Box with Zoom & Radar Play -->
                 <div class="relative aspect-video bg-black/60 flex items-center justify-center overflow-hidden cursor-pointer"
-                     @click="openMedia('{{ $item->video_url ? 'video' : 'image' }}', '{{ $item->video_url ?: asset($item->thumbnail) }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}')">
+                     @click="openMedia('{{ $item->video_url ? 'video' : 'image' }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}')">
                     
-                    @if($item->thumbnail)
-                    <img src="{{ asset($item->thumbnail) }}" alt="{{ $item->title }}" 
+                    <img src="{{ $finalThumb }}" alt="{{ $item->title }}" 
                          class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
-                    @endif
 
                     <div class="absolute inset-0 bg-gradient-to-t from-[#140626] via-black/25 to-transparent z-10"></div>
                     
@@ -147,7 +159,7 @@
 
             <div class="p-6 pt-0">
                 <button type="button"
-                        @click="openMedia('{{ $item->video_url ? 'video' : 'image' }}', '{{ $item->video_url ?: asset($item->thumbnail) }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}')"
+                        @click="openMedia('{{ $item->video_url ? 'video' : 'image' }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}')"
                         class="w-full py-2.5 rounded-xl bg-purple-900/40 hover:bg-gradient-to-l hover:from-brand-orange hover:to-brand-amber hover:text-brand-dark text-brand-gold font-bold text-xs border border-purple-600/40 hover:border-transparent transition flex items-center justify-center gap-2 shadow">
                     <i class="fa-solid {{ $item->video_url ? 'fa-play' : 'fa-expand' }}"></i>
                     <span>{{ $item->video_url ? 'تشغيل ومعاينة الفيديو' : 'معاينة بالحجم الكامل' }}</span>

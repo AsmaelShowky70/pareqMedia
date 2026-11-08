@@ -446,7 +446,7 @@
                 <button @click="addPortfolioModal = false" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <form method="POST" action="{{ route('cms.portfolio.store') }}" class="space-y-3 text-xs">
+            <form method="POST" action="{{ route('cms.portfolio.store') }}" enctype="multipart/form-data" class="space-y-3 text-xs">
                 @csrf
                 <div>
                     <label class="block font-bold text-gray-300 mb-1">عنوان العمل <span class="text-red-400">*</span></label>
@@ -482,18 +482,40 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block font-bold text-brand-gold mb-1">
+                <!-- Video Options -->
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-brand-gold">
                         <i class="fa-solid fa-play ml-1"></i>
-                        رابط الفيديو (يوتيوب YouTube أو ملف MP4 مباشر أو فيديو محلي)
+                        الفيديو (اختياري)
                     </label>
-                    <input type="text" name="video_url" placeholder="https://www.youtube.com/watch?v=... أو /videos/promo_reels_1.mp4" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
-                    <p class="text-[10px] text-gray-400 mt-1">يدعم روابط يوتيوب العادية، روابط Shorts، فيميو، أو ملفات الفيديو المباشرة بصيغة mp4.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">رابط YouTube أو فيديو خارجي:</label>
+                            <input type="text" name="video_url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">أو رفع ملف فيديو MP4 مباشر:</label>
+                            <input type="file" name="video_file" accept="video/mp4,video/webm,video/mov" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-purple file:text-brand-gold">
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block font-bold text-gray-300 mb-1">مسار صورة الغلاف (Thumbnail)</label>
-                    <input type="text" name="thumbnail" placeholder="/images/portfolio/social_1.webp" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                <!-- Image / Thumbnail Options -->
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-amber-300">
+                        <i class="fa-solid fa-image ml-1"></i>
+                        صورة الغلاف / التصميم <span class="text-red-400">*</span>
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-brand-gold font-bold mb-1">رفع صورة من جهازك (مباشر):</label>
+                            <input type="file" name="thumbnail_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">أو كتابة رابط/مسار صورة:</label>
+                            <input type="text" name="thumbnail" placeholder="/images/portfolio/social_1.webp" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
                 </div>
 
                 <div>
@@ -508,7 +530,7 @@
 
                 <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
                     <button @click="addPortfolioModal = false" type="button" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-brand-hover">إلغاء</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">حفظ العمل</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">حفظ العمل ونشره</button>
                 </div>
             </form>
         </div>
@@ -530,7 +552,7 @@
                 <button @click="editPortfolioModal = false" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <form method="POST" :action="'{{ url('cms/portfolio') }}/' + (selectedPortfolio ? selectedPortfolio.id : '')" class="space-y-3 text-xs">
+            <form method="POST" :action="'{{ url('cms/portfolio') }}/' + (selectedPortfolio ? selectedPortfolio.id : '')" enctype="multipart/form-data" class="space-y-3 text-xs">
                 @csrf
                 @method('PUT')
 
@@ -568,18 +590,40 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block font-bold text-brand-gold mb-1">
+                <!-- Video Options -->
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-brand-gold">
                         <i class="fa-solid fa-play ml-1"></i>
-                        رابط الفيديو (YouTube أو ملف MP4 مباشر أو فيديو محلي)
+                        الفيديو (اختياري)
                     </label>
-                    <input type="text" name="video_url" x-bind:value="selectedPortfolio ? (selectedPortfolio.video_url || '') : ''" placeholder="https://www.youtube.com/watch?v=... أو /videos/promo_reels_1.mp4" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
-                    <p class="text-[10px] text-gray-400 mt-1">اتركه فارغاً إذا كان العمل عبارة عن تصميم ثابت أو غلاف.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">رابط YouTube أو فيديو خارجي:</label>
+                            <input type="text" name="video_url" x-bind:value="selectedPortfolio ? (selectedPortfolio.video_url || '') : ''" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">أو تغيير ملف الفيديو (MP4):</label>
+                            <input type="file" name="video_file" accept="video/mp4,video/webm,video/mov" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-purple file:text-brand-gold">
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block font-bold text-gray-300 mb-1">مسار صورة الغلاف (Thumbnail)</label>
-                    <input type="text" name="thumbnail" x-bind:value="selectedPortfolio ? selectedPortfolio.thumbnail : ''" placeholder="/images/portfolio/social_1.webp" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                <!-- Image / Thumbnail Options -->
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-amber-300">
+                        <i class="fa-solid fa-image ml-1"></i>
+                        صورة الغلاف / التصميم
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-brand-gold font-bold mb-1">رفع صورة جديدة من جهازك:</label>
+                            <input type="file" name="thumbnail_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">أو كتابة رابط/مسار صورة:</label>
+                            <input type="text" name="thumbnail" x-bind:value="selectedPortfolio ? selectedPortfolio.thumbnail : ''" placeholder="/images/portfolio/social_1.webp" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
                 </div>
 
                 <div>

@@ -28,6 +28,7 @@ Route::get('/process', [HomeController::class, 'process'])->name('public.process
 Route::get('/about', [HomeController::class, 'process'])->name('public.about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('public.contact');
 Route::post('/inquiries', [HomeController::class, 'submitInquiry'])->name('inquiries.store');
+Route::get('/invoice/receipt/{receipt_number}', [CashierController::class, 'publicReceipt'])->name('public.receipt');
 
 // Admin Panel Access (/admin) & Login
 Route::get('/admin', [AuthController::class, 'showLogin'])->name('admin');
