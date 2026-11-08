@@ -15,15 +15,18 @@ class Payment extends Model
         'invoice_id',
         'project_id',
         'cashier_user_id',
+        'cashier_id',
         'amount',
         'payment_type',
         'payment_method',
+        'payment_date',
         'transaction_reference',
         'notes',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'payment_date' => 'date',
     ];
 
     public function client()
@@ -43,7 +46,9 @@ class Payment extends Model
 
     public function cashier()
     {
-        return $this->belongsTo(User::class, 'cashier_user_id');
+        // Support both schema naming variants: cashier_user_id and cashier_id
+        $fk = !empty($this->attributes['cashier_user_id']) ? 'cashier_user_id' : 'cashier_id';
+        return $this->belongsTo(User::class, $fk);
     }
 
     public function getPaymentTypeArabicAttribute(): string

@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use App\Support\DatabaseSchemaAligner;
 
 class ClientController extends Controller
 {
@@ -241,17 +243,30 @@ class ClientController extends Controller
             $count = Payment::whereYear('created_at', $year)->count() + 1;
             $receiptNumber = sprintf('REC-%s-%04d', $year, $count);
 
-            Payment::create([
+            DatabaseSchemaAligner::alignPayments();
+
+            $paymentData = [
                 'receipt_number' => $receiptNumber,
                 'client_id' => $installment->client_id,
                 'project_id' => $installment->project_id,
                 'cashier_user_id' => Auth::id(),
+                'cashier_id' => Auth::id(),
                 'amount' => $validated['paid_amount'],
                 'payment_type' => 'milestone',
                 'payment_method' => $validated['payment_method'],
+                'payment_date' => now()->toDateString(),
                 'transaction_reference' => $validated['transaction_reference'] ?? null,
                 'notes' => "سداد قسط: {$installment->title}",
-            ]);
+            ];
+
+            try {
+                $availableCols = Schema::getColumnListing('payments');
+                if (!empty($availableCols)) {
+                    $paymentData = array_intersect_key($paymentData, array_flip($availableCols));
+                }
+            } catch (\Throwable $e) {}
+
+            Payment::create($paymentData);
 
             // Update Treasury Account if specified
             if (! empty($validated['treasury_account_id'])) {

@@ -64,6 +64,60 @@ try {
         } catch (\Exception $e) {
             echo "<p style='color:orange;'>تنبيه في جدول users: " . $e->getMessage() . "</p>";
         }
+
+        // Auto-align tables
+        echo "<h4>فحص وتحديث بنية الجداول الناقصة تلقائياً:</h4><ul>";
+        $tableRepairs = [
+            'payments' => [
+                'project_id' => "ALTER TABLE `payments` ADD COLUMN `project_id` bigint(20) UNSIGNED DEFAULT NULL",
+                'cashier_user_id' => "ALTER TABLE `payments` ADD COLUMN `cashier_user_id` bigint(20) UNSIGNED DEFAULT NULL",
+                'payment_type' => "ALTER TABLE `payments` ADD COLUMN `payment_type` varchar(255) NOT NULL DEFAULT 'down_payment'",
+                'transaction_reference' => "ALTER TABLE `payments` ADD COLUMN `transaction_reference` varchar(255) DEFAULT NULL",
+            ],
+            'invoices' => [
+                'paid_amount' => "ALTER TABLE `invoices` ADD COLUMN `paid_amount` decimal(12,2) NOT NULL DEFAULT 0.00",
+                'balance_due' => "ALTER TABLE `invoices` ADD COLUMN `balance_due` decimal(12,2) NOT NULL DEFAULT 0.00",
+            ],
+            'expenses' => [
+                'title' => "ALTER TABLE `expenses` ADD COLUMN `title` varchar(255) NOT NULL DEFAULT 'مصروف'",
+                'payment_method' => "ALTER TABLE `expenses` ADD COLUMN `payment_method` varchar(255) NOT NULL DEFAULT 'instapay'",
+                'project_id' => "ALTER TABLE `expenses` ADD COLUMN `project_id` bigint(20) UNSIGNED DEFAULT NULL",
+                'created_by' => "ALTER TABLE `expenses` ADD COLUMN `created_by` bigint(20) UNSIGNED DEFAULT NULL",
+                'spent_at' => "ALTER TABLE `expenses` ADD COLUMN `spent_at` date DEFAULT NULL",
+                'receipt_file' => "ALTER TABLE `expenses` ADD COLUMN `receipt_file` varchar(255) DEFAULT NULL",
+            ],
+            'inquiries' => [
+                'brand_name' => "ALTER TABLE `inquiries` ADD COLUMN `brand_name` varchar(255) DEFAULT NULL",
+                'email' => "ALTER TABLE `inquiries` ADD COLUMN `email` varchar(255) DEFAULT NULL",
+                'service_interested' => "ALTER TABLE `inquiries` ADD COLUMN `service_interested` varchar(255) DEFAULT NULL",
+                'budget_range' => "ALTER TABLE `inquiries` ADD COLUMN `budget_range` varchar(255) DEFAULT NULL",
+            ],
+            'portfolio_items' => [
+                'client_country' => "ALTER TABLE `portfolio_items` ADD COLUMN `client_country` varchar(255) DEFAULT NULL",
+                'video_url' => "ALTER TABLE `portfolio_items` ADD COLUMN `video_url` varchar(255) DEFAULT NULL",
+                'thumbnail' => "ALTER TABLE `portfolio_items` ADD COLUMN `thumbnail` varchar(255) DEFAULT NULL",
+                'metrics' => "ALTER TABLE `portfolio_items` ADD COLUMN `metrics` varchar(255) DEFAULT NULL",
+            ]
+        ];
+
+        foreach ($tableRepairs as $tbl => $cols) {
+            if (in_array($tbl, $tables)) {
+                $cStmt = $pdo->query("SHOW COLUMNS FROM `{$tbl}`");
+                $existingCols = $cStmt->fetchAll(PDO::FETCH_COLUMN);
+                foreach ($cols as $colName => $sql) {
+                    if (!in_array($colName, $existingCols)) {
+                        try {
+                            $pdo->exec($sql);
+                            echo "<li style='color:green;'>✔️ تم بنجاح إضافة العمود <code>{$colName}</code> في جدول <code>{$tbl}</code>.</li>";
+                        } catch (\Exception $ex) {
+                            echo "<li style='color:red;'>❌ تعذر إضافة <code>{$colName}</code> في <code>{$tbl}</code>: " . $ex->getMessage() . "</li>";
+                        }
+                    }
+                }
+            }
+        }
+        echo "<li style='color:green; font-weight:bold;'>✔️ اكتمل فحص وتحديث جداول الكاشير والمصروفات والفواتير بنجاح!</li>";
+        echo "</ul>";
     }
 } catch (PDOException $e) {
     echo "<p style='color:red; font-weight:bold; margin-top:10px;'>❌ فشل الاتصال بقاعدة البيانات:</p>";

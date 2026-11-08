@@ -32,7 +32,20 @@ class HomeController extends Controller
             'message' => 'nullable|string',
         ]);
 
-        Inquiry::create($validated);
+        \App\Support\DatabaseSchemaAligner::alignInquiries();
+        
+        $data = $validated;
+        $data['company_name'] = $validated['brand_name'] ?? null;
+        $data['service_type'] = $validated['service_interested'] ?? null;
+
+        try {
+            $availableCols = \Illuminate\Support\Facades\Schema::getColumnListing('inquiries');
+            if (!empty($availableCols)) {
+                $data = array_intersect_key($data, array_flip($availableCols));
+            }
+        } catch (\Throwable $e) {}
+
+        Inquiry::create($data);
 
         return back()->with('success_inquiry', 'تم استلام طلبك واستشارتك بنجاح! سيتواصل معك أحد مستشاري بريق للتسويق خلال ساعات قليلة.');
     }

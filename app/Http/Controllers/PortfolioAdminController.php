@@ -86,6 +86,16 @@ class PortfolioAdminController extends Controller
 
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['thumbnail'] = $validated['thumbnail'] ?? '/images/portfolio/social_1.webp';
+        $validated['media_url'] = $validated['video_url'] ?? $validated['thumbnail'];
+        $validated['thumbnail_url'] = $validated['thumbnail'];
+
+        \App\Support\DatabaseSchemaAligner::alignPortfolioItems();
+        try {
+            $availableCols = \Illuminate\Support\Facades\Schema::getColumnListing('portfolio_items');
+            if (!empty($availableCols)) {
+                $validated = array_intersect_key($validated, array_flip($availableCols));
+            }
+        } catch (\Throwable $e) {}
 
         PortfolioItem::create($validated);
 

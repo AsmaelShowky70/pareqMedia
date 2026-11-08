@@ -43,6 +43,15 @@ class ExpenseController extends Controller
         ]);
 
         $validated['created_by'] = Auth::id();
+        $validated['expense_date'] = $validated['spent_at'];
+
+        \App\Support\DatabaseSchemaAligner::alignExpenses();
+        try {
+            $availableCols = \Illuminate\Support\Facades\Schema::getColumnListing('expenses');
+            if (!empty($availableCols)) {
+                $validated = array_intersect_key($validated, array_flip($availableCols));
+            }
+        } catch (\Throwable $e) {}
 
         Expense::create($validated);
 

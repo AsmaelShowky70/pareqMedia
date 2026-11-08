@@ -10,6 +10,8 @@ use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
+use App\Support\DatabaseSchemaAligner;
 
 class CashierController extends Controller
 {
@@ -80,17 +82,33 @@ class CashierController extends Controller
         $count = Payment::whereYear('created_at', $year)->count() + 1;
         $receiptNumber = sprintf('REC-%s-%04d', $year, $count);
 
-        $payment = Payment::create([
+        // Ensure database schema matches and self-heals in production
+        DatabaseSchemaAligner::alignPayments();
+        DatabaseSchemaAligner::alignInvoices();
+
+        $paymentData = [
             'receipt_number' => $receiptNumber,
             'client_id' => $validated['client_id'],
             'project_id' => $validated['project_id'] ?? null,
             'cashier_user_id' => Auth::id(),
+            'cashier_id' => Auth::id(),
             'amount' => $validated['amount'],
             'payment_type' => $validated['payment_type'],
             'payment_method' => $validated['payment_method'],
+            'payment_date' => now()->toDateString(),
             'transaction_reference' => $validated['transaction_reference'] ?? null,
             'notes' => $validated['notes'] ?? null,
-        ]);
+        ];
+
+        // Defensive column filtering: only send columns that actually exist in the DB table
+        try {
+            $availableColumns = Schema::getColumnListing('payments');
+            if (!empty($availableColumns)) {
+                $paymentData = array_intersect_key($paymentData, array_flip($availableColumns));
+            }
+        } catch (\Throwable $e) {}
+
+        $payment = Payment::create($paymentData);
 
         // Check if there is an active invoice for this client to apply payment against
         $openInvoice = Invoice::where('client_id', $validated['client_id'])
@@ -100,15 +118,20 @@ class CashierController extends Controller
 
         if ($openInvoice) {
             $payment->update(['invoice_id' => $openInvoice->id]);
-            $newPaid = $openInvoice->paid_amount + $payment->amount;
-            $newBalance = max(0, $openInvoice->total_amount - $newPaid);
-            $newStatus = $newBalance <= 0 ? 'paid' : 'partially_paid';
-
-            $openInvoice->update([
-                'paid_amount' => $newPaid,
-                'balance_due' => $newBalance,
-                'status' => $newStatus,
-            ]);
+            
+            $invoiceUpdateData = [];
+            if (Schema::hasColumn('invoices', 'paid_amount')) {
+                $newPaid = ($openInvoice->paid_amount ?? 0) + $payment->amount;
+                $invoiceUpdateData['paid_amount'] = $newPaid;
+                if (Schema::hasColumn('invoices', 'balance_due')) {
+                    $newBalance = max(0, ($openInvoice->total_amount ?? 0) - $newPaid);
+                    $invoiceUpdateData['balance_due'] = $newBalance;
+                    $invoiceUpdateData['status'] = $newBalance <= 0 ? 'paid' : 'partially_paid';
+                }
+            }
+            if (!empty($invoiceUpdateData)) {
+                $openInvoice->update($invoiceUpdateData);
+            }
         }
 
         return redirect()->route('cashier.receipt', $payment->id)

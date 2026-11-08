@@ -19,6 +19,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Skip database auto-alignment during console/artisan commands
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
+        // Auto align database schema in web runtime if tables differ
+        try {
+            $lockPath = storage_path('framework/schema_aligned_v2.lock');
+            if (!file_exists($lockPath)) {
+                \App\Support\DatabaseSchemaAligner::align();
+                @file_put_contents($lockPath, date('Y-m-d H:i:s'));
+            }
+        } catch (\Throwable $e) {
+            // Fail safely if database is offline or during installation
+        }
     }
 }

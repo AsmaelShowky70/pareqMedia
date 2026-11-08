@@ -17,6 +17,7 @@ class Expense extends Model
         'project_id',
         'created_by',
         'spent_at',
+        'expense_date',
         'notes',
         'receipt_file',
     ];
