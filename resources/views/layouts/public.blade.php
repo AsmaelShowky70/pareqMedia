@@ -242,7 +242,7 @@
     @stack('styles')
 </head>
 
-<body class="bg-brand-void text-gray-100 overflow-x-hidden selection:bg-brand-amber selection:text-brand-dark" 
+<body class="bg-brand-void text-gray-100 overflow-x-hidden selection:bg-brand-amber selection:text-brand-dark min-h-screen flex flex-col" 
       x-data="{ 
           mobileNav: false, 
           previewModal: false, 
@@ -289,13 +289,13 @@
     <!-- Top Laser Scroll Progress Indicator -->
     <div id="scroll-progress-bar"></div>
 
-    <!-- Floating Background Glowing Orbs (Orange & Purple Energy Field) -->
-    <div class="glow-orb w-[650px] h-[650px] bg-purple-900/30 -top-40 -right-40 animate-float-slow"></div>
-    <div class="glow-orb w-[550px] h-[550px] bg-amber-500/15 top-[28rem] -left-48 animate-float-reverse"></div>
-    <div class="glow-orb w-[750px] h-[750px] bg-purple-950/40 top-[70rem] right-10 animate-float-slow"></div>
-    <div class="glow-orb w-[600px] h-[600px] bg-orange-600/10 top-[120rem] left-1/4 animate-pulse-glow"></div>
-    <div class="glow-orb w-[800px] h-[800px] bg-purple-900/25 top-[180rem] -right-40 animate-float-reverse"></div>
-    <div class="glow-orb w-[650px] h-[650px] bg-amber-600/15 bottom-40 left-10 animate-float-slow"></div>
+    <!-- Ambient Background Lighting Layer (Fixed viewport layer so it never expands document height or creates space below footer) -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="glow-orb w-[650px] h-[650px] bg-purple-900/25 -top-32 -right-32 animate-float-slow"></div>
+        <div class="glow-orb w-[550px] h-[550px] bg-amber-500/12 top-1/4 -left-40 animate-float-reverse"></div>
+        <div class="glow-orb w-[700px] h-[700px] bg-purple-950/35 top-1/2 -right-32 animate-float-slow"></div>
+        <div class="glow-orb w-[550px] h-[550px] bg-orange-600/10 -bottom-20 left-1/4 animate-pulse-glow"></div>
+    </div>
 
     <!-- UNIVERSAL HEADER & GLASSMORPHIC NAVBAR (شريط تنقل احترافي مع دعم الصفحات المنفصلة) -->
     <header class="fixed top-0 inset-x-0 z-50 bg-[#08020F]/85 backdrop-blur-2xl border-b border-purple-900/30 transition-all duration-300">
@@ -396,12 +396,12 @@
     </header>
 
     <!-- MAIN PAGE CONTENT (Injects here) -->
-    <main class="min-h-screen">
+    <main class="flex-grow w-full">
         @yield('content')
     </main>
 
     <!-- UNIVERSAL FOOTER -->
-    <footer class="bg-brand-void border-t border-purple-900/50 py-16 px-4 sm:px-6 lg:px-8 relative z-10 text-xs text-gray-400">
+    <footer class="bg-brand-void border-t border-purple-900/50 py-16 px-4 sm:px-6 lg:px-8 relative z-10 text-xs text-gray-400 mt-auto">
         <div class="max-w-7xl mx-auto space-y-12">
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-right">
