@@ -301,15 +301,13 @@
     <header class="fixed top-0 inset-x-0 z-50 bg-[#08020F]/85 backdrop-blur-2xl border-b border-purple-900/30 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Brand Identity Logo with Ambient Glow (Bigger with PARIQ AGENCY as requested) -->
-            <a href="{{ route('home') }}" class="flex items-center gap-3 sm:gap-3.5 group relative py-1">
+            <!-- Brand Identity Logo (Clean, crisp logo with PARIQ AGENCY only) -->
+            <a href="{{ route('home') }}" class="flex items-center gap-3 group relative py-1">
                 <div class="relative flex items-center justify-center">
-                    <span class="absolute -inset-2 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-peach opacity-30 group-hover:opacity-75 blur-md transition duration-300"></span>
-                    <img src="{{ asset('images/logo.png') }}" alt="PARIQ AGENCY" class="relative h-14 sm:h-16 lg:h-16 w-auto object-contain drop-shadow-xl group-hover:scale-105 transition-transform duration-300">
+                    <img src="{{ asset('images/logo.png') }}" alt="PARIQ AGENCY" class="relative h-12 sm:h-14 lg:h-15 w-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300">
                 </div>
                 <div class="flex flex-col text-right">
-                    <span class="text-base sm:text-lg font-black gold-gradient-text tracking-wide leading-tight">وكالة بريق</span>
-                    <span class="text-[10px] sm:text-[11px] font-black text-brand-orange tracking-widest font-mono uppercase">PARIQ AGENCY</span>
+                    <span class="text-xs sm:text-sm font-black text-brand-orange tracking-widest font-mono uppercase">PARIQ AGENCY</span>
                 </div>
             </a>
 

@@ -62,44 +62,43 @@
                 </div>
 
                 <!-- Hero Action Buttons & Scroll Indicator -->
-                <div class="space-y-6 pt-2">
-                    <div class="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3 sm:gap-4 w-full sm:w-auto">
+                <!-- Actions & Scroll Indicator (اسحب للأسفل بجانب مشاهدة أعمالنا في نفس السطر) -->
+                <div class="pt-2">
+                    <div class="flex flex-wrap items-center lg:justify-start justify-center gap-3 sm:gap-4 w-full">
                         <!-- زر تواصل معنا -->
                         <a href="{{ route('public.contact') }}" 
-                           class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs sm:text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 flex items-center justify-center gap-2.5 group">
+                           class="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs sm:text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 flex items-center justify-center gap-2.5 group">
                             <span>تواصل معنا الآن</span>
                             <i class="fa-solid fa-paper-plane text-xs group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
                         </a>
 
                         <!-- زر مشاهدة أعمالنا -->
                         <a href="{{ route('public.portfolio') }}" 
-                           class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#19092E]/80 hover:bg-[#250C44] border-2 border-brand-orange/50 hover:border-brand-orange text-white font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 backdrop-blur-md group">
+                           class="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-[#19092E]/80 hover:bg-[#250C44] border-2 border-brand-orange/50 hover:border-brand-orange text-white font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 backdrop-blur-md group">
                             <span class="w-6 h-6 rounded-full bg-brand-orange/20 text-brand-orange flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <i class="fa-solid fa-play text-[10px]"></i>
                             </span>
                             <span>مشاهدة أعمالنا</span>
                         </a>
-                    </div>
 
-                    <!-- ايقون اسحب لتحت (Scroll Down Indicator) -->
-                    <div class="pt-2 flex lg:justify-start justify-center">
-                        <a href="#video-showcase" class="inline-flex items-center gap-2.5 text-xs text-gray-400 hover:text-brand-orange transition group">
+                        <!-- اسحب للأسفل بجانب زر مشاهدة أعمالنا -->
+                        <a href="#video-showcase" class="inline-flex items-center gap-2 px-3 py-2 text-xs text-gray-400 hover:text-brand-orange transition group shrink-0">
                             <div class="w-5 h-8 rounded-full border-2 border-gray-400 group-hover:border-brand-orange flex items-start justify-center p-1 transition-colors">
                                 <span class="w-1.5 h-2 rounded-full bg-brand-orange animate-bounce"></span>
                             </div>
-                            <span class="font-bold tracking-wider text-[11px]">اسحب للأسفل</span>
+                            <span class="font-bold tracking-wider text-[11px] whitespace-nowrap">اسحب للأسفل</span>
                         </a>
                     </div>
                 </div>
 
             </div>
 
-            <!-- Left Column: Big Animated Pariq Logo with Orbiting Effects (اللوجو كبير علي الشمال مع انيميشن) -->
+            <!-- Left Column: Big Animated Pariq Logo with Orbiting Effects (اللوجو كبير علي الشمال مع انيميشن بدون بلور زائد) -->
             <div class="lg:col-span-5 flex justify-center items-center relative py-6 lg:py-0">
                 <div class="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-[400px] lg:h-[400px] flex items-center justify-center">
                     
-                    <!-- 1. Ambient Background Pulse Glow -->
-                    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-brand-orange/25 via-purple-600/20 to-transparent blur-3xl animate-pulse-glow pointer-events-none"></div>
+                    <!-- 1. Ambient Background Pulse Glow (خفيف ونظيف) -->
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-brand-orange/15 via-purple-600/10 to-transparent blur-xl animate-pulse-glow pointer-events-none"></div>
                     
                     <!-- 2. Orbiting Concentric Geometric Rings -->
                     <div class="absolute inset-0 rounded-full border-2 border-dashed border-brand-orange/30 animate-[spin_35s_linear_infinite] pointer-events-none"></div>
@@ -109,10 +108,10 @@
                     <div class="absolute top-2 right-1/4 w-3.5 h-3.5 rounded-full bg-brand-orange shadow-[0_0_15px_#FF9420] animate-ping pointer-events-none"></div>
                     <div class="absolute bottom-6 left-6 w-2.5 h-2.5 rounded-full bg-brand-peach shadow-[0_0_12px_#FFBA70] animate-pulse pointer-events-none"></div>
                     
-                    <!-- 4. Central Floating Luxury Orb with Big Pariq Logo -->
-                    <div class="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-tr from-[#1B082B] via-[#2D0D4E] to-[#120522] border-2 border-brand-orange/60 p-6 sm:p-8 flex items-center justify-center shadow-[0_0_80px_rgba(255,148,32,0.4)] animate-float-slow group">
+                    <!-- 4. Central Floating Luxury Orb with Big Pariq Logo (Clean sharp shadow) -->
+                    <div class="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-tr from-[#1B082B] via-[#2D0D4E] to-[#120522] border-2 border-brand-orange/60 p-6 sm:p-8 flex items-center justify-center shadow-[0_0_35px_rgba(255,148,32,0.25)] animate-float-slow group">
                         
-                        <img src="{{ asset('images/logo.png') }}" alt="وكالة بريق" class="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)] group-hover:scale-105 transition-transform duration-500">
+                        <img src="{{ asset('images/logo.png') }}" alt="PARIQ AGENCY" class="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-transform duration-500">
 
                         <!-- Floating Badge: Official Pariq Brand -->
                         <div class="absolute -bottom-3 inset-x-0 mx-auto w-max px-4 py-1.5 rounded-full bg-[#18082B]/95 border border-brand-orange/60 text-[10px] sm:text-[11px] font-black text-brand-orange shadow-2xl flex items-center gap-1.5 backdrop-blur-md">
