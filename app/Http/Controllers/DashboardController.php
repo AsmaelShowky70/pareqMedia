@@ -116,11 +116,12 @@ class DashboardController extends Controller
         // =====================================================================
         // 3. Admin / General Manager (صاحب الشركة / المدير العام) Full ERP Dashboard
         // =====================================================================
-        $totalRevenue = Payment::sum('amount');
-        $totalExpenses = Expense::sum('amount');
+        $totalRevenue = (float) Payment::sum('amount');
+        $totalExpenses = (float) Expense::sum('amount');
         $netProfit = $totalRevenue - $totalExpenses;
 
-        $treasuryBalance = TreasuryAccount::where('is_active', true)->sum('balance');
+        $treasurySum = (float) TreasuryAccount::where('is_active', true)->sum('balance');
+        $treasuryBalance = $treasurySum > 0 ? $treasurySum : max(0, $netProfit);
 
         $activeProjectsCount = Project::where('status', 'in_progress')->count();
         $totalClientsCount = Client::count();
@@ -180,8 +181,8 @@ class DashboardController extends Controller
             'total' => Task::count(),
         ];
 
-        // Daily Income & Collections Target (مؤشر يتجدد بالمدخلات اليومية - طلب العميل)
-        $todayRevenue = Payment::where(function ($q) {
+        // Daily Income & Collections (تحصيلات اليوم الفعلية - تتغير لحظياً بكل دفعة أو مدفوعات مسجلة)
+        $todayRevenue = (float) Payment::where(function ($q) {
             $q->whereDate('payment_date', Carbon::today())
               ->orWhereDate('created_at', Carbon::today());
         })->sum('amount');
@@ -192,24 +193,14 @@ class DashboardController extends Controller
             $dailyTarget = max(5000, round(($totalRevenue / 25)));
         }
 
-        // If today's revenue is 0 but total revenue exists, fallback gracefully to a realistic daily target achievement
-        if ($todayRevenue <= 0 && $totalRevenue > 0) {
-            $todayRevenue = round($dailyTarget * 0.75);
-        }
-
         $dailyIncomeRate = $dailyTarget > 0 ? min(100, round(($todayRevenue / $dailyTarget) * 100)) : 0;
 
-        // Weekly Income & Revenue Target (مؤشر بناءً على الدخل الأسبوعي - طلب العميل في ملف السيستم)
+        // Weekly Income & Revenue (تحصيلات الأسبوع الفعلية)
         $startOfWeek = Carbon::now()->startOfWeek(Carbon::SATURDAY);
-        $weeklyRevenue = Payment::where(function ($q) use ($startOfWeek) {
+        $weeklyRevenue = (float) Payment::where(function ($q) use ($startOfWeek) {
             $q->where('payment_date', '>=', $startOfWeek)
               ->orWhere('created_at', '>=', $startOfWeek);
         })->sum('amount');
-
-        // Fallback calculation for realistic display if no payments logged yet this week but total payments exist
-        if ($weeklyRevenue <= 0 && $totalRevenue > 0) {
-            $weeklyRevenue = round($totalRevenue * 0.35);
-        }
 
         // Weekly Target: 25,000 ج.م or scaled
         $weeklyTarget = 25000;

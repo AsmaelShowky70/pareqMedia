@@ -115,18 +115,28 @@
                     <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center text-base sm:text-xl shadow-inner shrink-0 group-hover:scale-105 transition">
                         <i class="fa-solid fa-coins"></i>
                     </div>
+                    @if($todayRevenue > 0)
+                    <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black bg-emerald-500/20 text-emerald-400 flex items-center gap-1 border border-emerald-500/40 whitespace-nowrap animate-pulse">
+                        <i class="fa-solid fa-arrow-trend-up text-[9px] sm:text-[10px]"></i>
+                        <span>اليوم: +{{ number_format($todayRevenue, 0) }} ج.م</span>
+                    </span>
+                    @else
                     <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black bg-amber-500/15 text-amber-400 flex items-center gap-1 border border-amber-500/30 whitespace-nowrap">
                         <i class="fa-solid fa-arrow-trend-up text-[9px] sm:text-[10px]"></i>
                         <span>+18% ↑</span>
                     </span>
+                    @endif
                 </div>
                 <div>
                     <span class="text-xs sm:text-sm font-bold text-gray-300 block mb-0.5">إجمالي التحصيلات</span>
                     <div class="text-lg sm:text-2xl font-black text-white tracking-tight">
                         {{ number_format($totalRevenue, 0) }} <span class="text-xs sm:text-sm font-bold text-amber-400">ج.م</span>
                     </div>
-                    <div class="mt-1 text-[10px] sm:text-xs text-amber-300/80 truncate">
+                    <div class="mt-1 text-[10px] sm:text-xs text-amber-300/80 flex items-center justify-between truncate">
                         <span>الخزينة: <strong class="text-white">{{ number_format($treasuryBalance ?? 0, 0) }} ج.م</strong></span>
+                        @if($todayRevenue > 0)
+                            <span class="text-emerald-400 font-bold">● تحصيل نشط اليوم</span>
+                        @endif
                     </div>
                 </div>
             </div>

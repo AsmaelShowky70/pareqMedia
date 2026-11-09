@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\TreasuryAccount;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -109,6 +110,14 @@ class CashierController extends Controller
         } catch (\Throwable $e) {}
 
         $payment = Payment::create($paymentData);
+
+        // Update active treasury balance directly so dashboard treasury reflects this payment immediately
+        try {
+            $mainTreasury = TreasuryAccount::where('is_active', true)->first();
+            if ($mainTreasury) {
+                $mainTreasury->increment('balance', $payment->amount);
+            }
+        } catch (\Throwable $e) {}
 
         // Check if there is an active invoice for this client to apply payment against
         $openInvoice = Invoice::where('client_id', $validated['client_id'])

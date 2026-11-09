@@ -339,7 +339,7 @@
              prev() { this.activeIdx = (this.activeIdx - 1 + this.services.length) % this.services.length; },
              startAutoplay() {
                  this.stopAutoplay();
-                 this.autoplayTimer = setInterval(() => { this.next(); }, 3200);
+                 this.autoplayTimer = setInterval(() => { this.next(); }, 10000);
              },
              stopAutoplay() {
                  if (this.autoplayTimer) {
