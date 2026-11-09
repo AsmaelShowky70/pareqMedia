@@ -13,6 +13,7 @@ use App\Models\Task;
 use App\Models\TreasuryAccount;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
@@ -140,20 +141,30 @@ class DashboardController extends Controller
             ->get();
 
         // Field Photographers live activity
-        $activePhotographerTasks = Task::with(['assignee', 'project', 'client'])
-            ->whereIn('attendance_status', ['on_the_way', 'checked_in'])
-            ->latest('photographer_accepted_at')
-            ->get();
+        $hasAttendanceStatus = Schema::hasColumn('tasks', 'attendance_status');
+        if ($hasAttendanceStatus) {
+            $activePhotographerTasks = Task::with(['assignee', 'project', 'client'])
+                ->whereIn('attendance_status', ['on_the_way', 'checked_in'])
+                ->latest('photographer_accepted_at')
+                ->get();
+        } else {
+            $activePhotographerTasks = collect();
+        }
 
         // Task statistics across all company
         $completedTasksCount = Task::where('status', 'completed')->count();
         $inProgressTasksCount = Task::where('status', 'in_progress')->count();
         $remainingTasksCount = Task::whereIn('status', ['not_started', 'on_leave'])->count();
-        $overdueTasksCount = Task::where('status', '!=', 'completed')
-            ->where('status', '!=', 'cancelled')
-            ->whereNotNull('delivery_deadline')
-            ->where('delivery_deadline', '<', Carbon::now())
-            ->count();
+        
+        $hasDeliveryDeadline = Schema::hasColumn('tasks', 'delivery_deadline');
+        $overdueTasksCount = 0;
+        if ($hasDeliveryDeadline) {
+            $overdueTasksCount = Task::where('status', '!=', 'completed')
+                ->where('status', '!=', 'cancelled')
+                ->whereNotNull('delivery_deadline')
+                ->where('delivery_deadline', '<', Carbon::now())
+                ->count();
+        }
         if ($overdueTasksCount === 0 && $remainingTasksCount > 2) {
             $overdueTasksCount = 2; // Baseline demo counter if fresh
         }
@@ -170,9 +181,14 @@ class DashboardController extends Controller
         ];
 
         // Daily Progress Completion Rate
-        $totalDailyTasks = Task::whereNotNull('daily_delivery_deadline')->count();
-        $completedDailyTasks = Task::whereNotNull('daily_delivery_deadline')->where('status', 'completed')->count();
-        $dailyCompletionRate = $totalDailyTasks > 0 ? round(($completedDailyTasks / $totalDailyTasks) * 100) : 75;
+        $hasDailyDeadline = Schema::hasColumn('tasks', 'daily_delivery_deadline');
+        if ($hasDailyDeadline) {
+            $totalDailyTasks = Task::whereNotNull('daily_delivery_deadline')->count();
+            $completedDailyTasks = Task::whereNotNull('daily_delivery_deadline')->where('status', 'completed')->count();
+            $dailyCompletionRate = $totalDailyTasks > 0 ? round(($completedDailyTasks / $totalDailyTasks) * 100) : 75;
+        } else {
+            $dailyCompletionRate = $taskCounts['total'] > 0 ? round(($completedTasksCount / max(1, $taskCounts['total'])) * 100) : 75;
+        }
 
         // Department Task Distribution (باند توزيع المهام حسب القسم)
         $departmentDistribution = [
@@ -202,11 +218,14 @@ class DashboardController extends Controller
             ->get();
 
         // Today's urgent/active tasks
-        $urgentTasks = Task::with(['assignee', 'client', 'project'])
-            ->whereIn('status', ['in_progress', 'not_started'])
-            ->orderBy('delivery_deadline', 'asc')
-            ->take(6)
-            ->get();
+        $urgentQuery = Task::with(['assignee', 'client', 'project'])
+            ->whereIn('status', ['in_progress', 'not_started']);
+        if ($hasDeliveryDeadline) {
+            $urgentQuery->orderBy('delivery_deadline', 'asc');
+        } else {
+            $urgentQuery->latest();
+        }
+        $urgentTasks = $urgentQuery->take(6)->get();
 
         // Recent cashier transactions
         $recentPayments = Payment::with(['client', 'cashier'])

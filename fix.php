@@ -97,6 +97,22 @@ try {
                 'video_url' => "ALTER TABLE `portfolio_items` ADD COLUMN `video_url` varchar(255) DEFAULT NULL",
                 'thumbnail' => "ALTER TABLE `portfolio_items` ADD COLUMN `thumbnail` varchar(255) DEFAULT NULL",
                 'metrics' => "ALTER TABLE `portfolio_items` ADD COLUMN `metrics` varchar(255) DEFAULT NULL",
+            ],
+            'tasks' => [
+                'daily_delivery_deadline' => "ALTER TABLE `tasks` ADD COLUMN `daily_delivery_deadline` varchar(255) DEFAULT NULL",
+                'delivery_deadline' => "ALTER TABLE `tasks` ADD COLUMN `delivery_deadline` date DEFAULT NULL",
+                'material_link' => "ALTER TABLE `tasks` ADD COLUMN `material_link` text DEFAULT NULL",
+                'delivery_link' => "ALTER TABLE `tasks` ADD COLUMN `delivery_link` text DEFAULT NULL",
+                'location_address' => "ALTER TABLE `tasks` ADD COLUMN `location_address` varchar(255) DEFAULT NULL",
+                'location_map_url' => "ALTER TABLE `tasks` ADD COLUMN `location_map_url` text DEFAULT NULL",
+                'attendance_status' => "ALTER TABLE `tasks` ADD COLUMN `attendance_status` varchar(255) NOT NULL DEFAULT 'none'",
+                'photographer_accepted_at' => "ALTER TABLE `tasks` ADD COLUMN `photographer_accepted_at` timestamp NULL DEFAULT NULL",
+            ],
+            'projects' => [
+                'content_creator_id' => "ALTER TABLE `projects` ADD COLUMN `content_creator_id` bigint(20) UNSIGNED DEFAULT NULL",
+                'submitted_to_gm_at' => "ALTER TABLE `projects` ADD COLUMN `submitted_to_gm_at` timestamp NULL DEFAULT NULL",
+                'gm_approval_status' => "ALTER TABLE `projects` ADD COLUMN `gm_approval_status` varchar(255) NOT NULL DEFAULT 'pending'",
+                'delivery_notes' => "ALTER TABLE `projects` ADD COLUMN `delivery_notes` text DEFAULT NULL",
             ]
         ];
 
