@@ -100,7 +100,7 @@
 
         <!-- Sidebar Navigation -->
         <aside :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'"
-               class="fixed inset-y-0 right-0 z-50 w-72 bg-brand-purple border-l border-brand-border flex flex-col transition-transform duration-300 ease-in-out lg:static lg:translate-x-0">
+               class="fixed inset-y-0 right-0 z-50 w-72 max-w-[85vw] bg-brand-purple border-l border-brand-border flex flex-col transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 shadow-2xl">
             
             <!-- Logo Header -->
             <div class="p-5 border-b border-brand-border flex items-center justify-between">
@@ -282,25 +282,25 @@
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
             
             <!-- Topbar Navigation -->
-            <header class="bg-brand-purple/80 backdrop-blur-md border-b border-brand-border z-30 flex items-center justify-between px-4 lg:px-8 py-3.5">
-                <div class="flex items-center gap-4">
-                    <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-400 hover:text-white rounded-lg hover:bg-brand-hover">
-                        <i class="fa-solid fa-bars text-xl"></i>
+            <header class="bg-brand-purple/80 backdrop-blur-md border-b border-brand-border z-30 flex items-center justify-between px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
+                <div class="flex items-center gap-2.5 sm:gap-4 min-w-0">
+                    <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-400 hover:text-white rounded-lg hover:bg-brand-hover active:scale-95 transition shrink-0" aria-label="فتح القائمة">
+                        <i class="fa-solid fa-bars text-lg sm:text-xl"></i>
                     </button>
-                    <div>
-                        <h1 class="text-lg lg:text-xl font-bold text-white flex items-center gap-2.5">
+                    <div class="min-w-0">
+                        <h1 class="text-base sm:text-lg lg:text-xl font-bold text-white flex items-center gap-2 truncate">
                             @yield('page_title', 'لوحة إدارة الوكالة')
                         </h1>
-                        <p class="text-xs text-gray-400 hidden sm:block">@yield('page_subtitle', 'نظام إدارة مشروعات ومهام شركة بريق للتسويق الإلكتروني')</p>
+                        <p class="text-[10px] sm:text-xs text-gray-400 hidden sm:block truncate">@yield('page_subtitle', 'نظام إدارة مشروعات ومهام شركة بريق للتسويق الإلكتروني')</p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 sm:gap-3">
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
                     <!-- Web Push Notification Enable Button (Visible on Mobile & Desktop) -->
                     <button @click="requestNotificationPermission()" 
                             x-show="notificationPermission !== 'granted'" 
                             type="button" 
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-card hover:bg-brand-hover text-brand-gold text-xs font-bold border border-brand-yellow/30 transition shadow" 
+                            class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-brand-card hover:bg-brand-hover text-brand-gold text-[11px] sm:text-xs font-bold border border-brand-yellow/30 transition shadow active:scale-95" 
                             title="تفعيل الإشعارات على الهاتف والكمبيوتر">
                         <i class="fa-solid fa-bell-ring animate-pulse text-brand-yellow"></i>
                         <span class="hidden sm:inline">تفعيل الإشعارات</span>
@@ -309,18 +309,18 @@
                     <!-- Notifications Dropdown -->
                     <div class="relative" x-data="{ notifOpen: false }">
                         <button @click="notifOpen = !notifOpen" 
-                                class="relative p-2 rounded-xl bg-brand-card hover:bg-brand-hover text-gray-300 hover:text-white border border-brand-border transition">
-                            <i class="fa-solid fa-bell text-base"></i>
+                                class="relative p-2 rounded-xl bg-brand-card hover:bg-brand-hover text-gray-300 hover:text-white border border-brand-border transition active:scale-95" aria-label="الإشعارات">
+                            <i class="fa-solid fa-bell text-sm sm:text-base"></i>
                             <span x-show="unreadCount > 0" 
                                   x-text="unreadCount" 
-                                  class="absolute -top-1 -right-1 px-1.5 py-0.5 text-[10px] font-black rounded-full bg-rose-500 text-white animate-bounce"></span>
+                                  class="absolute -top-1 -right-1 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-black rounded-full bg-rose-500 text-white animate-bounce"></span>
                         </button>
 
-                        <!-- Dropdown Panel -->
+                        <!-- Dropdown Panel (Responsive for Mobile Screens) -->
                         <div x-show="notifOpen" 
                              @click.away="notifOpen = false" 
                              x-transition 
-                             class="absolute left-0 sm:left-auto sm:right-0 mt-2 w-80 sm:w-96 bg-brand-card border border-brand-border rounded-2xl shadow-2xl z-50 overflow-hidden" 
+                             class="fixed sm:absolute top-16 sm:top-full left-3 right-3 sm:left-0 sm:right-auto mt-2 w-auto sm:w-96 bg-brand-card border border-brand-border rounded-2xl shadow-2xl z-50 overflow-hidden" 
                              style="display: none;">
                             <div class="p-3.5 border-b border-brand-border flex items-center justify-between bg-brand-purple/60">
                                 <div class="flex items-center gap-2">
@@ -384,7 +384,7 @@
             <!-- Proactive Notification Prompt Banner (For GM and all Staff) -->
             <div x-show="notificationPermission !== 'granted'" 
                  x-transition
-                 class="bg-gradient-to-l from-amber-500/20 via-brand-purple to-amber-500/10 border-b border-amber-500/40 px-4 lg:px-8 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                 class="bg-gradient-to-l from-amber-500/20 via-brand-purple to-amber-500/10 border-b border-amber-500/40 px-3 sm:px-6 lg:px-8 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
                 <div class="flex items-center gap-2.5 text-amber-200">
                     <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
                         <i class="fa-solid fa-bell-ring animate-pulse text-xs"></i>
@@ -403,30 +403,30 @@
             </div>
 
             <!-- Alerts Banner -->
-            <div class="px-4 lg:px-8 pt-4">
+            <div class="px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4">
                 @if(session('success'))
-                <div class="p-4 mb-4 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 flex items-center justify-between text-sm shadow">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+                <div class="p-3.5 sm:p-4 mb-3 sm:mb-4 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 flex items-center justify-between text-xs sm:text-sm shadow">
+                    <div class="flex items-center gap-2.5 sm:gap-3">
+                        <i class="fa-solid fa-circle-check text-emerald-400 text-base sm:text-lg shrink-0"></i>
                         <span>{{ session('success') }}</span>
                     </div>
-                    <button onclick="this.parentElement.remove()" class="text-emerald-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                    <button onclick="this.parentElement.remove()" class="text-emerald-400 hover:text-white p-1"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 @endif
 
                 @if(session('error'))
-                <div class="p-4 mb-4 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 flex items-center justify-between text-sm shadow">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
+                <div class="p-3.5 sm:p-4 mb-3 sm:mb-4 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 flex items-center justify-between text-xs sm:text-sm shadow">
+                    <div class="flex items-center gap-2.5 sm:gap-3">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base sm:text-lg shrink-0"></i>
                         <span>{{ session('error') }}</span>
                     </div>
-                    <button onclick="this.parentElement.remove()" class="text-rose-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                    <button onclick="this.parentElement.remove()" class="text-rose-400 hover:text-white p-1"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 @endif
 
                 @if($errors->any())
-                <div class="p-4 mb-4 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-sm shadow">
-                    <div class="flex items-center gap-3 font-bold mb-1">
+                <div class="p-3.5 sm:p-4 mb-3 sm:mb-4 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs sm:text-sm shadow">
+                    <div class="flex items-center gap-2.5 sm:gap-3 font-bold mb-1">
                         <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
                         <span>يرجى مراجعة الأخطاء التالية:</span>
                     </div>
@@ -440,7 +440,7 @@
             </div>
 
             <!-- Page Content Body -->
-            <main class="flex-1 overflow-y-auto px-4 lg:px-8 pb-10">
+            <main class="flex-1 overflow-y-auto px-3 sm:px-6 lg:px-8 pb-10">
                 @yield('content')
             </main>
         </div>

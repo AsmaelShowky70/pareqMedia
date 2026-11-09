@@ -33,45 +33,45 @@
         @endif
 
         <!-- Slogan Pill with Radiant Brand Colors (بريق مفتاح نجاحك في التسويق) -->
-        <div class="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-[#18082B]/90 border border-brand-orange/40 text-white text-xs sm:text-sm font-extrabold shadow-[0_0_25px_rgba(255,148,32,0.3)] animate-pulse-glow">
-            <span class="w-2.5 h-2.5 rounded-full bg-brand-orange animate-ping"></span>
-            <span class="text-brand-orange text-base">✦</span>
-            <span class="tracking-wide">بريق ، مفتاح نجاحك في التسويق</span>
-            <span class="text-brand-orange text-base">✦</span>
+        <div class="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#18082B]/90 border border-brand-orange/40 text-white text-[11px] sm:text-sm font-extrabold shadow-[0_0_25px_rgba(255,148,32,0.3)] animate-pulse-glow max-w-full">
+            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-brand-orange animate-ping shrink-0"></span>
+            <span class="text-brand-orange text-xs sm:text-base">✦</span>
+            <span class="tracking-wide truncate">بريق ، مفتاح نجاحك في التسويق</span>
+            <span class="text-brand-orange text-xs sm:text-base">✦</span>
         </div>
 
         <!-- Main Headline -->
-        <div class="space-y-4">
-            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.18] tracking-tight">
+        <div class="space-y-3 sm:space-y-4">
+            <h1 class="text-3xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.2] tracking-tight">
                 بريق مفتاح نجاحك 
-                <span class="gold-gradient-text block mt-2 text-5xl sm:text-7xl lg:text-8xl">في التسويق</span>
+                <span class="gold-gradient-text block mt-1.5 sm:mt-2 text-4xl sm:text-7xl lg:text-8xl">في التسويق</span>
             </h1>
 
             <!-- Subtitle under slogan in smaller font as requested -->
-            <p class="text-base sm:text-xl lg:text-2xl text-gray-200 font-bold max-w-3xl mx-auto leading-relaxed pt-2">
+            <p class="text-sm sm:text-xl lg:text-2xl text-gray-200 font-bold max-w-3xl mx-auto leading-relaxed pt-1 sm:pt-2">
                 نصنع لعلامتك التجارية بريقاً استثنائياً في العالم الرقمي
             </p>
-            <p class="text-xs sm:text-sm text-gray-400 max-w-2xl mx-auto leading-relaxed font-normal">
+            <p class="text-[11px] sm:text-sm text-gray-400 max-w-2xl mx-auto leading-relaxed font-normal px-2">
                 منظومة إبداعية متكاملة تجمع بين التصوير السينمائي، المونتاج فائق الجاذبية، وتصميم الهويات البصرية، وإدارة الحملات الإعلانية القائمة على أعلى عائد استثماري.
             </p>
         </div>
 
         <!-- Hero Action Buttons & Scroll Indicator -->
-        <div class="flex flex-col items-center justify-center gap-8 pt-4">
+        <div class="flex flex-col items-center justify-center gap-6 sm:gap-8 pt-2 sm:pt-4">
             
-            <div class="flex flex-wrap items-center justify-center gap-4">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
                 <!-- زر تواصل معنا -->
                 <a href="{{ route('public.contact') }}" 
-                   class="px-8 py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 flex items-center gap-3 group">
+                   class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs sm:text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 flex items-center justify-center gap-2.5 group">
                     <span>تواصل معنا الآن</span>
                     <i class="fa-solid fa-paper-plane text-xs group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
                 </a>
 
                 <!-- زر مشاهدة أعمالنا -->
                 <a href="{{ route('public.portfolio') }}" 
-                   class="px-8 py-4 rounded-2xl bg-[#19092E]/80 hover:bg-[#250C44] border-2 border-brand-orange/50 hover:border-brand-orange text-white font-bold text-sm transition shadow-lg flex items-center gap-2.5 backdrop-blur-md group">
-                    <span class="w-6 h-6 rounded-full bg-brand-orange/20 text-brand-orange flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-play text-[10px]"></i>
+                   class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-[#19092E]/80 hover:bg-[#250C44] border-2 border-brand-orange/50 hover:border-brand-orange text-white font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 backdrop-blur-md group">
+                    <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-brand-orange/20 text-brand-orange flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-play text-[9px] sm:text-[10px]"></i>
                     </span>
                     <span>مشاهدة أعمالنا</span>
                 </a>
@@ -123,13 +123,13 @@
             </video>
 
             <!-- Top Video Info Bar -->
-            <div class="absolute top-4 right-4 z-20 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md border border-brand-orange/40 text-[11px] text-white font-bold pointer-events-none">
-                <span class="w-2 h-2 rounded-full bg-brand-orange animate-ping"></span>
-                <span>PARIQ SHOWREEL • 1080 × 1920 FHD</span>
+            <div class="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-brand-orange/40 text-[9px] sm:text-[11px] text-white font-bold pointer-events-none">
+                <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-orange animate-ping"></span>
+                <span>PARIQ SHOWREEL • 1080×1920</span>
             </div>
 
             <!-- Bottom Left Actions: Sound Toggle + Fullscreen Modal -->
-            <div class="absolute bottom-4 left-4 z-20 flex items-center gap-2">
+            <div class="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2">
                 <!-- Sound Toggle Button -->
                 <button type="button" 
                         @click="
@@ -138,7 +138,7 @@
                             isMuted = v.muted;
                             if (v.paused) { v.play(); }
                         "
-                        class="px-3.5 py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1.5 shadow-lg">
+                        class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-[10px] sm:text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1 sm:gap-1.5 shadow-lg active:scale-95">
                     <i class="fa-solid" :class="isMuted ? 'fa-volume-xmark text-amber-400' : 'fa-volume-high text-emerald-400'"></i>
                     <span x-text="isMuted ? 'تشغيل الصوت' : 'كتم الصوت'"></span>
                 </button>
@@ -146,7 +146,7 @@
                 <!-- Fullscreen Modal Button -->
                 <button type="button" 
                         @click="openMedia('video', '{{ asset('videos/bariq.mp4') }}', 'شو ريل وكالة بريق الرسمي 2026', 'أحدث إنتاجات وكالة بريق للتسويق والتصوير السينمائي والمونتاج الإعلاني بدقة 1080*1920')"
-                        class="px-3.5 py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1.5 shadow-lg">
+                        class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-[10px] sm:text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1 sm:gap-1.5 shadow-lg active:scale-95">
                     <i class="fa-solid fa-expand"></i>
                     <span>نافذة كاملة</span>
                 </button>
@@ -164,45 +164,45 @@
          x-init="initObserver($el)"
          class="space-y-6">
         
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div class="p-6 rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
-                <div class="w-12 h-12 rounded-2xl bg-orange-500/15 border border-brand-orange/30 text-brand-orange flex items-center justify-center mx-auto mb-3 text-xl group-hover:scale-110 transition-transform">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6">
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-orange-500/15 border border-brand-orange/30 text-brand-orange flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
-                <div class="text-3xl lg:text-4xl font-black text-brand-orange flex items-center justify-center font-mono">
+                <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-brand-orange flex items-center justify-center font-mono">
                     <span>+</span><span x-text="projects">0</span>
                 </div>
-                <div class="text-xs text-gray-300 mt-1.5 font-bold">مشروع مكتمل بنجاح</div>
+                <div class="text-[11px] sm:text-xs text-gray-300 mt-1 font-bold">مشروع مكتمل بنجاح</div>
             </div>
 
-            <div class="p-6 rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
-                <div class="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-500/40 text-purple-300 flex items-center justify-center mx-auto mb-3 text-xl group-hover:scale-110 transition-transform">
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-500/20 border border-purple-500/40 text-purple-300 flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-users"></i>
                 </div>
-                <div class="text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
+                <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
                     <span>+</span><span x-text="clients">0</span>
                 </div>
-                <div class="text-xs text-gray-300 mt-1.5 font-bold">عميل سعيد في 6 دول</div>
+                <div class="text-[11px] sm:text-xs text-gray-300 mt-1 font-bold">عميل سعيد في 6 دول</div>
             </div>
 
-            <div class="p-6 rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-brand-peach/30 text-brand-peach flex items-center justify-center mx-auto mb-3 text-xl group-hover:scale-110 transition-transform">
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-500/15 border border-brand-peach/30 text-brand-peach flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-award"></i>
                 </div>
-                <div class="text-3xl lg:text-4xl font-black text-brand-peach flex items-center justify-center font-mono">
+                <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-brand-peach flex items-center justify-center font-mono">
                     <span>+</span><span x-text="years">0</span>
                 </div>
-                <div class="text-xs text-gray-300 mt-1.5 font-bold">سنوات خبرة متواصلة</div>
+                <div class="text-[11px] sm:text-xs text-gray-300 mt-1 font-bold">سنوات خبرة متواصلة</div>
             </div>
 
-            <div class="p-6 rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
-                <div class="w-12 h-12 rounded-2xl bg-orange-500/15 border border-orange-500/30 text-orange-400 flex items-center justify-center mx-auto mb-3 text-xl group-hover:scale-110 transition-transform">
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-orange-500/15 border border-orange-500/30 text-orange-400 flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-user-group"></i>
                 </div>
-                <div class="text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
+                <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
                     <span>+</span><span x-text="team">0</span>
                 </div>
-                <div class="text-xs text-gray-300 mt-1.5 font-bold">مبدع وخبير متخصص</div>
+                <div class="text-[11px] sm:text-xs text-gray-300 mt-1 font-bold">مبدع وخبير متخصص</div>
             </div>
         </div>
 
@@ -343,36 +343,36 @@
         </div>
 
         <!-- Interactive 3D Circular Orbit / Coverflow Showcase -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
             
             <!-- Left/Center: Active Service Spotlight & Image Showcase (7 Cols) -->
             <div class="lg:col-span-7">
-                <div class="glass-card-purple rounded-3xl p-6 sm:p-10 border border-brand-orange/40 shadow-2xl relative overflow-hidden space-y-6">
+                <div class="glass-card-purple rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 border border-brand-orange/40 shadow-2xl relative overflow-hidden space-y-4 sm:space-y-6">
                     
                     <!-- Top Badge & Navigation Controls -->
                     <div class="flex items-center justify-between">
-                        <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-brand-orange/15 border border-brand-orange/30 text-brand-orange text-xs font-bold">
-                            <span class="font-mono text-sm" x-text="'0' + (activeIdx + 1)"></span>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-brand-orange/15 border border-brand-orange/30 text-brand-orange text-[11px] sm:text-xs font-bold">
+                            <span class="font-mono text-xs sm:text-sm" x-text="'0' + (activeIdx + 1)"></span>
                             <span class="text-gray-400">•</span>
                             <span x-text="services[activeIdx].title"></span>
                         </div>
 
-                        <div class="flex items-center gap-2">
-                            <button @click="prev()" type="button" class="w-10 h-10 rounded-xl bg-purple-900/60 hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow">
+                        <div class="flex items-center gap-1.5 sm:gap-2">
+                            <button @click="prev()" type="button" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-900/60 hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow active:scale-95 text-xs sm:text-sm" aria-label="السابق">
                                 <i class="fa-solid fa-arrow-right"></i>
                             </button>
-                            <button @click="next()" type="button" class="w-10 h-10 rounded-xl bg-purple-900/60 hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow">
+                            <button @click="next()" type="button" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-900/60 hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow active:scale-95 text-xs sm:text-sm" aria-label="التالي">
                                 <i class="fa-solid fa-arrow-left"></i>
                             </button>
                         </div>
                     </div>
 
                     <!-- Image Preview of the Selected Service -->
-                    <div class="relative aspect-video rounded-2xl overflow-hidden bg-black/60 border border-purple-800/60 group">
+                    <div class="relative aspect-video rounded-xl sm:rounded-2xl overflow-hidden bg-black/60 border border-purple-800/60 group">
                         <img :src="services[activeIdx].img" :alt="services[activeIdx].title" class="w-full h-full object-cover transition-all duration-500 transform group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-4 right-4 text-white font-bold text-sm flex items-center gap-2">
-                            <div class="w-9 h-9 rounded-xl bg-brand-orange text-brand-dark flex items-center justify-center text-sm shadow">
+                        <div class="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 text-white font-bold text-xs sm:text-sm flex items-center gap-2">
+                            <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-brand-orange text-brand-dark flex items-center justify-center text-xs sm:text-sm shadow">
                                 <i :class="services[activeIdx].icon"></i>
                             </div>
                             <span x-text="services[activeIdx].title"></span>
@@ -380,27 +380,27 @@
                     </div>
 
                     <!-- Title & Full Description -->
-                    <div class="space-y-3">
-                        <h3 class="text-2xl sm:text-3xl font-black text-white" x-text="services[activeIdx].title"></h3>
+                    <div class="space-y-2 sm:space-y-3">
+                        <h3 class="text-xl sm:text-2xl lg:text-3xl font-black text-white" x-text="services[activeIdx].title"></h3>
                         <p class="text-xs sm:text-sm text-gray-300 leading-relaxed" x-text="services[activeIdx].desc"></p>
                     </div>
 
                     <!-- Direct Deep Link to Service Section in /services -->
-                    <div class="pt-4 border-t border-purple-800/40 flex items-center justify-between">
+                    <div class="pt-3 sm:pt-4 border-t border-purple-800/40 flex items-center justify-between">
                         <a :href="'{{ route('public.services') }}#' + services[activeIdx].slug" 
-                           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-brand-dark font-black text-xs transition shadow-lg">
+                           class="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-brand-dark font-black text-[11px] sm:text-xs transition shadow-lg active:scale-95">
                             <span>عرض تفاصيل هذه الخدمة</span>
-                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            <i class="fa-solid fa-arrow-left text-[9px] sm:text-[10px]"></i>
                         </a>
 
-                        <span class="text-xs text-gray-400 font-mono" x-text="(activeIdx + 1) + ' / 10'"></span>
+                        <span class="text-[11px] sm:text-xs text-gray-400 font-mono" x-text="(activeIdx + 1) + ' / 10'"></span>
                     </div>
 
                 </div>
             </div>
 
             <!-- Right: Orbiting Selector List of the 10 Services (5 Cols) -->
-            <div class="lg:col-span-5 space-y-2.5 max-h-[620px] overflow-y-auto pr-1">
+            <div class="lg:col-span-5 space-y-2 sm:space-y-2.5 max-h-64 sm:max-h-80 lg:max-h-[620px] overflow-y-auto pr-1">
                 <template x-for="(srv, idx) in services" :key="srv.id">
                     <div @click="activeIdx = idx" 
                          :class="activeIdx === idx ? 'bg-gradient-to-l from-brand-orange/20 to-[#1F0B38] border-brand-orange shadow-lg shadow-orange-500/10 scale-[1.02]' : 'bg-[#150626]/80 border-purple-800/40 hover:border-purple-600 opacity-75 hover:opacity-100'"
@@ -716,54 +716,54 @@
         </div>
 
         <!-- 4 Connected Features with Line Indicator -->
-        <div class="relative py-4">
+        <div class="relative py-2 sm:py-4">
             
             <!-- Connected Horizontal Line -->
             <div class="hidden sm:block absolute top-6 left-12 right-12 h-0.5 bg-gradient-to-r from-brand-orange via-brand-peach to-brand-orange z-0 opacity-40"></div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 relative z-10">
                 
                 <!-- Feature 1 -->
-                <div class="flex flex-col items-center text-center space-y-3">
-                    <div class="w-12 h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-lg font-black shadow-lg shadow-orange-500/30">
+                <div class="flex flex-col items-center text-center space-y-2.5 sm:space-y-3">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-base sm:text-lg font-black shadow-lg shadow-orange-500/30">
                         <i class="fa-solid fa-comments"></i>
                     </div>
-                    <div class="glass-card-purple rounded-2xl p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
-                        <h4 class="text-sm font-black text-white mb-1">تواصل مباشر</h4>
-                        <p class="text-[11px] text-gray-300">نرد بسرعة ونفهم احتياجك بدقة دون وسطاء</p>
+                    <div class="glass-card-purple rounded-xl sm:rounded-2xl p-3.5 sm:p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
+                        <h4 class="text-xs sm:text-sm font-black text-white mb-1">تواصل مباشر</h4>
+                        <p class="text-[10px] sm:text-[11px] text-gray-300">نرد بسرعة ونفهم احتياجك بدقة دون وسطاء</p>
                     </div>
                 </div>
 
                 <!-- Feature 2 -->
-                <div class="flex flex-col items-center text-center space-y-3">
-                    <div class="w-12 h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-lg font-black shadow-lg shadow-orange-500/30">
+                <div class="flex flex-col items-center text-center space-y-2.5 sm:space-y-3">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-base sm:text-lg font-black shadow-lg shadow-orange-500/30">
                         <i class="fa-solid fa-bolt"></i>
                     </div>
-                    <div class="glass-card-purple rounded-2xl p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
-                        <h4 class="text-sm font-black text-white mb-1">تنفيذ سريع</h4>
-                        <p class="text-[11px] text-gray-300">خطوات واضحة وجداول تسليم دقيقة بدون تأخير</p>
+                    <div class="glass-card-purple rounded-xl sm:rounded-2xl p-3.5 sm:p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
+                        <h4 class="text-xs sm:text-sm font-black text-white mb-1">تنفيذ سريع</h4>
+                        <p class="text-[10px] sm:text-[11px] text-gray-300">خطوات واضحة وجداول تسليم دقيقة بدون تأخير</p>
                     </div>
                 </div>
 
                 <!-- Feature 3 -->
-                <div class="flex flex-col items-center text-center space-y-3">
-                    <div class="w-12 h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-lg font-black shadow-lg shadow-orange-500/30">
+                <div class="flex flex-col items-center text-center space-y-2.5 sm:space-y-3">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-base sm:text-lg font-black shadow-lg shadow-orange-500/30">
                         <i class="fa-solid fa-bullseye"></i>
                     </div>
-                    <div class="glass-card-purple rounded-2xl p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
-                        <h4 class="text-sm font-black text-white mb-1">نحقق الهدف</h4>
-                        <p class="text-[11px] text-gray-300">نتيجة ملموسة وعائد حقيقي لنمو علامتك</p>
+                    <div class="glass-card-purple rounded-xl sm:rounded-2xl p-3.5 sm:p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
+                        <h4 class="text-xs sm:text-sm font-black text-white mb-1">نحقق الهدف</h4>
+                        <p class="text-[10px] sm:text-[11px] text-gray-300">نتيجة ملموسة وعائد حقيقي لنمو علامتك</p>
                     </div>
                 </div>
 
                 <!-- Feature 4 -->
-                <div class="flex flex-col items-center text-center space-y-3">
-                    <div class="w-12 h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-lg font-black shadow-lg shadow-orange-500/30">
+                <div class="flex flex-col items-center text-center space-y-2.5 sm:space-y-3">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-base sm:text-lg font-black shadow-lg shadow-orange-500/30">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                     </div>
-                    <div class="glass-card-purple rounded-2xl p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
-                        <h4 class="text-sm font-black text-white mb-1">إبداع بلا حدود</h4>
-                        <p class="text-[11px] text-gray-300">أفكار استثنائية تصنع الفارق في السوق الرقمي</p>
+                    <div class="glass-card-purple rounded-xl sm:rounded-2xl p-3.5 sm:p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
+                        <h4 class="text-xs sm:text-sm font-black text-white mb-1">إبداع بلا حدود</h4>
+                        <p class="text-[10px] sm:text-[11px] text-gray-300">أفكار استثنائية تصنع الفارق في السوق الرقمي</p>
                     </div>
                 </div>
 
@@ -772,9 +772,9 @@
         </div>
 
         <!-- Big CTA Button -->
-        <div class="pt-4">
+        <div class="pt-2 sm:pt-4">
             <a href="{{ route('public.contact') }}" 
-               class="inline-flex items-center gap-3 px-10 py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 group">
+               class="inline-flex items-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs sm:text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 group">
                 <i class="fa-solid fa-paper-plane group-hover:rotate-12 transition-transform"></i>
                 <span>تواصل معنا الآن</span>
             </a>
@@ -786,10 +786,10 @@
 <!-- =========================================================================
      10. DIRECT CONSULTATION FORM ON HOMEPAGE
      ========================================================================= -->
-<section id="contact-summary" class="py-20 bg-gradient-to-b from-[#16062C] via-[#1B0736] to-[#08020F] relative z-10">
+<section id="contact-summary" class="py-14 sm:py-20 bg-gradient-to-b from-[#16062C] via-[#1B0736] to-[#08020F] relative z-10">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div class="glass-card-purple rounded-[2rem] p-8 sm:p-14 shadow-2xl relative overflow-hidden border border-brand-orange/40">
+        <div class="glass-card-purple rounded-2xl sm:rounded-[2rem] p-5 sm:p-10 lg:p-14 shadow-2xl relative overflow-hidden border border-brand-orange/40">
             
             <div class="text-center max-w-xl mx-auto mb-10 space-y-3 relative z-10">
                 <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">

@@ -22,30 +22,30 @@
             </div>
 
             <!-- Stats pills -->
-            <div class="flex flex-wrap items-center gap-3">
-                <div class="px-4 py-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-center">
-                    <div class="text-[11px] text-blue-300 font-bold">مشاريعك الجارية</div>
-                    <div class="text-2xl font-black text-blue-400">{{ $activeProjectsCount }}</div>
+            <div class="grid grid-cols-3 gap-2 sm:gap-3 w-full md:w-auto">
+                <div class="px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-center">
+                    <div class="text-[10px] sm:text-[11px] text-blue-300 font-bold">مشاريع جارية</div>
+                    <div class="text-xl sm:text-2xl font-black text-blue-400">{{ $activeProjectsCount }}</div>
                 </div>
-                <div class="px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
-                    <div class="text-[11px] text-amber-300 font-bold">سلمت للمدير العام</div>
-                    <div class="text-2xl font-black text-amber-400">{{ $deliveredProjectsCount }}</div>
+                <div class="px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
+                    <div class="text-[10px] sm:text-[11px] text-amber-300 font-bold">سلمت للمدير</div>
+                    <div class="text-xl sm:text-2xl font-black text-amber-400">{{ $deliveredProjectsCount }}</div>
                 </div>
-                <div class="px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
-                    <div class="text-[11px] text-emerald-300 font-bold">معتمدة ومكتملة</div>
-                    <div class="text-2xl font-black text-emerald-400">{{ $completedProjectsCount }}</div>
+                <div class="px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
+                    <div class="text-[10px] sm:text-[11px] text-emerald-300 font-bold">معتمدة</div>
+                    <div class="text-xl sm:text-2xl font-black text-emerald-400">{{ $completedProjectsCount }}</div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Quick Actions Bar -->
-    <div class="flex flex-wrap items-center justify-between gap-3 bg-brand-card/70 border border-brand-border p-4 rounded-2xl">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-brand-card/70 border border-brand-border p-3.5 sm:p-4 rounded-2xl">
         <div class="text-xs text-gray-300 font-bold flex items-center gap-2">
             <i class="fa-solid fa-bolt text-brand-yellow"></i>
             <span>إجراءات سريعة لفريق عملك:</span>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
             <a href="{{ route('content-plans.index') }}" 
                class="px-4 py-2 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 font-bold text-xs border border-indigo-500/30 transition flex items-center gap-2">
                 <i class="fa-solid fa-calendar-days text-brand-gold"></i>

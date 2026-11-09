@@ -10,14 +10,14 @@
 <div class="space-y-6 pt-2" x-data="employeeDashboard()">
 
     <!-- 1. Daily Quota & Status Banner -->
-    <div class="bg-gradient-to-r from-brand-card via-brand-purple to-brand-card border border-brand-border rounded-2xl p-6 relative overflow-hidden">
+    <div class="bg-gradient-to-r from-brand-card via-brand-purple to-brand-card border border-brand-border rounded-2xl p-4 sm:p-6 relative overflow-hidden">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="space-y-1.5">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-yellow/15 text-brand-gold text-xs font-bold mb-1">
                     <i class="fa-solid fa-bullseye"></i>
                     <span>التارجت واليومية المعتمدة لك:</span>
                 </div>
-                <h2 class="text-xl font-black text-white">{{ $user->daily_quota ?? 'متابعة وإنجاز المهام المسندة يومياً' }}</h2>
+                <h2 class="text-lg sm:text-xl font-black text-white">{{ $user->daily_quota ?? 'متابعة وإنجاز المهام المسندة يومياً' }}</h2>
                 <p class="text-xs text-gray-400">
                     قسم: <span class="text-gray-200 font-bold">{{ $user->department_name_arabic }}</span> | 
                     المسمى: <span class="text-gray-200 font-bold">{{ $user->job_title }}</span>
@@ -25,21 +25,21 @@
             </div>
 
             <!-- Stats & Portfolio button -->
-            <div class="flex flex-wrap items-center gap-3">
+            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
                 <a href="{{ route('my-portfolio') }}" 
-                   class="px-4 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-hover text-brand-gold text-xs font-bold border border-brand-yellow/40 transition shadow flex items-center gap-2">
+                   class="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-brand-purple hover:bg-brand-hover text-brand-gold text-xs font-bold border border-brand-yellow/40 transition shadow flex items-center gap-2">
                     <i class="fa-solid fa-briefcase text-sm"></i>
                     <span>معرض إنجازاتي وسابقة أعمالي</span>
                 </a>
 
                 <div class="flex items-center gap-2">
-                    <div class="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
-                        <div class="text-[11px] text-amber-300 font-bold">قيد العمل</div>
-                        <div class="text-lg font-black text-amber-400">{{ $inProgressCount }}</div>
+                    <div class="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
+                        <div class="text-[10px] sm:text-[11px] text-amber-300 font-bold">قيد العمل</div>
+                        <div class="text-base sm:text-lg font-black text-amber-400">{{ $inProgressCount }}</div>
                     </div>
-                    <div class="px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
-                        <div class="text-[11px] text-emerald-300 font-bold">أتممت تسليمه</div>
-                        <div class="text-lg font-black text-emerald-400">{{ $completedCount }}</div>
+                    <div class="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
+                        <div class="text-[10px] sm:text-[11px] text-emerald-300 font-bold">أتممت تسليمه</div>
+                        <div class="text-base sm:text-lg font-black text-emerald-400">{{ $completedCount }}</div>
                     </div>
                 </div>
             </div>
@@ -188,15 +188,15 @@
             </div>
 
             <!-- Color Key Guide -->
-            <div class="flex items-center gap-2 text-xs">
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold">
-                    <span class="w-2 h-2 rounded-full bg-rose-500"></span> أحمر: عاجل جداً
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs">
+                <span class="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold">
+                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-rose-500"></span> أحمر: عاجل جداً
                 </span>
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
-                    <span class="w-2 h-2 rounded-full bg-amber-400"></span> أصفر: يقترب
+                <span class="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
+                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-400"></span> أصفر: يقترب
                 </span>
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> أخضر: متسع
+                <span class="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
+                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400"></span> أخضر: متسع
                 </span>
             </div>
         </div>

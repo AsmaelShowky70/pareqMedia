@@ -389,7 +389,7 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-4"
-             class="lg:hidden bg-[#110423]/95 backdrop-blur-2xl border-b border-purple-800/50 px-6 py-5 space-y-3.5 text-sm font-bold shadow-2xl">
+             class="lg:hidden bg-[#110423]/95 backdrop-blur-2xl border-b border-purple-800/50 px-6 py-5 space-y-3.5 text-sm font-bold shadow-2xl max-h-[85vh] overflow-y-auto">
             
             @auth
             <a href="{{ route('dashboard') }}" @click="mobileNav = false" class="w-full py-3 px-4 rounded-xl bg-gradient-to-l from-brand-amber to-brand-gold text-brand-dark font-black text-center flex items-center justify-center gap-2 shadow">
@@ -520,7 +520,7 @@
     </footer>
 
     <!-- FLOATING WHATSAPP CONSULTATION WIDGET (زر واتساب العائم بنبضات الرادار) -->
-    <div id="pariq-whatsapp-floating" class="fixed bottom-6 right-4 sm:right-6 z-40 flex items-center group">
+    <div id="pariq-whatsapp-floating" class="fixed bottom-4 sm:bottom-6 right-3 sm:right-6 z-40 flex items-center group">
         <a href="https://wa.me/201062330838?text=مرحباً%20وكالة%20بريق،%20أرغب%20في%20الحصول%20على%20استشارة%20تسويقية%20مجانية%20وعرض%20سعر" 
            target="_blank" 
            class="hidden sm:flex items-center gap-2 px-4 py-2 ml-3 rounded-full bg-[#18082B]/95 border border-emerald-500/40 text-white text-xs font-bold shadow-2xl backdrop-blur-md transform transition-all group-hover:scale-105 group-hover:border-emerald-400">
@@ -531,7 +531,7 @@
         <a href="https://wa.me/201062330838?text=مرحباً%20وكالة%20بريق،%20أرغب%20في%20الحصول%20على%20استشارة%20تسويقية%20مجانية%20وعرض%20سعر" 
            target="_blank" 
            aria-label="تواصل مع بريق عبر واتساب"
-           class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-[#128C7E] to-[#25D366] text-white flex items-center justify-center text-2xl shadow-2xl shadow-emerald-500/30 hover:scale-110 active:scale-95 transition-all duration-300">
+           class="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-[#128C7E] to-[#25D366] text-white flex items-center justify-center text-xl sm:text-2xl shadow-2xl shadow-emerald-500/30 hover:scale-110 active:scale-95 transition-all duration-300">
             <span class="absolute inset-0 rounded-full bg-emerald-400/30 animate-ping -z-10"></span>
             <i class="fa-brands fa-whatsapp"></i>
         </a>
@@ -543,7 +543,7 @@
             x-transition 
             @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
             aria-label="الرجوع للأعلى"
-            class="fixed bottom-24 right-5 sm:right-7 z-40 w-11 h-11 rounded-full bg-[#1A0833]/90 border border-purple-600/40 hover:border-brand-gold text-brand-gold hover:text-white flex items-center justify-center text-sm shadow-xl backdrop-blur-md hover:scale-110 active:scale-95 transition-all" 
+            class="fixed bottom-20 sm:bottom-24 right-4 sm:right-7 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1A0833]/90 border border-purple-600/40 hover:border-brand-gold text-brand-gold hover:text-white flex items-center justify-center text-xs sm:text-sm shadow-xl backdrop-blur-md hover:scale-110 active:scale-95 transition-all" 
             style="display: none;">
         <i class="fa-solid fa-arrow-up"></i>
     </button>
@@ -556,15 +556,16 @@
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-95"
-         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl" 
+         class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-xl" 
          style="display: none;">
         
         <div @click.away="closeMedia()" 
              :class="activeMedia.aspect === 'vertical' ? 'max-w-md' : (activeMedia.type === 'branding' ? 'max-w-5xl' : 'max-w-4xl')"
-             class="w-full glass-card-purple rounded-[2rem] p-6 shadow-2xl relative space-y-4 border border-purple-500/50 max-h-[92vh] overflow-y-auto">
+             class="w-full glass-card-purple rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 shadow-2xl relative space-y-3 sm:space-y-4 border border-purple-500/50 max-h-[92vh] overflow-y-auto">
             
             <button @click="closeMedia()" 
-                    class="absolute -top-12 left-0 text-white hover:text-brand-orange text-2xl transition">
+                    class="absolute top-3 left-3 sm:-top-12 sm:left-0 text-white hover:text-brand-orange text-lg sm:text-2xl transition z-30 w-8 h-8 rounded-full bg-black/60 sm:bg-transparent flex items-center justify-center"
+                    aria-label="إغلاق النافذة">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
