@@ -289,22 +289,22 @@
     <!-- Top Laser Scroll Progress Indicator -->
     <div id="scroll-progress-bar"></div>
 
-    <!-- Ambient Background Lighting Layer (Fixed viewport layer so it never expands document height or creates space below footer) -->
+    <!-- Ambient Background Lighting Layer (Fixed viewport layer away from top navbar logo to avoid glare) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="glow-orb w-[650px] h-[650px] bg-purple-900/25 -top-32 -right-32 animate-float-slow"></div>
-        <div class="glow-orb w-[550px] h-[550px] bg-amber-500/12 top-1/4 -left-40 animate-float-reverse"></div>
-        <div class="glow-orb w-[700px] h-[700px] bg-purple-950/35 top-1/2 -right-32 animate-float-slow"></div>
+        <div class="glow-orb w-[600px] h-[600px] bg-purple-900/20 top-40 right-1/3 animate-float-slow"></div>
+        <div class="glow-orb w-[550px] h-[550px] bg-amber-500/10 top-1/4 -left-40 animate-float-reverse"></div>
+        <div class="glow-orb w-[700px] h-[700px] bg-purple-950/30 top-1/2 -right-32 animate-float-slow"></div>
         <div class="glow-orb w-[550px] h-[550px] bg-orange-600/10 -bottom-20 left-1/4 animate-pulse-glow"></div>
     </div>
 
     <!-- UNIVERSAL HEADER & GLASSMORPHIC NAVBAR (شريط تنقل احترافي مع دعم الصفحات المنفصلة) -->
-    <header class="fixed top-0 inset-x-0 z-50 bg-[#08020F]/85 backdrop-blur-2xl border-b border-purple-900/30 transition-all duration-300">
+    <header class="fixed top-0 inset-x-0 z-50 bg-[#08020F]/90 backdrop-blur-2xl border-b border-purple-900/30 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Brand Identity Logo (Clean, crisp logo with PARIQ AGENCY only) -->
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group relative py-1">
-                <div class="relative flex items-center justify-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="PARIQ AGENCY" class="relative h-12 sm:h-14 lg:h-15 w-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300">
+            <!-- Brand Identity Logo (Clean, crisp logo with PARIQ AGENCY only, zero glow or glare) -->
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 sm:gap-3 group relative py-1">
+                <div class="flex items-center justify-center">
+                    <img src="{{ asset('images/logo.png') }}" alt="PARIQ AGENCY" class="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
                 </div>
                 <div class="flex flex-col text-right">
                     <span class="text-xs sm:text-sm font-black text-brand-orange tracking-widest font-mono uppercase">PARIQ AGENCY</span>

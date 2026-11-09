@@ -82,7 +82,7 @@
                         </a>
 
                         <!-- اسحب للأسفل بجانب زر مشاهدة أعمالنا -->
-                        <a href="#video-showcase" class="inline-flex items-center gap-2 px-3 py-2 text-xs text-gray-400 hover:text-brand-orange transition group shrink-0">
+                        <a href="#stats-summary" class="inline-flex items-center gap-2 px-3 py-2 text-xs text-gray-400 hover:text-brand-orange transition group shrink-0">
                             <div class="w-5 h-8 rounded-full border-2 border-gray-400 group-hover:border-brand-orange flex items-start justify-center p-1 transition-colors">
                                 <span class="w-1.5 h-2 rounded-full bg-brand-orange animate-bounce"></span>
                             </div>
@@ -93,31 +93,44 @@
 
             </div>
 
-            <!-- Left Column: Big Animated Pariq Logo with Orbiting Effects (اللوجو كبير علي الشمال مع انيميشن بدون بلور زائد) -->
-            <div class="lg:col-span-5 flex justify-center items-center relative py-6 lg:py-0">
-                <div class="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-[400px] lg:h-[400px] flex items-center justify-center">
+            <!-- Left Column: Official Animated Lightning Video (الفيديو نفسه مكان اللوجو بدون شكل دائري - مدمج مع الخلفية) -->
+            <div class="lg:col-span-5 flex justify-center items-center relative py-4 lg:py-0">
+                <div class="relative w-full max-w-lg lg:max-w-xl flex items-center justify-center group"
+                     x-data="{ isMuted: true }">
                     
-                    <!-- 1. Ambient Background Pulse Glow (خفيف ونظيف) -->
-                    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-brand-orange/15 via-purple-600/10 to-transparent blur-xl animate-pulse-glow pointer-events-none"></div>
-                    
-                    <!-- 2. Orbiting Concentric Geometric Rings -->
-                    <div class="absolute inset-0 rounded-full border-2 border-dashed border-brand-orange/30 animate-[spin_35s_linear_infinite] pointer-events-none"></div>
-                    <div class="absolute -inset-4 sm:-inset-6 rounded-full border border-purple-500/25 animate-[spin_45s_linear_infinite_reverse] pointer-events-none"></div>
-                    
-                    <!-- 3. Glowing Satellite Nodes orbiting -->
-                    <div class="absolute top-2 right-1/4 w-3.5 h-3.5 rounded-full bg-brand-orange shadow-[0_0_15px_#FF9420] animate-ping pointer-events-none"></div>
-                    <div class="absolute bottom-6 left-6 w-2.5 h-2.5 rounded-full bg-brand-peach shadow-[0_0_12px_#FFBA70] animate-pulse pointer-events-none"></div>
-                    
-                    <!-- 4. Central Floating Luxury Orb with Big Pariq Logo (Clean sharp shadow) -->
-                    <div class="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-tr from-[#1B082B] via-[#2D0D4E] to-[#120522] border-2 border-brand-orange/60 p-6 sm:p-8 flex items-center justify-center shadow-[0_0_35px_rgba(255,148,32,0.25)] animate-float-slow group">
-                        
-                        <img src="{{ asset('images/logo.png') }}" alt="PARIQ AGENCY" class="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)] group-hover:scale-105 transition-transform duration-500">
+                    <!-- Floating Subtle Ambient Glow behind the lightning -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-orange/20 via-purple-600/15 to-transparent blur-2xl pointer-events-none rounded-3xl"></div>
 
-                        <!-- Floating Badge: Official Pariq Brand -->
-                        <div class="absolute -bottom-3 inset-x-0 mx-auto w-max px-4 py-1.5 rounded-full bg-[#18082B]/95 border border-brand-orange/60 text-[10px] sm:text-[11px] font-black text-brand-orange shadow-2xl flex items-center gap-1.5 backdrop-blur-md">
-                            <span class="w-2 h-2 rounded-full bg-brand-orange animate-ping"></span>
-                            <span>PARIQ CREATIVE AGENCY</span>
-                        </div>
+                    <!-- Lightning Video Frame without circular crop -->
+                    <div class="relative w-full aspect-video flex items-center justify-center">
+                        <video id="hero-lightning-video" 
+                               playsinline 
+                               preload="auto"
+                               autoplay
+                               muted
+                               loop
+                               poster="{{ asset('videos/bariq-poster.jpg') }}"
+                               class="w-full h-full object-contain mix-blend-screen pointer-events-auto cursor-pointer"
+                               @click="
+                                   $el.muted = !$el.muted;
+                                   isMuted = $el.muted;
+                               ">
+                            <source src="{{ asset('videos/bariq.mp4') }}" type="video/mp4">
+                            <source src="{{ asset('videos/bariq.webm') }}" type="video/webm">
+                            متصفحك لا يدعم تشغيل الفيديو المباشر.
+                        </video>
+
+                        <!-- Subtle Sound Toggle Button -->
+                        <button type="button" 
+                                @click="
+                                    const v = document.getElementById('hero-lightning-video');
+                                    v.muted = !v.muted;
+                                    isMuted = v.muted;
+                                "
+                                class="absolute bottom-1 left-2 px-2.5 py-1 rounded-xl bg-black/75 hover:bg-brand-orange hover:text-brand-dark text-white text-[10px] font-bold border border-white/20 transition flex items-center gap-1.5 opacity-75 hover:opacity-100 z-20 backdrop-blur-md shadow">
+                            <i class="fa-solid" :class="isMuted ? 'fa-volume-xmark text-amber-400' : 'fa-volume-high text-emerald-400'"></i>
+                            <span x-text="isMuted ? 'تشغيل الصوت' : 'كتم الصوت'"></span>
+                        </button>
                     </div>
 
                 </div>
@@ -129,75 +142,9 @@
 </section>
 
 <!-- =========================================================================
-     2. VIDEO SHOWCASE (الفيديو بمقاس 1080*1920 بالعرض - bariq.mov/mp4)
+     2. LIVE ANIMATED STATS COUNTER BAR (احصائيات زي مهي موجودة)
      ========================================================================= -->
-<section id="video-showcase" class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative z-10">
-    <div class="text-center max-w-2xl mx-auto mb-8 space-y-2">
-        <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
-            فيديو شو ريل وكالة بريق الرسمي
-        </span>
-        <h2 class="text-2xl sm:text-4xl font-black text-white">شاهد إبداع بريق في دقيقة واحدة</h2>
-        <p class="text-xs sm:text-sm text-gray-300">أعمالنا السينمائية ومونتاجنا الإعلاني بدقة 1080×1920 بملء الشاشة بالعرض</p>
-    </div>
-
-    <!-- 16:9 (1920x1080) Horizontal Video Frame -->
-    <div class="conic-glow-border rounded-3xl overflow-hidden shadow-2xl relative group" 
-         x-data="{ isMuted: true, isPlaying: true }">
-        
-        <div class="relative aspect-video w-full bg-[#08020F] rounded-[1.4rem] overflow-hidden flex items-center justify-center">
-            
-            <video id="pariq-hero-video" 
-                   playsinline 
-                   preload="auto"
-                   autoplay
-                   muted
-                   loop
-                   controls
-                   poster="{{ asset('videos/bariq-poster.jpg') }}"
-                   class="w-full h-full object-contain bg-black">
-                <source src="{{ asset('videos/bariq.mp4') }}" type="video/mp4">
-                <source src="{{ asset('videos/bariq.webm') }}" type="video/webm">
-                متصفحك لا يدعم تشغيل الفيديو المباشر.
-            </video>
-
-            <!-- Top Video Info Bar -->
-            <div class="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-brand-orange/40 text-[9px] sm:text-[11px] text-white font-bold pointer-events-none">
-                <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-orange animate-ping"></span>
-                <span>PARIQ SHOWREEL • 1080×1920</span>
-            </div>
-
-            <!-- Bottom Left Actions: Sound Toggle + Fullscreen Modal -->
-            <div class="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2">
-                <!-- Sound Toggle Button -->
-                <button type="button" 
-                        @click="
-                            const v = document.getElementById('pariq-hero-video');
-                            v.muted = !v.muted;
-                            isMuted = v.muted;
-                            if (v.paused) { v.play(); }
-                        "
-                        class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-[10px] sm:text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1 sm:gap-1.5 shadow-lg active:scale-95">
-                    <i class="fa-solid" :class="isMuted ? 'fa-volume-xmark text-amber-400' : 'fa-volume-high text-emerald-400'"></i>
-                    <span x-text="isMuted ? 'تشغيل الصوت' : 'كتم الصوت'"></span>
-                </button>
-
-                <!-- Fullscreen Modal Button -->
-                <button type="button" 
-                        @click="openMedia('video', '{{ asset('videos/bariq.mp4') }}', 'شو ريل وكالة بريق الرسمي 2026', 'أحدث إنتاجات وكالة بريق للتسويق والتصوير السينمائي والمونتاج الإعلاني بدقة 1080*1920')"
-                        class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-[10px] sm:text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1 sm:gap-1.5 shadow-lg active:scale-95">
-                    <i class="fa-solid fa-expand"></i>
-                    <span>نافذة كاملة</span>
-                </button>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- =========================================================================
-     3. LIVE ANIMATED STATS COUNTER BAR (احصائيات زي مهي موجودة)
-     ========================================================================= -->
-<section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+<section id="stats-summary" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <div x-data="pariqStatsCounter()" 
          x-init="initObserver($el)"
          class="space-y-6">
