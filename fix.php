@@ -6,8 +6,15 @@ ini_set('display_errors', 1);
 echo "<div style='font-family:sans-serif; direction:rtl; text-align:right; max-width:800px; margin:30px auto; padding:25px; border:1px solid #ddd; border-radius:12px; background:#fafafa;'>";
 echo "<h2 style='color:#1e3a8a; margin-top:0;'>🔧 تقرير فحص وتشخيص منصة بريق ميديا</h2>";
 
-// 1. Check PHP Version
+// 1. Check PHP Version & Git Pull
 echo "<p><strong>• إصدار PHP الحالي:</strong> " . PHP_VERSION . "</p>";
+
+if (function_exists('shell_exec')) {
+    $gitPull = shell_exec('git pull origin main 2>&1');
+    echo "<div style='background:#0f172a; color:#38bdf8; padding:10px; border-radius:8px; margin:10px 0; font-family:monospace; direction:ltr; text-align:left;'>";
+    echo "<strong>$ git pull origin main:</strong><br>" . nl2br(htmlspecialchars($gitPull ?? 'No output returned.'));
+    echo "</div>";
+}
 
 // 2. Check .env file
 $envPath = __DIR__ . '/.env';
