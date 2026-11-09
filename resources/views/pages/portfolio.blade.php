@@ -40,6 +40,221 @@
     </div>
 </section>
 
+<!-- =========================================================================
+     3D WIDESCREEN CINEMATIC PORTFOLIO SHOWCASE (معرض أعمال ثلاثي الأبعاد بشكل سينمائي عريض مع حركة تلقائية من الشمال لليمين)
+     ========================================================================= -->
+@php
+    $showcasePortfolio = [];
+    if (isset($portfolioItems) && $portfolioItems->isNotEmpty()) {
+        foreach ($portfolioItems->take(10) as $pItem) {
+            $tUrl = $pItem->thumbnail;
+            $fThumb = $tUrl ? (str_starts_with($tUrl, 'http') ? $tUrl : asset(ltrim($tUrl, '/'))) : asset('images/portfolio/social_1.webp');
+            $fMedia = $pItem->video_url ? (str_starts_with($pItem->video_url, 'http') ? $pItem->video_url : asset(ltrim($pItem->video_url, '/'))) : $fThumb;
+            $mType = $pItem->video_url ? 'video' : 'image';
+            $asp = in_array($pItem->category, ['reels', 'video_reels']) ? 'vertical' : 'landscape';
+            $showcasePortfolio[] = [
+                'id' => $pItem->id,
+                'title' => $pItem->title,
+                'client' => ($pItem->client_name ?? 'شريك نجاح') . ($pItem->client_country ? ' • ' . $pItem->client_country : ''),
+                'category' => $pItem->category_arabic ?? 'إنتاج إبداعي',
+                'mediaType' => $mType,
+                'finalMedia' => $fMedia,
+                'thumb' => $fThumb,
+                'metrics' => $pItem->metrics ?: 'نتائج استثنائية موثقة',
+                'desc' => $pItem->description ?: 'إنتاج إبداعي سينمائي بأعلى معايير الجودة والإتقان من وكالة بريق.',
+                'aspect' => $asp,
+            ];
+        }
+    }
+    if (count($showcasePortfolio) < 5) {
+        $fallbacks = [
+            [
+                'id' => 101,
+                'title' => 'ريلز سينمائي سريع لمطاعم شاورماكر (Shawrmaker Jordan)',
+                'client' => 'Shawrmaker • الأردن 🇯🇴',
+                'category' => 'فيديوهات ريلز وسوشيال 4K',
+                'mediaType' => 'video',
+                'finalMedia' => asset('videos/food_commercial.mp4'),
+                'thumb' => asset('images/portfolio/social_4.webp'),
+                'metrics' => '+1.4M مشاهدة | زيادة 45% في المبيعات',
+                'desc' => 'مونتاج سينمائي سريع وهندسة صوتية واقعية تعكس تجربة الطعام بكل إثارة.',
+                'aspect' => 'vertical',
+            ],
+            [
+                'id' => 102,
+                'title' => 'برومو المغامرة الصحراوية 4K - Fox ATVs سلطنة عمان',
+                'client' => 'Fox ATVs • سلطنة عمان 🇴🇲',
+                'category' => 'فيديو برومو سينمائي',
+                'mediaType' => 'video',
+                'finalMedia' => asset('videos/safari_tour.mp4'),
+                'thumb' => asset('images/portfolio/social_3.webp'),
+                'metrics' => 'تغطية سياحية وتلفزيونية شاملة',
+                'desc' => 'تصوير سينمائي ودرونز بدقة فائقة في الكثبان الذهبية لرياضة المغامرات.',
+                'aspect' => 'landscape',
+            ],
+            [
+                'id' => 103,
+                'title' => 'حملة نمو العيادات والحجوزات - مجمع ماجستي الطبي (الرياض)',
+                'client' => 'مجمع ماجستي • السعودية 🇸🇦',
+                'category' => 'إعلانات ممولة ونتائج ROAS',
+                'mediaType' => 'video',
+                'finalMedia' => asset('videos/promo_reels_1.mp4'),
+                'thumb' => asset('images/portfolio/ad_result_69.webp'),
+                'metrics' => 'عائد إعلاني ROAS 6.8x | +180% حجوزات',
+                'desc' => 'استراتيجية إعلانية متكاملة وإدارة ميزانيات رقمية بمعدل تحويل قياسي.',
+                'aspect' => 'landscape',
+            ],
+            [
+                'id' => 104,
+                'title' => 'تصميم هوية بصرية كاملة وتغليف - مجموعة رامز كولايت',
+                'client' => 'Ramez QLight • الإمارات 🇦🇪',
+                'category' => 'هوية بصرية وبراندينج',
+                'mediaType' => 'image',
+                'finalMedia' => asset('images/portfolio/ramez_qlight.webp'),
+                'thumb' => asset('images/portfolio/ramez_qlight.webp'),
+                'metrics' => 'براندينج ثلاثي الأبعاد وتغليف فاخر',
+                'desc' => 'بناء هوية بصرية رائدة من الألف إلى الياء لتثبيت الريادة السوقية.',
+                'aspect' => 'landscape',
+            ],
+            [
+                'id' => 105,
+                'title' => 'بوستر إعلاني وتسويقي لحملات التوصيل السريع',
+                'client' => 'تطبيقات التوصيل • مصر 🇪🇬',
+                'category' => 'تصميم جرافيك إعلاني',
+                'mediaType' => 'image',
+                'finalMedia' => asset('images/portfolio/free_delivery.webp'),
+                'thumb' => asset('images/portfolio/free_delivery.webp'),
+                'metrics' => 'معدل نقر CTR تجاوز 9.4%',
+                'desc' => 'تصميم إبداعي عالي الجاذبية البصرية لتحفيز الشراء الفوري.',
+                'aspect' => 'landscape',
+            ],
+        ];
+        $showcasePortfolio = array_merge($showcasePortfolio, $fallbacks);
+    }
+@endphp
+
+<section class="py-12 bg-gradient-to-b from-[#08020F] via-[#140626] to-transparent relative z-10 overflow-hidden"
+         x-data="{ 
+             activeIdx: 0, 
+             autoplayTimer: null,
+             works: {{ Js::from($showcasePortfolio) }},
+             next() { this.activeIdx = (this.activeIdx + 1) % this.works.length; },
+             prev() { this.activeIdx = (this.activeIdx - 1 + this.works.length) % this.works.length; },
+             startAutoplay() {
+                 this.stopAutoplay();
+                 this.autoplayTimer = setInterval(() => { this.next(); }, 3400);
+             },
+             stopAutoplay() {
+                 if (this.autoplayTimer) {
+                     clearInterval(this.autoplayTimer);
+                     this.autoplayTimer = null;
+                 }
+             },
+             getCardStyle(idx) {
+                 const total = this.works.length;
+                 let diff = idx - this.activeIdx;
+                 if (diff > total / 2) diff -= total;
+                 if (diff < -total / 2) diff += total;
+                 const absDiff = Math.abs(diff);
+                 if (absDiff > 2) return 'display: none;';
+                 const translateX = diff * (window.innerWidth < 640 ? 250 : (window.innerWidth < 1024 ? 340 : 430));
+                 const scale = 1 - (absDiff * 0.12);
+                 const rotateY = diff * -16;
+                 const zIndex = 30 - (absDiff * 10);
+                 const opacity = 1 - (absDiff * 0.35);
+                 return `transform: translateX(${translateX}px) scale(${scale}) perspective(1000px) rotateY(${rotateY}deg); z-index: ${zIndex}; opacity: ${opacity};`;
+             }
+         }"
+         x-init="startAutoplay()"
+         @mouseenter="stopAutoplay()"
+         @mouseleave="startAutoplay()"
+         @touchstart="stopAutoplay()"
+         @touchend="startAutoplay()">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="text-center max-w-2xl mx-auto mb-8 space-y-2">
+            <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
+                صالة عرض سينمائية عريضة 3D
+            </span>
+            <h2 class="text-2xl sm:text-4xl font-black text-white">استعراض تفاعلي لأبرز أعمال بريق</h2>
+            <p class="text-xs sm:text-sm text-gray-300">تصميم عريض سينمائي يتحرك تلقائياً من الشمال لليمين • انقر على أي عمل لفتحه بجودة فائقة</p>
+        </div>
+
+        <!-- 3D Widescreen Track -->
+        <div class="relative py-4">
+            <div class="relative h-[270px] sm:h-[330px] md:h-[370px] lg:h-[400px] w-full flex items-center justify-center overflow-hidden">
+                <template x-for="(item, idx) in works" :key="item.id + '-' + idx">
+                    <div @click="activeIdx === idx ? openMedia(item.mediaType, item.finalMedia, item.title, item.desc, item.aspect) : (activeIdx = idx)"
+                         :style="getCardStyle(idx)"
+                         :class="activeIdx === idx ? 'border-2 border-brand-orange shadow-[0_0_55px_rgba(255,148,32,0.45)] ring-2 ring-brand-orange/50' : 'border border-purple-800/60 hover:border-brand-orange/60'"
+                         class="absolute w-[310px] sm:w-[440px] md:w-[530px] lg:w-[610px] h-[230px] sm:h-[290px] md:h-[330px] lg:h-[360px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ease-out shadow-2xl group flex flex-col justify-between select-none bg-[#0D031A]">
+                         
+                         <!-- Full Background Artwork -->
+                         <img :src="item.thumb" :alt="item.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-108">
+                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/60"></div>
+                         
+                         <!-- Top Category & Client Info -->
+                         <div class="relative z-10 p-4 sm:p-5 flex items-center justify-between gap-2">
+                             <span class="px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-brand-orange/50 text-[10px] sm:text-xs font-black text-brand-orange flex items-center gap-1.5 shadow-md">
+                                 <i class="fa-solid" :class="item.mediaType === 'video' ? 'fa-clapperboard' : 'fa-image'"></i>
+                                 <span x-text="item.category"></span>
+                             </span>
+                             <span class="px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-[10px] sm:text-xs font-bold text-gray-200 truncate max-w-[200px]"
+                                   x-text="item.client"></span>
+                         </div>
+                         
+                         <!-- Centered Play/Inspect Glowing Button -->
+                         <div class="relative z-10 flex items-center justify-center my-auto pointer-events-none">
+                             <div class="w-13 h-13 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-brand-orange to-amber-400 text-brand-dark flex items-center justify-center text-lg sm:text-2xl shadow-[0_0_30px_#FF9420] group-hover:scale-115 transition-transform duration-300">
+                                 <i class="fa-solid" :class="item.mediaType === 'video' ? 'fa-play mr-0.5' : 'fa-expand'"></i>
+                             </div>
+                         </div>
+
+                         <!-- Bottom Frosted Info Bar -->
+                         <div class="relative z-10 p-3 sm:p-4 bg-[#0A0214]/90 backdrop-blur-md border-t border-brand-orange/30 flex items-center justify-between gap-3 text-right">
+                             <div class="min-w-0 flex-1">
+                                 <h3 class="text-xs sm:text-sm md:text-base font-black text-white truncate group-hover:text-brand-orange transition-colors" x-text="item.title"></h3>
+                                 <div class="text-[10px] sm:text-xs text-amber-300 font-bold truncate mt-0.5" x-text="item.metrics"></div>
+                             </div>
+                             
+                             <button type="button"
+                                     @click.stop="openMedia(item.mediaType, item.finalMedia, item.title, item.desc, item.aspect)"
+                                     class="shrink-0 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-brand-dark font-black text-[10px] sm:text-xs transition shadow-lg flex items-center gap-1.5 active:scale-95">
+                                 <i class="fa-solid" :class="item.mediaType === 'video' ? 'fa-play' : 'fa-eye'"></i>
+                                 <span class="hidden sm:inline">مشاهدة العمل</span>
+                             </button>
+                         </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center justify-center gap-5 sm:gap-7 mt-8">
+                <button type="button" @click="prev()" 
+                        aria-label="السابق"
+                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#150626] border border-purple-800/60 hover:border-brand-orange hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow-lg active:scale-95">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <div class="flex items-center gap-3 w-48 sm:w-72">
+                    <span class="font-mono text-xs sm:text-sm font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
+                    <div class="flex-grow h-1.5 bg-purple-950 rounded-full overflow-hidden relative border border-purple-800/40">
+                        <div class="h-full bg-gradient-to-r from-brand-orange to-brand-peach transition-all duration-300 rounded-full"
+                             :style="'width: ' + (((activeIdx + 1) / works.length) * 100) + '%'"></div>
+                    </div>
+                    <span class="font-mono text-xs sm:text-sm font-bold text-gray-400" x-text="works.length < 10 ? '0' + works.length : works.length">10</span>
+                </div>
+
+                <button type="button" @click="next()" 
+                        aria-label="التالي"
+                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#150626] border border-purple-800/60 hover:border-brand-orange hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow-lg active:scale-95">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- MAIN PORTFOLIO SECTION WITH FILTER (جميع الأعمال . برومو . ريلز . تصميم . حملات إعلانية . هوية بصرية) -->
 <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10" x-data="{ activeFilter: 'all' }">
     

@@ -43,6 +43,132 @@
     </div>
 </section>
 
+<!-- =========================================================================
+     3D COVERFLOW SERVICES SHOWCASE (معرض الخدمات ثلاثي الأبعاد مع حركة تلقائية من الشمال لليمين)
+     ========================================================================= -->
+<section class="py-12 bg-gradient-to-b from-[#08020F] via-[#140626] to-transparent relative z-10 overflow-hidden"
+         x-data="{ 
+             activeIdx: 0, 
+             autoplayTimer: null,
+             services: [
+                 { id: 1, slug: 'video-shooting', title: 'تصوير الفيديو السينمائي', category: 'إنتاج سينمائي 4K', icon: 'fa-solid fa-video', desc: 'تصوير فيديوهات دعائية، بروموهات، كواليس، أو محتوى مخصص للسوشيال ميديا، بأسلوب عصري وجودة عالية تعبر عن هويتك.', img: '{{ asset('images/portfolio/social_4.webp') }}' },
+                 { id: 2, slug: 'video-editing', title: 'مونتاج الفيديو السريع', category: 'ريلز وبرومو فائق الجاذبية', icon: 'fa-solid fa-film', desc: 'نستخدم أحدث برامج المونتاج لنقدم فيديوهات عصرية عالية الجودة، بتأثيرات بصرية وصوتية احترافية، وتلوين دقيق.', img: '{{ asset('images/portfolio/social_2.webp') }}' },
+                 { id: 3, slug: 'social-media', title: 'إدارة وسائل التواصل الاجتماعي', category: 'نمو وتفاعل رقمي', icon: 'fa-solid fa-share-nodes', desc: 'نُدير حساباتك على مختلف المنصات من خلال إنشاء محتوى جذاب، وتصميم منشورات احترافية، والتفاعل مع الجمهور.', img: '{{ asset('images/portfolio/social_1.webp') }}' },
+                 { id: 4, slug: 'paid-ads', title: 'الإعلانات الممولة', category: 'حملات بأعلى عائد ROAS', icon: 'fa-solid fa-chart-line', desc: 'نصمم ونُدير حملات إعلانية احترافية تستهدف جمهورك بدقة عبر المنصات الرقمية المختلفة، لزيادة الانتشار.', img: '{{ asset('images/portfolio/ad_result_69.webp') }}' },
+                 { id: 5, slug: 'photography', title: 'جلسات التصوير الفوتوغرافي', category: 'منتجات وأماكن وفعاليات', icon: 'fa-solid fa-camera', desc: 'جلسات تصوير احترافية للمنتجات، الأماكن، الفعاليات، أو فريق العمل، باستخدام أحدث المعدات.', img: '{{ asset('images/portfolio/free_delivery.webp') }}' },
+                 { id: 6, slug: 'graphic-design', title: 'تصميم الجرافيك الإبداعي', category: 'أغلفة وسوشيال ميديا', icon: 'fa-solid fa-bezier-curve', desc: 'إبداع في التصميم البصري يعكس هوية علامتك التجارية ويجذب انتباه جمهورك المستهدف.', img: '{{ asset('images/portfolio/ramez_qlight.webp') }}' },
+                 { id: 7, slug: 'branding', title: 'الهوية البصرية والبراندينج', category: 'بناء العلامات التجارية', icon: 'fa-solid fa-palette', desc: 'نساعدك على بناء هوية قوية لعلامتك التجارية من الألف إلى الياء، تعزز وجودك في السوق.', img: '{{ asset('images/portfolio/logo_1.webp') }}' },
+                 { id: 8, slug: 'marketing-strategy', title: 'إعداد الخطط والاستراتيجيات', category: 'تحليل ودراسة سوق شاملة', icon: 'fa-solid fa-lightbulb', desc: 'نضع خطط تسويقية شاملة ومخصصة تناسب أهدافك، مدعومة بتحليل السوق والمنافسين.', img: '{{ asset('images/portfolio/ad_result_70.webp') }}' },
+                 { id: 9, slug: 'data-analysis', title: 'تحليل البيانات والتقارير', category: 'قياس دقيق للأداء والنتائج', icon: 'fa-solid fa-chart-pie', desc: 'نقيس الأداء، ونحلل النتائج بدقة، ونقدم لك تقارير واضحة تساعدك في اتخاذ قرارات مدروسة.', img: '{{ asset('images/portfolio/ad_result_72.webp') }}' },
+                 { id: 10, slug: 'content-writing', title: 'صناعة وكتابة المحتوى', category: 'سيناريوهات ونصوص تسويقية', icon: 'fa-solid fa-pen-nib', desc: 'نكتب محتوى مبتكر بأسلوب احترافي بعيداً عن التكرار، لكي نجذب الجمهور من أول جملة.', img: '{{ asset('images/portfolio/social_3.webp') }}' }
+             ],
+             next() { this.activeIdx = (this.activeIdx + 1) % this.services.length; },
+             prev() { this.activeIdx = (this.activeIdx - 1 + this.services.length) % this.services.length; },
+             startAutoplay() {
+                 this.stopAutoplay();
+                 this.autoplayTimer = setInterval(() => { this.next(); }, 3200);
+             },
+             stopAutoplay() {
+                 if (this.autoplayTimer) {
+                     clearInterval(this.autoplayTimer);
+                     this.autoplayTimer = null;
+                 }
+             },
+             getCardStyle(idx) {
+                 const total = this.services.length;
+                 let diff = idx - this.activeIdx;
+                 if (diff > total / 2) diff -= total;
+                 if (diff < -total / 2) diff += total;
+                 const absDiff = Math.abs(diff);
+                 if (absDiff > 2) return 'display: none;';
+                 const translateX = diff * (window.innerWidth < 640 ? 230 : (window.innerWidth < 1024 ? 280 : 330));
+                 const scale = 1 - (absDiff * 0.14);
+                 const rotateY = diff * -18;
+                 const zIndex = 30 - (absDiff * 10);
+                 const opacity = 1 - (absDiff * 0.35);
+                 return `transform: translateX(${translateX}px) scale(${scale}) perspective(1000px) rotateY(${rotateY}deg); z-index: ${zIndex}; opacity: ${opacity};`;
+             }
+         }"
+         x-init="startAutoplay()"
+         @mouseenter="stopAutoplay()"
+         @mouseleave="startAutoplay()"
+         @touchstart="stopAutoplay()"
+         @touchend="startAutoplay()">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="text-center max-w-2xl mx-auto mb-8 space-y-2">
+            <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
+                استعراض تفاعلي ثلاثي الأبعاد
+            </span>
+            <h2 class="text-2xl sm:text-4xl font-black text-white">تصفح خدماتنا الـ 10 بأسلوب عصري</h2>
+            <p class="text-xs sm:text-sm text-gray-300">تتحرك الكروت تلقائياً ويمكنك النقر على أي خدمة للانتقال إلى تفاصيلها ومخرجاتها فوراً</p>
+        </div>
+
+        <!-- 3D Coverflow Container -->
+        <div class="relative py-4">
+            <div class="relative h-[430px] sm:h-[470px] w-full flex items-center justify-center overflow-hidden">
+                <template x-for="(srv, idx) in services" :key="srv.id">
+                    <div @click="activeIdx = idx"
+                         :style="getCardStyle(idx)"
+                         :class="activeIdx === idx ? 'border-2 border-brand-orange shadow-[0_0_50px_rgba(255,148,32,0.35)]' : 'border border-purple-800/50 hover:border-brand-orange/60'"
+                         class="absolute w-[270px] sm:w-[320px] md:w-[360px] h-[390px] sm:h-[430px] rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ease-out shadow-2xl group flex flex-col justify-between select-none bg-[#110423]">
+                         
+                         <img :src="srv.img" :alt="srv.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-108">
+                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                         
+                         <div class="relative z-10 p-5 flex items-center justify-between">
+                             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-brand-orange/40 text-[11px] font-black text-brand-orange font-mono"
+                                   x-text="'0' + srv.id"></span>
+                             <div class="w-9 h-9 rounded-2xl bg-brand-orange text-brand-dark flex items-center justify-center text-xs shadow-lg">
+                                 <i :class="srv.icon"></i>
+                             </div>
+                         </div>
+                         
+                         <div class="relative z-10 p-5 sm:p-6 space-y-2 text-right">
+                             <div class="text-[10px] sm:text-[11px] font-bold text-brand-peach uppercase tracking-wider" x-text="srv.category"></div>
+                             <h3 class="text-base sm:text-xl font-black text-white group-hover:text-brand-orange transition-colors" x-text="srv.title"></h3>
+                             <p class="text-[11px] sm:text-xs text-gray-300 line-clamp-2 leading-relaxed" x-text="srv.desc"></p>
+                             
+                             <div class="pt-2">
+                                 <a :href="'#' + srv.slug" 
+                                    @click.stop
+                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-brand-dark font-black text-[11px] transition shadow-lg active:scale-95">
+                                     <span>انتقل لتفاصيل الخدمة</span>
+                                     <i class="fa-solid fa-arrow-down text-[9px]"></i>
+                                 </a>
+                             </div>
+                         </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center justify-center gap-5 sm:gap-7 mt-8">
+                <button type="button" @click="prev()" 
+                        aria-label="السابق"
+                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#150626] border border-purple-800/60 hover:border-brand-orange hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow-lg active:scale-95">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <div class="flex items-center gap-3 w-48 sm:w-72">
+                    <span class="font-mono text-xs sm:text-sm font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
+                    <div class="flex-grow h-1.5 bg-purple-950 rounded-full overflow-hidden relative border border-purple-800/40">
+                        <div class="h-full bg-gradient-to-r from-brand-orange to-brand-peach transition-all duration-300 rounded-full"
+                             :style="'width: ' + (((activeIdx + 1) / services.length) * 100) + '%'"></div>
+                    </div>
+                    <span class="font-mono text-xs sm:text-sm font-bold text-gray-400">10</span>
+                </div>
+
+                <button type="button" @click="next()" 
+                        aria-label="التالي"
+                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#150626] border border-purple-800/60 hover:border-brand-orange hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow-lg active:scale-95">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- MAIN SERVICES SECTION (10 خدمات متكاملة بدون تسعير مع قالب صورة لكل خدمة) -->
 <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10" x-data="{ activeCategory: 'all' }">
     

@@ -322,6 +322,7 @@
 <section id="services-summary" class="py-24 bg-gradient-to-b from-[#08020F] via-[#140626] to-[#0A0216] relative z-10 overflow-hidden"
          x-data="{ 
              activeIdx: 0, 
+             autoplayTimer: null,
              services: [
                  { id: 1, slug: 'video-shooting', title: 'تصوير الفيديو السينمائي', category: 'إنتاج سينمائي 4K', icon: 'fa-solid fa-video', desc: 'تصوير فيديوهات دعائية، بروموهات، كواليس، أو محتوى مخصص للسوشيال ميديا، بأسلوب عصري وجودة عالية تعبر عن هويتك.', img: '{{ asset('images/portfolio/social_4.webp') }}' },
                  { id: 2, slug: 'video-editing', title: 'مونتاج الفيديو السريع', category: 'ريلز وبرومو فائق الجاذبية', icon: 'fa-solid fa-film', desc: 'نستخدم أحدث برامج المونتاج لنقدم فيديوهات عصرية عالية الجودة، بتأثيرات بصرية وصوتية احترافية، وتلوين دقيق، مما يضمن إخراجاً جذاباً يحقق أهدافك ويوصل رسالتك بوضوح.', img: '{{ asset('images/portfolio/social_2.webp') }}' },
@@ -336,6 +337,16 @@
              ],
              next() { this.activeIdx = (this.activeIdx + 1) % this.services.length; },
              prev() { this.activeIdx = (this.activeIdx - 1 + this.services.length) % this.services.length; },
+             startAutoplay() {
+                 this.stopAutoplay();
+                 this.autoplayTimer = setInterval(() => { this.next(); }, 3200);
+             },
+             stopAutoplay() {
+                 if (this.autoplayTimer) {
+                     clearInterval(this.autoplayTimer);
+                     this.autoplayTimer = null;
+                 }
+             },
              getCardStyle(idx) {
                  const total = this.services.length;
                  let diff = idx - this.activeIdx;
@@ -350,7 +361,12 @@
                  const opacity = 1 - (absDiff * 0.35);
                  return `transform: translateX(${translateX}px) scale(${scale}) perspective(1000px) rotateY(${rotateY}deg); z-index: ${zIndex}; opacity: ${opacity};`;
              }
-         }">
+         }"
+         x-init="startAutoplay()"
+         @mouseenter="stopAutoplay()"
+         @mouseleave="startAutoplay()"
+         @touchstart="stopAutoplay()"
+         @touchend="startAutoplay()">
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
