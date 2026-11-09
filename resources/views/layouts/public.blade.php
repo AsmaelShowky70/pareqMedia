@@ -230,6 +230,27 @@
             transform: translateY(-4px);
         }
 
+        /* Flowing Pipeline Laser Pulse for Process Sequence (RTL Flow: Step 1 -> 4) */
+        @keyframes pipelineLaserRtl {
+            0% {
+                right: -15%;
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                right: 115%;
+                opacity: 0;
+            }
+        }
+        .pipeline-laser-beam {
+            animation: pipelineLaserRtl 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 7px; }
         ::-webkit-scrollbar-track { background: #06010D; }

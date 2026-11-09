@@ -1202,16 +1202,18 @@
                 </p>
             </div>
 
-            <!-- Connected Horizontal Timeline with Flowing Laser Pulse -->
-            <div class="relative py-6 z-10">
+            <!-- Connected Horizontal Timeline with Flowing Laser Pulse (تسلسل عمليات متناسق) -->
+            <div class="relative pt-4 pb-6 z-10">
                 
                 <!-- Center Horizontal Connected Line with Flowing Laser & Progress Beam (Desktop) -->
-                <div class="hidden md:block absolute top-[4.2rem] left-14 right-14 h-1.5 bg-[#1B0A33] rounded-full overflow-hidden z-0 border border-purple-800/40">
-                    <!-- Flowing Infinite Electric Beam -->
-                    <div class="energy-beam-line absolute inset-0 w-full h-full opacity-60"></div>
-                    <!-- Dynamic Progress Bar based on active step -->
-                    <div class="h-full bg-gradient-to-r from-brand-orange via-amber-400 to-brand-peach transition-all duration-500 ease-out rounded-full shadow-[0_0_15px_#FF9420]"
-                         :style="'width: ' + (((activeStep - 1) / 3) * 100) + '%'"></div>
+                <!-- يبدأ من منتصف المربع الأول 01 وينتهي عند منتصف المربع الأخير 04 بدون أي بروز خارجي -->
+                <div class="hidden md:block absolute top-[5.25rem] -translate-y-1/2 right-[12.5%] left-[12.5%] h-1.5 sm:h-2 bg-[#1B0A33] rounded-full overflow-hidden z-0 border border-purple-800/50 shadow-inner">
+                    <!-- Flowing Infinite Electric Laser Beam (حركة أنيميشن مستمرة تتدفق عبر تسلسل العمليات من الخطوة 1 إلى 4) -->
+                    <div class="pipeline-laser-beam absolute top-0 h-full w-32 sm:w-44 bg-gradient-to-l from-transparent via-[#FFE3B8] via-[#FF9420] to-transparent"></div>
+                    
+                    <!-- Dynamic Progress Bar based on active step (RTL: يمتد من اليمين لليسار حسب الخطوة النشطة) -->
+                    <div class="absolute top-0 right-0 h-full bg-gradient-to-l from-brand-orange via-amber-400 to-brand-peach transition-all duration-700 ease-out rounded-full shadow-[0_0_15px_#FF9420]"
+                         :style="'width: ' + (((activeStep - 1) / 3) * 100) + '%;'"></div>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 relative z-10">
@@ -1219,19 +1221,20 @@
                     <!-- Step 1: تواصل مباشر -->
                     <div @mouseenter="activeStep = 1; autoPlay = false"
                          @click="activeStep = 1"
-                         class="flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl transition-all duration-300 cursor-pointer select-none group/step"
-                         :class="activeStep === 1 ? 'bg-brand-orange/15 border border-brand-orange/40 shadow-xl scale-105' : 'hover:bg-purple-950/40 border border-transparent'">
+                         class="flex flex-col items-center text-center px-2 pt-1 pb-3 cursor-pointer select-none group/step relative">
                         
                         <!-- Step Pill Badge -->
-                        <span class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full border mb-2 transition-all duration-300"
-                              :class="activeStep === 1 ? 'bg-brand-orange text-brand-dark border-brand-orange shadow-[0_0_12px_#FF9420]' : 'bg-[#140526] text-gray-400 border-purple-800/60'">
-                            01
-                        </span>
+                        <div class="h-6 flex items-center justify-center mb-2">
+                            <span class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full border transition-all duration-300"
+                                  :class="activeStep === 1 ? 'bg-brand-orange text-brand-dark border-brand-orange shadow-[0_0_12px_#FF9420]' : 'bg-[#140526] text-gray-400 border-purple-800/60'">
+                                01
+                            </span>
+                        </div>
 
-                        <!-- Icon Container with Animated Ping & Glow -->
-                        <div class="relative my-1">
-                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black transition-all duration-500"
-                                 :class="activeStep === 1 ? 'scale-115 ring-4 ring-brand-orange shadow-[0_0_35px_rgba(255,148,32,0.85)] bg-gradient-to-tr from-brand-orange to-amber-300 text-brand-dark' : 'scale-100 ring-4 ring-[#16062C] bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark opacity-85 group-hover/step:opacity-100 group-hover/step:scale-105'">
+                        <!-- Icon Container with Animated Ping & Subtle Glow (بدون أي مربع كبير محيط) -->
+                        <div class="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center z-10 my-0.5">
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black transition-all duration-300"
+                                 :class="activeStep === 1 ? 'scale-110 ring-4 ring-amber-400/80 shadow-[0_0_28px_rgba(255,148,32,0.9)] bg-gradient-to-tr from-brand-orange to-amber-300 text-brand-dark' : 'scale-100 ring-2 ring-purple-900/60 bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark opacity-90 group-hover/step:opacity-100 group-hover/step:scale-105'">
                                 <i class="fa-solid fa-comments"></i>
                             </div>
                             <span x-show="activeStep === 1" 
@@ -1239,7 +1242,7 @@
                                   class="absolute -inset-1 rounded-2xl bg-brand-orange/40 animate-ping pointer-events-none"></span>
                         </div>
 
-                        <div class="mt-2 space-y-1">
+                        <div class="mt-3 space-y-1">
                             <h4 class="text-xs sm:text-sm font-black transition-colors duration-300"
                                 :class="activeStep === 1 ? 'text-brand-orange drop-shadow' : 'text-white'">
                                 تواصل مباشر
@@ -1254,17 +1257,18 @@
                     <!-- Step 2: تنفيذ سريع -->
                     <div @mouseenter="activeStep = 2; autoPlay = false"
                          @click="activeStep = 2"
-                         class="flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl transition-all duration-300 cursor-pointer select-none group/step"
-                         :class="activeStep === 2 ? 'bg-brand-orange/15 border border-brand-orange/40 shadow-xl scale-105' : 'hover:bg-purple-950/40 border border-transparent'">
+                         class="flex flex-col items-center text-center px-2 pt-1 pb-3 cursor-pointer select-none group/step relative">
                         
-                        <span class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full border mb-2 transition-all duration-300"
-                              :class="activeStep === 2 ? 'bg-brand-orange text-brand-dark border-brand-orange shadow-[0_0_12px_#FF9420]' : 'bg-[#140526] text-gray-400 border-purple-800/60'">
-                            02
-                        </span>
+                        <div class="h-6 flex items-center justify-center mb-2">
+                            <span class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full border transition-all duration-300"
+                                  :class="activeStep === 2 ? 'bg-brand-orange text-brand-dark border-brand-orange shadow-[0_0_12px_#FF9420]' : 'bg-[#140526] text-gray-400 border-purple-800/60'">
+                                02
+                            </span>
+                        </div>
 
-                        <div class="relative my-1">
-                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black transition-all duration-500"
-                                 :class="activeStep === 2 ? 'scale-115 ring-4 ring-brand-orange shadow-[0_0_35px_rgba(255,148,32,0.85)] bg-gradient-to-tr from-brand-orange to-amber-300 text-brand-dark' : 'scale-100 ring-4 ring-[#16062C] bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark opacity-85 group-hover/step:opacity-100 group-hover/step:scale-105'">
+                        <div class="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center z-10 my-0.5">
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black transition-all duration-300"
+                                 :class="activeStep === 2 ? 'scale-110 ring-4 ring-amber-400/80 shadow-[0_0_28px_rgba(255,148,32,0.9)] bg-gradient-to-tr from-brand-orange to-amber-300 text-brand-dark' : 'scale-100 ring-2 ring-purple-900/60 bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark opacity-90 group-hover/step:opacity-100 group-hover/step:scale-105'">
                                 <i class="fa-solid fa-bolt"></i>
                             </div>
                             <span x-show="activeStep === 2" 
@@ -1272,7 +1276,7 @@
                                   class="absolute -inset-1 rounded-2xl bg-brand-orange/40 animate-ping pointer-events-none"></span>
                         </div>
 
-                        <div class="mt-2 space-y-1">
+                        <div class="mt-3 space-y-1">
                             <h4 class="text-xs sm:text-sm font-black transition-colors duration-300"
                                 :class="activeStep === 2 ? 'text-brand-orange drop-shadow' : 'text-white'">
                                 تنفيذ سريع
@@ -1287,17 +1291,18 @@
                     <!-- Step 3: تحقيق الهدف -->
                     <div @mouseenter="activeStep = 3; autoPlay = false"
                          @click="activeStep = 3"
-                         class="flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl transition-all duration-300 cursor-pointer select-none group/step"
-                         :class="activeStep === 3 ? 'bg-brand-orange/15 border border-brand-orange/40 shadow-xl scale-105' : 'hover:bg-purple-950/40 border border-transparent'">
+                         class="flex flex-col items-center text-center px-2 pt-1 pb-3 cursor-pointer select-none group/step relative">
                         
-                        <span class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full border mb-2 transition-all duration-300"
-                              :class="activeStep === 3 ? 'bg-brand-orange text-brand-dark border-brand-orange shadow-[0_0_12px_#FF9420]' : 'bg-[#140526] text-gray-400 border-purple-800/60'">
-                            03
-                        </span>
+                        <div class="h-6 flex items-center justify-center mb-2">
+                            <span class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full border transition-all duration-300"
+                                  :class="activeStep === 3 ? 'bg-brand-orange text-brand-dark border-brand-orange shadow-[0_0_12px_#FF9420]' : 'bg-[#140526] text-gray-400 border-purple-800/60'">
+                                03
+                            </span>
+                        </div>
 
-                        <div class="relative my-1">
-                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black transition-all duration-500"
-                                 :class="activeStep === 3 ? 'scale-115 ring-4 ring-brand-orange shadow-[0_0_35px_rgba(255,148,32,0.85)] bg-gradient-to-tr from-brand-orange to-amber-300 text-brand-dark' : 'scale-100 ring-4 ring-[#16062C] bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark opacity-85 group-hover/step:opacity-100 group-hover/step:scale-105'">
+                        <div class="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center z-10 my-0.5">
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black transition-all duration-300"
+                                 :class="activeStep === 3 ? 'scale-110 ring-4 ring-amber-400/80 shadow-[0_0_28px_rgba(255,148,32,0.9)] bg-gradient-to-tr from-brand-orange to-amber-300 text-brand-dark' : 'scale-100 ring-2 ring-purple-900/60 bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark opacity-90 group-hover/step:opacity-100 group-hover/step:scale-105'">
                                 <i class="fa-solid fa-bullseye"></i>
                             </div>
                             <span x-show="activeStep === 3" 
@@ -1305,7 +1310,7 @@
                                   class="absolute -inset-1 rounded-2xl bg-brand-orange/40 animate-ping pointer-events-none"></span>
                         </div>
 
-                        <div class="mt-2 space-y-1">
+                        <div class="mt-3 space-y-1">
                             <h4 class="text-xs sm:text-sm font-black transition-colors duration-300"
                                 :class="activeStep === 3 ? 'text-brand-orange drop-shadow' : 'text-white'">
                                 تحقيق الهدف
@@ -1320,17 +1325,18 @@
                     <!-- Step 4: إبداع بلا حدود -->
                     <div @mouseenter="activeStep = 4; autoPlay = false"
                          @click="activeStep = 4"
-                         class="flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl transition-all duration-300 cursor-pointer select-none group/step"
-                         :class="activeStep === 4 ? 'bg-brand-orange/15 border border-brand-orange/40 shadow-xl scale-105' : 'hover:bg-purple-950/40 border border-transparent'">
+                         class="flex flex-col items-center text-center px-2 pt-1 pb-3 cursor-pointer select-none group/step relative">
                         
-                        <span class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full border mb-2 transition-all duration-300"
-                              :class="activeStep === 4 ? 'bg-brand-orange text-brand-dark border-brand-orange shadow-[0_0_12px_#FF9420]' : 'bg-[#140526] text-gray-400 border-purple-800/60'">
-                            04
-                        </span>
+                        <div class="h-6 flex items-center justify-center mb-2">
+                            <span class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full border transition-all duration-300"
+                                  :class="activeStep === 4 ? 'bg-brand-orange text-brand-dark border-brand-orange shadow-[0_0_12px_#FF9420]' : 'bg-[#140526] text-gray-400 border-purple-800/60'">
+                                04
+                            </span>
+                        </div>
 
-                        <div class="relative my-1">
-                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black transition-all duration-500"
-                                 :class="activeStep === 4 ? 'scale-115 ring-4 ring-brand-orange shadow-[0_0_35px_rgba(255,148,32,0.85)] bg-gradient-to-tr from-brand-orange to-amber-300 text-brand-dark' : 'scale-100 ring-4 ring-[#16062C] bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark opacity-85 group-hover/step:opacity-100 group-hover/step:scale-105'">
+                        <div class="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center z-10 my-0.5">
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black transition-all duration-300"
+                                 :class="activeStep === 4 ? 'scale-110 ring-4 ring-amber-400/80 shadow-[0_0_28px_rgba(255,148,32,0.9)] bg-gradient-to-tr from-brand-orange to-amber-300 text-brand-dark' : 'scale-100 ring-2 ring-purple-900/60 bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark opacity-90 group-hover/step:opacity-100 group-hover/step:scale-105'">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i>
                             </div>
                             <span x-show="activeStep === 4" 
@@ -1338,7 +1344,7 @@
                                   class="absolute -inset-1 rounded-2xl bg-brand-orange/40 animate-ping pointer-events-none"></span>
                         </div>
 
-                        <div class="mt-2 space-y-1">
+                        <div class="mt-3 space-y-1">
                             <h4 class="text-xs sm:text-sm font-black transition-colors duration-300"
                                 :class="activeStep === 4 ? 'text-brand-orange drop-shadow' : 'text-white'">
                                 إبداع بلا حدود
