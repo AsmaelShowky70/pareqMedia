@@ -301,11 +301,15 @@
     <header class="fixed top-0 inset-x-0 z-50 bg-[#08020F]/85 backdrop-blur-2xl border-b border-purple-900/30 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Brand Identity Logo with Ambient Glow (Clean luxury icon as requested) -->
-            <a href="{{ route('home') }}" class="flex items-center group relative">
+            <!-- Brand Identity Logo with Ambient Glow (Bigger with PARIQ AGENCY as requested) -->
+            <a href="{{ route('home') }}" class="flex items-center gap-3 sm:gap-3.5 group relative py-1">
                 <div class="relative flex items-center justify-center">
                     <span class="absolute -inset-2 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-peach opacity-30 group-hover:opacity-75 blur-md transition duration-300"></span>
-                    <img src="{{ asset('images/logo.png') }}" alt="وكالة بريق للإعلام والتصميم" class="relative h-12 sm:h-14 w-auto object-contain drop-shadow group-hover:scale-105 transition-transform duration-300">
+                    <img src="{{ asset('images/logo.png') }}" alt="PARIQ AGENCY" class="relative h-14 sm:h-16 lg:h-16 w-auto object-contain drop-shadow-xl group-hover:scale-105 transition-transform duration-300">
+                </div>
+                <div class="flex flex-col text-right">
+                    <span class="text-base sm:text-lg font-black gold-gradient-text tracking-wide leading-tight">وكالة بريق</span>
+                    <span class="text-[10px] sm:text-[11px] font-black text-brand-orange tracking-widest font-mono uppercase">PARIQ AGENCY</span>
                 </div>
             </a>
 
@@ -325,10 +329,10 @@
                     <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-peach {{ request()->routeIs('public.services') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
                 </a>
 
-                <!-- 3. Portfolio Page -->
+                <!-- 3. Portfolio Page (Updated to اعمالنا) -->
                 <a href="{{ route('public.portfolio') }}" 
                    class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('public.portfolio') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }}">
-                    <span>معرض الأعمال</span>
+                    <span>أعمالنا</span>
                     <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-peach {{ request()->routeIs('public.portfolio') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
                 </a>
 
@@ -400,7 +404,7 @@
 
             <a href="{{ route('home') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('home') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">الرئيسية</a>
             <a href="{{ route('public.services') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.services') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">خدماتنا</a>
-            <a href="{{ route('public.portfolio') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.portfolio') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">معرض الأعمال</a>
+            <a href="{{ route('public.portfolio') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.portfolio') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">أعمالنا</a>
             <a href="{{ route('public.about') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.process') || request()->routeIs('public.about') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">من نحن</a>
             <a href="{{ route('public.contact') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.contact') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">تواصل معنا</a>
             
@@ -456,8 +460,8 @@
                     <h4 class="text-sm font-black text-white border-b border-purple-800/40 pb-2">روابط المنصة الرئيسية</h4>
                     <ul class="space-y-2 text-xs">
                         <li><a href="{{ route('home') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> الصفحة الرئيسية</a></li>
-                        <li><a href="{{ route('public.services') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> كافة الخدمات والباقات</a></li>
-                        <li><a href="{{ route('public.portfolio') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> معرض الأعمال الموثق</a></li>
+                        <li><a href="{{ route('public.services') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> كافة الخدمات</a></li>
+                        <li><a href="{{ route('public.portfolio') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> أعمالنا المعتمدة</a></li>
                         <li><a href="{{ route('public.process') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> منهجية العمل ومن نحن</a></li>
                         <li><a href="{{ route('public.contact') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> طلب استشارة وعرض سعر</a></li>
                     </ul>
@@ -508,9 +512,9 @@
                     مفتاح نجاحك في التسويق والإبداع • جميع الحقوق محفوظة © {{ date('Y') }} وكالة بريق للإعلام والتصميم.
                 </div>
                 <div class="flex items-center gap-4 text-[11px] text-gray-400">
-                    <a href="{{ route('public.services') }}" class="hover:text-brand-gold">الخدمات</a>
+                    <a href="{{ route('public.services') }}" class="hover:text-brand-gold">خدماتنا</a>
                     <span>•</span>
-                    <a href="{{ route('public.portfolio') }}" class="hover:text-brand-gold">الأعمال</a>
+                    <a href="{{ route('public.portfolio') }}" class="hover:text-brand-gold">أعمالنا</a>
                     <span>•</span>
                     <a href="{{ route('public.contact') }}" class="hover:text-brand-gold">تواصل معنا</a>
                 </div>

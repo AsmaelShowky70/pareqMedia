@@ -20,10 +20,10 @@
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[950px] h-[950px] rounded-full border border-purple-500/10 pointer-events-none"></div>
     </div>
 
-    <div class="max-w-5xl mx-auto text-center space-y-8 relative z-10">
+    <div class="max-w-7xl mx-auto relative z-10 w-full">
         
         @if(session('success_inquiry'))
-        <div class="p-4 mb-4 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-sm flex items-center justify-between shadow-2xl backdrop-blur-md">
+        <div class="p-4 mb-6 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-sm flex items-center justify-between shadow-2xl backdrop-blur-md">
             <div class="flex items-center gap-3">
                 <i class="fa-solid fa-circle-check text-emerald-400 text-xl"></i>
                 <span class="font-bold">{{ session('success_inquiry') }}</span>
@@ -32,58 +32,97 @@
         </div>
         @endif
 
-        <!-- Slogan Pill with Radiant Brand Colors (بريق مفتاح نجاحك في التسويق) -->
-        <div class="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#18082B]/90 border border-brand-orange/40 text-white text-[11px] sm:text-sm font-extrabold shadow-[0_0_25px_rgba(255,148,32,0.3)] animate-pulse-glow max-w-full">
-            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-brand-orange animate-ping shrink-0"></span>
-            <span class="text-brand-orange text-xs sm:text-base">✦</span>
-            <span class="tracking-wide truncate">بريق ، مفتاح نجاحك في التسويق</span>
-            <span class="text-brand-orange text-xs sm:text-base">✦</span>
-        </div>
-
-        <!-- Main Headline -->
-        <div class="space-y-3 sm:space-y-4">
-            <h1 class="text-3xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.2] tracking-tight">
-                بريق مفتاح نجاحك 
-                <span class="gold-gradient-text block mt-1.5 sm:mt-2 text-4xl sm:text-7xl lg:text-8xl">في التسويق</span>
-            </h1>
-
-            <!-- Subtitle under slogan in smaller font as requested -->
-            <p class="text-sm sm:text-xl lg:text-2xl text-gray-200 font-bold max-w-3xl mx-auto leading-relaxed pt-1 sm:pt-2">
-                نصنع لعلامتك التجارية بريقاً استثنائياً في العالم الرقمي
-            </p>
-            <p class="text-[11px] sm:text-sm text-gray-400 max-w-2xl mx-auto leading-relaxed font-normal px-2">
-                منظومة إبداعية متكاملة تجمع بين التصوير السينمائي، المونتاج فائق الجاذبية، وتصميم الهويات البصرية، وإدارة الحملات الإعلانية القائمة على أعلى عائد استثماري.
-            </p>
-        </div>
-
-        <!-- Hero Action Buttons & Scroll Indicator -->
-        <div class="flex flex-col items-center justify-center gap-6 sm:gap-8 pt-2 sm:pt-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
-                <!-- زر تواصل معنا -->
-                <a href="{{ route('public.contact') }}" 
-                   class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs sm:text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 flex items-center justify-center gap-2.5 group">
-                    <span>تواصل معنا الآن</span>
-                    <i class="fa-solid fa-paper-plane text-xs group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
-                </a>
+            <!-- Right Column: Slogan, Headline & CTAs (RTL Start) -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-right">
+                
+                <!-- Slogan Pill with Radiant Brand Colors (بريق مفتاح نجاحك في التسويق) -->
+                <div class="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#18082B]/90 border border-brand-orange/40 text-white text-[11px] sm:text-sm font-extrabold shadow-[0_0_25px_rgba(255,148,32,0.3)] animate-pulse-glow max-w-full">
+                    <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-brand-orange animate-ping shrink-0"></span>
+                    <span class="text-brand-orange text-xs sm:text-base">✦</span>
+                    <span class="tracking-wide">بريق ، مفتاح نجاحك في التسويق</span>
+                    <span class="text-brand-orange text-xs sm:text-base">✦</span>
+                </div>
 
-                <!-- زر مشاهدة أعمالنا -->
-                <a href="{{ route('public.portfolio') }}" 
-                   class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-[#19092E]/80 hover:bg-[#250C44] border-2 border-brand-orange/50 hover:border-brand-orange text-white font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 backdrop-blur-md group">
-                    <span class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-brand-orange/20 text-brand-orange flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-play text-[9px] sm:text-[10px]"></i>
-                    </span>
-                    <span>مشاهدة أعمالنا</span>
-                </a>
+                <!-- Main Headline (مع حل مشكلة قطع كلمة التسويق من الأسفل نهائياً) -->
+                <div class="space-y-3 sm:space-y-4">
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-normal tracking-tight">
+                        بريق مفتاح نجاحك 
+                        <span class="gold-gradient-text block mt-1 sm:mt-2 text-4xl sm:text-6xl lg:text-7xl xl:text-8xl leading-normal pb-3 overflow-visible">في التسويق</span>
+                    </h1>
+
+                    <!-- Subtitle under slogan in smaller font as requested -->
+                    <p class="text-base sm:text-xl lg:text-2xl text-gray-200 font-bold max-w-2xl leading-relaxed pt-1">
+                        نصنع لعلامتك التجارية بريقاً استثنائياً في العالم الرقمي
+                    </p>
+                    <p class="text-xs sm:text-sm text-gray-400 max-w-xl leading-relaxed font-normal">
+                        منظومة إبداعية متكاملة تجمع بين التصوير السينمائي، المونتاج فائق الجاذبية، وتصميم الهويات البصرية، وإدارة الحملات الإعلانية القائمة على أعلى عائد استثماري.
+                    </p>
+                </div>
+
+                <!-- Hero Action Buttons & Scroll Indicator -->
+                <div class="space-y-6 pt-2">
+                    <div class="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3 sm:gap-4 w-full sm:w-auto">
+                        <!-- زر تواصل معنا -->
+                        <a href="{{ route('public.contact') }}" 
+                           class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs sm:text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 flex items-center justify-center gap-2.5 group">
+                            <span>تواصل معنا الآن</span>
+                            <i class="fa-solid fa-paper-plane text-xs group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                        </a>
+
+                        <!-- زر مشاهدة أعمالنا -->
+                        <a href="{{ route('public.portfolio') }}" 
+                           class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#19092E]/80 hover:bg-[#250C44] border-2 border-brand-orange/50 hover:border-brand-orange text-white font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 backdrop-blur-md group">
+                            <span class="w-6 h-6 rounded-full bg-brand-orange/20 text-brand-orange flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-play text-[10px]"></i>
+                            </span>
+                            <span>مشاهدة أعمالنا</span>
+                        </a>
+                    </div>
+
+                    <!-- ايقون اسحب لتحت (Scroll Down Indicator) -->
+                    <div class="pt-2 flex lg:justify-start justify-center">
+                        <a href="#video-showcase" class="inline-flex items-center gap-2.5 text-xs text-gray-400 hover:text-brand-orange transition group">
+                            <div class="w-5 h-8 rounded-full border-2 border-gray-400 group-hover:border-brand-orange flex items-start justify-center p-1 transition-colors">
+                                <span class="w-1.5 h-2 rounded-full bg-brand-orange animate-bounce"></span>
+                            </div>
+                            <span class="font-bold tracking-wider text-[11px]">اسحب للأسفل</span>
+                        </a>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- ايقون اسحب لتحت (Scroll Down Indicator) -->
-            <a href="#video-showcase" class="inline-flex flex-col items-center gap-2 text-xs text-gray-400 hover:text-brand-orange transition group pt-4">
-                <div class="w-6 h-10 rounded-full border-2 border-gray-400 group-hover:border-brand-orange flex items-start justify-center p-1 transition-colors">
-                    <span class="w-1.5 h-2.5 rounded-full bg-brand-orange animate-bounce"></span>
+            <!-- Left Column: Big Animated Pariq Logo with Orbiting Effects (اللوجو كبير علي الشمال مع انيميشن) -->
+            <div class="lg:col-span-5 flex justify-center items-center relative py-6 lg:py-0">
+                <div class="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-[400px] lg:h-[400px] flex items-center justify-center">
+                    
+                    <!-- 1. Ambient Background Pulse Glow -->
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-brand-orange/25 via-purple-600/20 to-transparent blur-3xl animate-pulse-glow pointer-events-none"></div>
+                    
+                    <!-- 2. Orbiting Concentric Geometric Rings -->
+                    <div class="absolute inset-0 rounded-full border-2 border-dashed border-brand-orange/30 animate-[spin_35s_linear_infinite] pointer-events-none"></div>
+                    <div class="absolute -inset-4 sm:-inset-6 rounded-full border border-purple-500/25 animate-[spin_45s_linear_infinite_reverse] pointer-events-none"></div>
+                    
+                    <!-- 3. Glowing Satellite Nodes orbiting -->
+                    <div class="absolute top-2 right-1/4 w-3.5 h-3.5 rounded-full bg-brand-orange shadow-[0_0_15px_#FF9420] animate-ping pointer-events-none"></div>
+                    <div class="absolute bottom-6 left-6 w-2.5 h-2.5 rounded-full bg-brand-peach shadow-[0_0_12px_#FFBA70] animate-pulse pointer-events-none"></div>
+                    
+                    <!-- 4. Central Floating Luxury Orb with Big Pariq Logo -->
+                    <div class="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-tr from-[#1B082B] via-[#2D0D4E] to-[#120522] border-2 border-brand-orange/60 p-6 sm:p-8 flex items-center justify-center shadow-[0_0_80px_rgba(255,148,32,0.4)] animate-float-slow group">
+                        
+                        <img src="{{ asset('images/logo.png') }}" alt="وكالة بريق" class="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-60 lg:h-60 object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)] group-hover:scale-105 transition-transform duration-500">
+
+                        <!-- Floating Badge: Official Pariq Brand -->
+                        <div class="absolute -bottom-3 inset-x-0 mx-auto w-max px-4 py-1.5 rounded-full bg-[#18082B]/95 border border-brand-orange/60 text-[10px] sm:text-[11px] font-black text-brand-orange shadow-2xl flex items-center gap-1.5 backdrop-blur-md">
+                            <span class="w-2 h-2 rounded-full bg-brand-orange animate-ping"></span>
+                            <span>PARIQ CREATIVE AGENCY</span>
+                        </div>
+                    </div>
+
                 </div>
-                <span class="font-bold tracking-wider text-[11px]">اسحب للأسفل</span>
-            </a>
+            </div>
 
         </div>
 
@@ -441,7 +480,7 @@
             <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
                 نماذج من أعمالنا
             </span>
-            <h2 class="text-2xl sm:text-4xl font-black text-white">معرض الأعمال السريع والموثق</h2>
+            <h2 class="text-2xl sm:text-4xl font-black text-white">أعمالنا وسجل إنجازاتنا الموثق</h2>
             <p class="text-xs text-gray-300">بطاقات تفاعلية لأبرز إنتاجاتنا: انقر على أي بطاقة لتشغيل العمل فوراً</p>
         </div>
 
