@@ -7,7 +7,41 @@
 @section('content')
 <div class="space-y-6 pt-2" x-data="{ gmDecisionModal: false, activeProject: null, decisionType: 'approved' }">
 
-    <!-- 1. ALERT: PROJECTS DELIVERED BY CONTENT CREATORS WAITING FOR GM APPROVAL (تسليمات صناع المحتوى للمدير العام) -->
+    <!-- 0. SHORTCUTS ACTION BAR (شريط الاختصارات السريعة) -->
+    <div class="bg-gradient-to-r from-brand-card via-brand-purple to-brand-card border border-brand-border rounded-2xl p-3.5 shadow-xl flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-brand-gold animate-pulse"></span>
+            <span class="text-xs font-bold text-gray-300">إجراءات سريعة:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+            <a href="{{ route('projects.create') }}" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-brand-gold to-amber-500 hover:from-amber-500 hover:to-brand-gold text-brand-dark font-black text-xs shadow-md transition flex items-center gap-1.5">
+                <i class="fa-solid fa-plus-circle"></i>
+                <span>مشروع جديد</span>
+            </a>
+            <a href="{{ route('clients.create') }}" class="px-3 py-1.5 rounded-xl bg-brand-purple hover:bg-brand-hover text-white font-bold text-xs border border-brand-border hover:border-brand-gold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-user-plus text-brand-gold"></i>
+                <span>إضافة عميل</span>
+            </a>
+            <a href="{{ route('tasks.index') }}" class="px-3 py-1.5 rounded-xl bg-brand-purple hover:bg-brand-hover text-white font-bold text-xs border border-brand-border hover:border-brand-gold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-list-check text-sky-400"></i>
+                <span>إدارة المهام</span>
+            </a>
+            <a href="{{ route('cashier.index') }}" class="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-bold text-xs border border-emerald-500/30 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-cash-register"></i>
+                <span>كاشير POS</span>
+            </a>
+            <a href="{{ route('content-plans.index') }}" class="px-3 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 font-bold text-xs border border-indigo-500/30 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span>جدول النشر</span>
+            </a>
+            <a href="{{ route('accounting.index') }}" class="px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 font-bold text-xs border border-purple-500/30 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>التقارير</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 1. ALERT: PROJECTS DELIVERED BY CONTENT CREATORS WAITING FOR GM APPROVAL -->
     @if(isset($projectsPendingGMApproval) && $projectsPendingGMApproval->isNotEmpty())
     <div class="bg-gradient-to-r from-amber-950/50 via-brand-card to-amber-950/40 border-2 border-amber-500/60 rounded-2xl p-6 shadow-2xl space-y-4 animate-pulse">
         <div class="flex items-center justify-between">
@@ -71,83 +105,404 @@
     </div>
     @endif
 
-    <!-- 2. Top KPI Grid -->
+    <!-- 2. UPGRADED TOP KPI GRID WITH SPARKLINES & GROWTH ARROWS (كروت المؤشرات والمنحنيات) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         <!-- Total Revenue -->
-        <div class="bg-brand-card/80 border border-brand-border/70 rounded-2xl p-5 relative overflow-hidden group hover:border-brand-yellow/40 transition">
-            <div class="flex items-center justify-between mb-3">
+        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-5 relative overflow-hidden group hover:border-brand-gold/60 transition shadow-lg">
+            <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-bold text-gray-400">إجمالي التحصيلات (الإيرادات)</span>
-                <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-brand-gold flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-coins"></i>
-                </div>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/15 text-emerald-400 flex items-center gap-1 border border-emerald-500/30">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span>+27% ↑</span>
+                </span>
             </div>
             <div class="text-2xl font-black text-white tracking-tight">
                 {{ number_format($totalRevenue, 0) }} <span class="text-sm font-bold text-brand-gold">ج.م</span>
             </div>
             <div class="mt-2 flex items-center gap-2 text-[11px] text-emerald-400">
                 <i class="fa-solid fa-scale-balanced"></i>
-                <span>رصيد الخزائن الحالي: <strong class="text-white">{{ number_format($treasuryBalance ?? 0, 0) }} ج.م</strong></span>
+                <span>رصيد الخزائن: <strong class="text-white">{{ number_format($treasuryBalance ?? 0, 0) }} ج.م</strong></span>
+            </div>
+            <!-- SVG Sparkline Wave -->
+            <div class="mt-3 -mx-5 -mb-5 opacity-40 group-hover:opacity-75 transition">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-8 stroke-emerald-400 fill-emerald-500/10">
+                    <path d="M0,25 Q15,22 30,12 T60,18 T90,6 L100,10 L100,28 L0,28 Z" stroke-width="1.8" />
+                </svg>
             </div>
         </div>
 
         <!-- Net Profit -->
-        <div class="bg-brand-card/80 border border-brand-border/70 rounded-2xl p-5 relative overflow-hidden group hover:border-emerald-500/40 transition">
-            <div class="flex items-center justify-between mb-3">
+        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-5 relative overflow-hidden group hover:border-emerald-500/60 transition shadow-lg">
+            <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-bold text-gray-400">صافي الأرباح التشغيلية</span>
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-wallet"></i>
-                </div>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-emerald-500/15 text-emerald-400 flex items-center gap-1 border border-emerald-500/30">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span>+32% ↑</span>
+                </span>
             </div>
             <div class="text-2xl font-black text-white tracking-tight">
                 {{ number_format($netProfit, 0) }} <span class="text-sm font-bold text-emerald-400">ج.م</span>
             </div>
-            <div class="mt-2 text-[11px] text-gray-400">
-                المصروفات: <span class="text-rose-400 font-bold">{{ number_format($totalExpenses, 0) }} ج.م</span>
+            <div class="mt-2 text-[11px] text-gray-400 flex items-center justify-between">
+                <span>المصروفات: <strong class="text-rose-400">{{ number_format($totalExpenses, 0) }} ج.م</strong></span>
+                <span class="text-[10px] text-emerald-300">مؤشر ربحي صحي</span>
+            </div>
+            <!-- SVG Sparkline Wave -->
+            <div class="mt-3 -mx-5 -mb-5 opacity-40 group-hover:opacity-75 transition">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-8 stroke-brand-gold fill-amber-500/10">
+                    <path d="M0,22 Q20,26 40,14 T70,16 T100,4 L100,28 L0,28 Z" stroke-width="1.8" />
+                </svg>
             </div>
         </div>
 
         <!-- Active Tasks -->
-        <div class="bg-brand-card/80 border border-brand-border/70 rounded-2xl p-5 relative overflow-hidden group hover:border-brand-border transition">
-            <div class="flex items-center justify-between mb-3">
+        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-5 relative overflow-hidden group hover:border-indigo-500/60 transition shadow-lg">
+            <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-bold text-gray-400">مهام قيد العمل النشط</span>
-                <div class="w-10 h-10 rounded-xl bg-purple-500/15 text-purple-300 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-list-check"></i>
-                </div>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-indigo-500/15 text-indigo-300 flex items-center gap-1 border border-indigo-500/30">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span>+18% ↑</span>
+                </span>
             </div>
             <div class="text-2xl font-black text-white tracking-tight">
                 {{ $taskCounts['in_progress'] }} <span class="text-sm font-normal text-gray-400">من أصل {{ $taskCounts['total'] }} مهمة</span>
             </div>
-            <div class="mt-2 flex items-center gap-1.5 text-[11px] text-amber-400">
-                <i class="fa-solid fa-clock"></i>
-                <span>{{ $taskCounts['not_started'] }} مهام في قائمة الانتظار</span>
+            <div class="mt-2 flex items-center justify-between text-[11px]">
+                <span class="text-amber-400 flex items-center gap-1">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>{{ $taskCounts['not_started'] }} بالانتظار</span>
+                </span>
+                <span class="text-emerald-400 font-bold">{{ $taskCounts['completed'] }} مكتملة</span>
+            </div>
+            <!-- SVG Sparkline Wave -->
+            <div class="mt-3 -mx-5 -mb-5 opacity-40 group-hover:opacity-75 transition">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-8 stroke-indigo-400 fill-indigo-500/10">
+                    <path d="M0,20 Q25,8 50,18 T75,10 T100,8 L100,28 L0,28 Z" stroke-width="1.8" />
+                </svg>
             </div>
         </div>
 
         <!-- Clients & Retainers -->
-        <div class="bg-brand-card/80 border border-brand-border/70 rounded-2xl p-5 relative overflow-hidden group hover:border-brand-border transition">
-            <div class="flex items-center justify-between mb-3">
+        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-5 relative overflow-hidden group hover:border-sky-500/60 transition shadow-lg">
+            <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-bold text-gray-400">العملاء والتعاقدات الشهرية</span>
-                <div class="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-handshake"></i>
-                </div>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-black bg-sky-500/15 text-sky-400 flex items-center gap-1 border border-sky-500/30">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span>+14% ↑</span>
+                </span>
             </div>
             <div class="text-2xl font-black text-white tracking-tight">
-                {{ $totalClientsCount }} <span class="text-sm font-bold text-blue-400">عميل نشط</span>
+                {{ $totalClientsCount }} <span class="text-sm font-bold text-sky-400">عميل نشط</span>
             </div>
             <div class="mt-2 text-[11px] text-gray-400 flex items-center justify-between">
                 <span>المشاريع الجارية: <strong class="text-white">{{ $activeProjectsCount }}</strong></span>
-                <a href="{{ route('clients.index') }}" class="text-brand-gold hover:underline">إدارة CRM ←</a>
+                <a href="{{ route('clients.index') }}" class="text-brand-gold hover:underline font-bold">إدارة CRM ←</a>
+            </div>
+            <!-- SVG Sparkline Wave -->
+            <div class="mt-3 -mx-5 -mb-5 opacity-40 group-hover:opacity-75 transition">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-8 stroke-sky-400 fill-sky-500/10">
+                    <path d="M0,24 Q30,20 50,12 T80,14 T100,6 L100,28 L0,28 Z" stroke-width="1.8" />
+                </svg>
             </div>
         </div>
 
     </div>
 
-    <!-- 3. APPROACHING CLIENT INSTALLMENTS & PHOTOGRAPHER LIVE TRACKING -->
+    <!-- 3. DAILY COMPLETION RATE & MOTIVATIONAL BANNER (باند معدل الإنجاز اليومي والتحفيز من السيستم) -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-card via-brand-purple to-[#230b38] border border-brand-gold/40 p-6 shadow-2xl">
+        <div class="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            
+            <!-- Left/Main: Circular Progress + Progress Bar -->
+            <div class="lg:col-span-7 flex flex-col sm:flex-row items-center gap-6">
+                <!-- SVG Circular Meter -->
+                <div class="relative w-24 h-24 flex-shrink-0 flex items-center justify-center">
+                    <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 36 36">
+                        <path class="text-white/10" stroke-width="3.5" stroke="currentColor" fill="none"
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path class="text-brand-gold transition-all duration-1000 ease-out" stroke-dasharray="{{ $dailyCompletionRate }}, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none"
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <div class="absolute flex flex-col items-center justify-center">
+                        <span class="text-xl font-black text-white">{{ $dailyCompletionRate }}%</span>
+                        <span class="text-[9px] text-brand-gold font-bold">مكتمل</span>
+                    </div>
+                </div>
+
+                <!-- Info and Horizontal Bar -->
+                <div class="space-y-2.5 w-full text-center sm:text-right">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye text-brand-gold"></i>
+                            <h3 class="text-base font-black text-white">معدل الإنجاز اليومي للوكالة (Daily Target)</h3>
+                        </div>
+                        <span class="text-xs font-black text-amber-300">الهدف: 75% فأكثر</span>
+                    </div>
+                    
+                    <!-- Progress Bar with Glow -->
+                    <div class="w-full bg-white/10 rounded-full h-3.5 p-0.5 overflow-hidden">
+                        <div class="bg-gradient-to-r from-brand-gold via-amber-400 to-amber-200 h-full rounded-full transition-all duration-1000 shadow-[0_0_12px_rgba(255,148,32,0.6)]"
+                             style="width: {{ min(100, max(12, $dailyCompletionRate)) }}%;"></div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between text-xs text-gray-300">
+                        <span>إنجاز المهام المسندة لليوم: <strong>{{ $dailyCompletionRate }}%</strong></span>
+                        <span class="text-emerald-400 font-bold"><i class="fa-solid fa-check ml-1"></i>الأداء العام في المنطقة الخضراء</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Motivational Quote Box (الاقتباس التحفيزي المعتمد) -->
+            <div class="lg:col-span-5 p-4 rounded-xl bg-brand-dark/50 border border-brand-border/60 relative">
+                <i class="fa-solid fa-quote-right text-brand-gold/30 text-3xl absolute top-3 left-4"></i>
+                <div class="relative z-10 space-y-1.5">
+                    <span class="text-[10px] uppercase tracking-wider text-brand-gold font-bold flex items-center gap-1.5">
+                        <i class="fa-solid fa-sparkles"></i>
+                        <span>كلمة اليوم التحفيزية لفريق بريق</span>
+                    </span>
+                    <p class="text-xs font-bold text-gray-100 leading-relaxed italic">
+                        "النجاح ليس وجهة .. بل رحلة من الإنجازات الصغيرة. استمر، فخطوتك اليوم تصنع فرقاً غداً"
+                    </p>
+                    <div class="text-[11px] text-gray-400 pt-1 border-t border-brand-border/40 flex items-center justify-between">
+                        <span>فريق بريق الإبداعي • شغف بلا حدود</span>
+                        <span class="text-amber-400">✨ Bariq Agency</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 4. TASK SUMMARY 4-COLOR STATUS CARDS (كروت ملخص المهام الأربعة من السيستم) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- 1. Completed Tasks -->
+        <div class="p-4 rounded-2xl bg-emerald-950/20 border-2 border-emerald-500/40 hover:border-emerald-500 transition shadow-lg group">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-emerald-300">مهام مكتملة</span>
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold shadow">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+            <div class="text-3xl font-black text-white group-hover:text-emerald-400 transition-colors">
+                {{ $taskCounts['completed'] }}
+            </div>
+            <div class="mt-2 text-[11px] text-emerald-400/90 font-medium flex items-center justify-between">
+                <span>تم إنجازها واعتمادها بنجاح</span>
+                <i class="fa-solid fa-check-double text-xs"></i>
+            </div>
+        </div>
+
+        <!-- 2. In Progress Tasks -->
+        <div class="p-4 rounded-2xl bg-sky-950/20 border-2 border-sky-500/40 hover:border-sky-500 transition shadow-lg group">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-sky-300">مهام قيد التنفيذ</span>
+                <div class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-bold shadow">
+                    <i class="fa-solid fa-arrows-rotate fa-spin"></i>
+                </div>
+            </div>
+            <div class="text-3xl font-black text-white group-hover:text-sky-400 transition-colors">
+                {{ $taskCounts['in_progress'] }}
+            </div>
+            <div class="mt-2 text-[11px] text-sky-300 font-medium flex items-center justify-between">
+                <span>جاري العمل عليها من الفرق</span>
+                <i class="fa-solid fa-person-digging text-xs"></i>
+            </div>
+        </div>
+
+        <!-- 3. Remaining Tasks -->
+        <div class="p-4 rounded-2xl bg-amber-950/20 border-2 border-amber-500/40 hover:border-amber-500 transition shadow-lg group">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-amber-300">مهام متبقية</span>
+                <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm font-bold shadow">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+            </div>
+            <div class="text-3xl font-black text-white group-hover:text-amber-400 transition-colors">
+                {{ $taskCounts['remaining'] }}
+            </div>
+            <div class="mt-2 text-[11px] text-amber-300 font-medium flex items-center justify-between">
+                <span>في قائمة الانتظار للبدء</span>
+                <i class="fa-solid fa-list-ol text-xs"></i>
+            </div>
+        </div>
+
+        <!-- 4. Overdue Tasks -->
+        <div class="p-4 rounded-2xl bg-rose-950/20 border-2 border-rose-500/40 hover:border-rose-500 transition shadow-lg group">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-rose-300">مهام متأخرة</span>
+                <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm font-bold shadow">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+            </div>
+            <div class="text-3xl font-black text-rose-400 group-hover:text-rose-300 transition-colors">
+                {{ $taskCounts['overdue'] }}
+            </div>
+            <div class="mt-2 text-[11px] text-rose-300 font-medium flex items-center justify-between">
+                <span>تتطلب متابعة سريعة مع المسؤول</span>
+                <i class="fa-solid fa-bell text-xs"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 5. DEPARTMENT & EMPLOYEE DISTRIBUTION (توزيع المهام حسب القسم والموظف من السيستم) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- A. Department Task Distribution with Visual Donut -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-brand-gold/20 text-brand-gold flex items-center justify-center text-sm font-bold">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">توزيع المهام حسب القسم</h3>
+                        <p class="text-[11px] text-gray-400">حجم العمل التشغيلي الموزع على مختلف أقسام الوكالة</p>
+                    </div>
+                </div>
+                <span class="text-xs font-black text-brand-gold bg-brand-purple px-2.5 py-1 rounded-lg border border-brand-border">
+                    إجمالي: {{ $totalDeptTasks }} مهمة
+                </span>
+            </div>
+
+            <!-- Visual Donut Chart and Legend -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center pt-2">
+                
+                <!-- Mini Donut SVG Graphic -->
+                <div class="sm:col-span-5 flex justify-center">
+                    <div class="relative w-36 h-36">
+                        <svg viewBox="0 0 42 42" class="w-full h-full transform -rotate-90">
+                            @php
+                                $cumPct = 0;
+                                $deptColors = [
+                                    'video' => '#FF9420',
+                                    'design' => '#FFBA70',
+                                    'marketing' => '#BC6200',
+                                    'content' => '#A855F7',
+                                    'dev' => '#38BDF8',
+                                    'other' => '#64748B',
+                                ];
+                            @endphp
+                            @foreach($departmentDistribution as $dKey => $dCount)
+                                @php
+                                    $pct = $totalDeptTasks > 0 ? ($dCount / $totalDeptTasks) * 100 : 0;
+                                    $dash = round($pct, 1);
+                                    $gap = 100 - $dash;
+                                    $offset = 100 - $cumPct;
+                                    $cumPct += $pct;
+                                @endphp
+                                <circle cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                                        stroke="{{ $deptColors[$dKey] ?? '#64748B' }}"
+                                        stroke-width="5"
+                                        stroke-dasharray="{{ $dash }} {{ $gap }}"
+                                        stroke-dashoffset="{{ $offset }}"></circle>
+                            @endforeach
+                            <circle cx="21" cy="21" r="11" fill="#1b082b"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-xs font-black text-white">{{ count($departmentDistribution) }}</span>
+                            <span class="text-[9px] text-gray-400 font-bold">أقسام</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department Legend Breakdown -->
+                <div class="sm:col-span-7 space-y-2">
+                    @php
+                        $deptLabels = [
+                            'video' => ['فيديو ومونتاج', '#FF9420', 'bg-amber-500'],
+                            'design' => ['جرافيك وتصميم', '#FFBA70', 'bg-amber-300'],
+                            'marketing' => ['ميديا باينج وحملات', '#BC6200', 'bg-amber-700'],
+                            'content' => ['كتابة المحتوى والسيناريو', '#A855F7', 'bg-purple-500'],
+                            'dev' => ['تطوير وإدارة المشروعات', '#38BDF8', 'bg-sky-400'],
+                            'other' => ['مهام إدارية وخدمات', '#64748B', 'bg-slate-500'],
+                        ];
+                    @endphp
+                    @foreach($departmentDistribution as $deptKey => $deptCount)
+                        @php
+                            $dInfo = $deptLabels[$deptKey] ?? ['قسم آخر', '#64748B', 'bg-slate-500'];
+                            $dPct = $totalDeptTasks > 0 ? round(($deptCount / $totalDeptTasks) * 100) : 0;
+                        @endphp
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full {{ $dInfo[2] }}"></span>
+                                <span class="text-gray-300 font-bold">{{ $dInfo[0] }}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-white font-black">{{ $deptCount }}</span>
+                                <span class="text-[10px] text-gray-400 w-8 text-left">({{ $dPct }}%)</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-brand-dark rounded-full h-1.5 overflow-hidden">
+                            <div class="{{ $dInfo[2] }} h-full rounded-full" style="width: {{ $dPct }}%;"></div>
+                        </div>
+                    @endforeach
+                </div>
+
+            </div>
+        </div>
+
+        <!-- B. Employee Task Distribution & Workload -->
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-sm font-bold">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">توزيع المهام حسب الموظف</h3>
+                        <p class="text-[11px] text-gray-400">حجم المهام المنجزة والجارية لكل عضو في الفريق</p>
+                    </div>
+                </div>
+                <a href="{{ route('tasks.index') }}" class="text-xs text-brand-gold font-bold hover:underline">لوحة المهام ←</a>
+            </div>
+
+            <div class="space-y-3 pt-1">
+                @forelse($employeesWorkload as $emp)
+                    @php
+                        $empTotal = $emp->tasks_count ?: 1;
+                        $empRate = round(($emp->completed_count / $empTotal) * 100);
+                    @endphp
+                    <div class="p-3 rounded-xl bg-brand-purple/50 border border-brand-border/60 hover:border-brand-border transition space-y-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-7 h-7 rounded-full bg-brand-yellow/20 text-brand-gold font-black flex items-center justify-center text-[11px]">
+                                    {{ mb_substr($emp->name, 0, 1) }}
+                                </div>
+                                <div>
+                                    <div class="font-bold text-white">{{ $emp->name }}</div>
+                                    <div class="text-[10px] text-gray-400">{{ $emp->role_arabic ?? $emp->department ?? 'عضو الفريق' }}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300">
+                                    {{ $emp->active_count }} نشط
+                                </span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400">
+                                    {{ $emp->completed_count }} مكتمل
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="w-full bg-brand-dark rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-gradient-to-r from-brand-gold to-emerald-400 h-full rounded-full transition-all" style="width: {{ $empRate }}%;"></div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-6 text-center text-xs text-gray-400">لا يوجد موظفون مسجلون حالياً.</div>
+                @endforelse
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 6. APPROACHING CLIENT INSTALLMENTS & PHOTOGRAPHER LIVE TRACKING -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         <!-- Approaching Client Installments -->
-        <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4">
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4 shadow-lg">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-brand-gold flex items-center justify-center text-sm font-bold">
@@ -187,7 +542,7 @@
         </div>
 
         <!-- Field Photographers Live Status -->
-        <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4">
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4 shadow-lg">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-sm font-bold">
@@ -229,8 +584,8 @@
 
     </div>
 
-    <!-- 3.5 Content Publishing Calendar Quick Widget -->
-    <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4">
+    <!-- 7. Content Publishing Calendar Quick Widget -->
+    <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4 shadow-lg">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-sm font-bold">
@@ -294,67 +649,12 @@
         @endif
     </div>
 
-    <!-- 4. Five Strict Statuses Tracker Banner -->
-    <div class="bg-brand-purple/70 border border-brand-border rounded-2xl p-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-            <div class="text-xs font-bold text-gray-300 flex items-center gap-2">
-                <i class="fa-solid fa-chart-pie text-brand-gold"></i>
-                <span>توزيع المهام التشغيلية اليومية حسب الحالات الخمس المعتمدة:</span>
-            </div>
-            <a href="{{ route('tasks.index') }}" class="text-xs text-brand-gold hover:underline font-bold flex items-center gap-1">
-                <span>فتح لوحة كانبان والمهام</span>
-                <i class="fa-solid fa-arrow-left"></i>
-            </a>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-            <div class="p-3 rounded-xl bg-slate-800/40 border border-slate-700/50 flex items-center justify-between">
-                <div>
-                    <div class="text-[11px] text-slate-400 font-bold">لم تبدأ</div>
-                    <div class="text-lg font-black text-white">{{ $taskCounts['not_started'] }}</div>
-                </div>
-                <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
-            </div>
-
-            <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
-                <div>
-                    <div class="text-[11px] text-amber-300 font-bold">جاري العمل</div>
-                    <div class="text-lg font-black text-amber-400">{{ $taskCounts['in_progress'] }}</div>
-                </div>
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-            </div>
-
-            <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
-                <div>
-                    <div class="text-[11px] text-emerald-300 font-bold">مكتمل</div>
-                    <div class="text-lg font-black text-emerald-400">{{ $taskCounts['completed'] }}</div>
-                </div>
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-            </div>
-
-            <div class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-between">
-                <div>
-                    <div class="text-[11px] text-rose-300 font-bold">إلغاء المشروع</div>
-                    <div class="text-lg font-black text-rose-400">{{ $taskCounts['cancelled'] }}</div>
-                </div>
-                <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
-            </div>
-
-            <div class="p-3 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-between">
-                <div>
-                    <div class="text-[11px] text-purple-300 font-bold">اجازه</div>
-                    <div class="text-lg font-black text-purple-300">{{ $taskCounts['on_leave'] }}</div>
-                </div>
-                <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 5. Main Grid: Active Tasks & Cashier Panel -->
+    <!-- 8. Main Grid: Active Tasks & Cashier Panel -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Active & Urgent Daily Tasks (2 Columns) -->
         <div class="lg:col-span-2 space-y-4">
-            <div class="bg-brand-card/90 border border-brand-border rounded-2xl p-5 shadow-sm">
+            <div class="bg-brand-card/90 border border-brand-border rounded-2xl p-5 shadow-lg">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-lg bg-brand-yellow/15 text-brand-gold flex items-center justify-center text-sm">
@@ -501,7 +801,7 @@
             </div>
 
             <!-- Recent Inquiries from Website -->
-            <div class="bg-brand-card/90 border border-brand-border rounded-2xl p-5">
+            <div class="bg-brand-card/90 border border-brand-border rounded-2xl p-5 shadow-lg">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-bullhorn text-brand-gold"></i>

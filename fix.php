@@ -117,6 +117,43 @@ try {
             }
         }
         echo "<li style='color:green; font-weight:bold;'>✔️ اكتمل فحص وتحديث جداول الكاشير والمصروفات والفواتير بنجاح!</li>";
+
+        // 3.5 Sync 10 Official Services
+        echo "<h4>تحديث خدمات الوكالة الـ 10 المعتمدة:</h4><ul>";
+        $targetServices = [
+            ['title_ar' => 'إدارة حسابات السوشيال ميديا', 'slug' => 'social-media-management', 'icon' => 'share-nodes', 'short_description' => 'إدارة شاملة لحساباتك تشمل وضع الاستراتيجيات، جدولة المنشورات، التفاعل مع المتابعين، وتحليل الأداء لتحقيق أعلى وصول وتفاعل لعلامتك.'],
+            ['title_ar' => 'صناعة المحتوى', 'slug' => 'content-creation', 'icon' => 'pen-nib', 'short_description' => 'ابتكار محتوى إبداعي يروي قصة علامتك التجارية من خلال بوستات جذابة، مقالات، وتصاميم تواكب أحدث التريندات وتلهم جمهورك المستهدف.'],
+            ['title_ar' => 'إدارة الحملات الإعلانية', 'slug' => 'paid-ads', 'icon' => 'bullhorn', 'short_description' => 'إطلاق وتحسين إعلاناتك الممولة على مختلف المنصات (Meta, Google, TikTok, Snapchat) باستهداف ذكي يحقق أعلى عائد على الاستثمار (ROAS).'],
+            ['title_ar' => 'التصوير والمونتاج الاحترافي', 'slug' => 'video-production', 'icon' => 'video', 'short_description' => 'إنتاج وتصوير فيديوهات احترافية ومونتاج سينمائي يناسب إعلاناتك وريلز إنستغرام وتيك توك لإبراز علامتك بأعلى جودة بصرية.'],
+            ['title_ar' => 'تصميم الهوية البصرية', 'slug' => 'branding-identity', 'icon' => 'palette', 'short_description' => 'بناء هوية كاملة تعبر عن روح علامتك، تبدأ من تصميم الشعار وحتى الألوان والخطوط والأدلة الإرشادية لترسيخ علامتك في الأذهان.'],
+            ['title_ar' => 'كتابة السيناريو والإعلانات', 'slug' => 'scriptwriting', 'icon' => 'scroll', 'short_description' => 'كتابة نصوص إعلانية وسيناريوهات مؤثرة (Copywriting) تجمع بين الإبداع والإقناع لتحفيز جمهورك على اتخاذ قرار الشراء.'],
+            ['title_ar' => 'تصوير المنتجات والفيديو', 'slug' => 'product-photography', 'icon' => 'camera', 'short_description' => 'جلسات تصوير مخصصة للمنتجات بأحدث معدات الإضاءة والكاميرات لتظهر تفاصيل منتجاتك بجاذبية لا تقاوم في متجرك وإعلاناتك.'],
+            ['title_ar' => 'التسويق عبر المؤثرين', 'slug' => 'influencer-marketing', 'icon' => 'users', 'short_description' => 'اختيار وتنسيق الحملات الإعلانية مع أنسب المؤثرين وصناع المحتوى الذين يثق بهم جمهورك لبناء مصداقية سريعة وزيادة مبيعاتك.'],
+            ['title_ar' => 'استشارات التسويق الرقمي', 'slug' => 'marketing-consulting', 'icon' => 'chart-pie', 'short_description' => 'جلسات استشارية متخصصة لتحليل وضع علامتك الحالي ووضع خطة نمو واضحة ومدروسة تساعدك على تخطي المنافسين وتوسيع أعمالك.'],
+            ['title_ar' => 'تحسين محركات البحث SEO', 'slug' => 'seo-optimization', 'icon' => 'magnifying-glass-chart', 'short_description' => 'تهيئة موقعك الإلكتروني ليتصدر النتائج الأولى في محركات البحث مثل جوجل لجلب زوار مهتمين ومبيعات عضوية مستمرة بدون إعلانات.']
+        ];
+
+        foreach ($targetServices as $idx => $ts) {
+            $checkSvc = $pdo->prepare("SELECT id FROM services WHERE slug = ? OR title_ar = ?");
+            $checkSvc->execute([$ts['slug'], $ts['title_ar']]);
+            $existingSvc = $checkSvc->fetch(PDO::FETCH_ASSOC);
+            if ($existingSvc) {
+                $upSvc = $pdo->prepare("UPDATE services SET title_ar = ?, short_description = ?, icon = ?, sort_order = ?, is_active = 1 WHERE id = ?");
+                $upSvc->execute([$ts['title_ar'], $ts['short_description'], $ts['icon'], $idx + 1, $existingSvc['id']]);
+            } else {
+                $inSvc = $pdo->prepare("INSERT INTO services (title_ar, slug, icon, short_description, sort_order, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 1, NOW(), NOW())");
+                $inSvc->execute([$ts['title_ar'], $ts['slug'], $ts['icon'], $ts['short_description'], $idx + 1]);
+            }
+        }
+        echo "<li style='color:green;'>✔️ تم بنجاح مزامنة وتحديث جميع الخدمات الـ 10 الرسمية في قاعدة البيانات.</li>";
+
+        // Clear compiled views
+        $cachedViews = glob(__DIR__ . '/storage/framework/views/*.php');
+        if ($cachedViews) {
+            foreach ($cachedViews as $cv) { @unlink($cv); }
+            echo "<li style='color:green;'>✔️ تم تنظيف وتحديث كاش القوالب (Views Cache) بنجاح.</li>";
+        }
+
         echo "</ul>";
     }
 } catch (PDOException $e) {

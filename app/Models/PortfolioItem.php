@@ -38,12 +38,11 @@ class PortfolioItem extends Model
     public function getCategoryArabicAttribute(): string
     {
         return match ($this->category) {
-            'video_reels' => 'فيديوهات ريلز وقصيرة',
-            'promo_video' => 'برومو وفيديوهات إعلانية',
-            'social_design' => 'تصميمات سوشيال ميديا',
-            'youtube_thumbnail' => 'أغلفة يوتيوب احترافية',
-            'branding' => 'لوجو وهويات بصرية',
-            'ad_results' => 'نتائج حملات إعلانية',
+            'promo', 'promo_video' => 'برومو وفيديوهات إعلانية',
+            'reels', 'video_reels' => 'فيديوهات ريلز وقصيرة',
+            'design', 'social_design', 'youtube_thumbnail' => 'تصميمات جرافيك وأغلفة',
+            'campaigns', 'ad_results' => 'حملات إعلانية ونتائج ROAS',
+            'branding' => 'هوية بصرية وبراندينج',
             default => 'عمل إبداعي',
         };
     }

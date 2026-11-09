@@ -128,22 +128,67 @@
                 </div>
             </div>
 
-            <!-- Regional Coverage Card -->
-            <div class="glass-card-purple rounded-3xl p-7 space-y-3 border border-purple-800/60">
-                <h3 class="text-base font-black text-white flex items-center gap-2">
-                    <i class="fa-solid fa-globe text-brand-amber"></i>
-                    <span>نطاق خدماتنا وتغطيتنا الإقليمية</span>
-                </h3>
+            <!-- Regional Coverage Card (توسيع نطاق خدماتنا ودول العمل حسب طلب العميل) -->
+            <div class="glass-card-purple rounded-3xl p-7 space-y-4 border border-purple-800/60">
+                <div class="flex items-center justify-between border-b border-purple-800/40 pb-3">
+                    <h3 class="text-base font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-earth-americas text-brand-orange"></i>
+                        <span>نطاق خدماتنا وتغطيتنا الإقليمية والدولية</span>
+                    </h3>
+                    <span class="px-2.5 py-1 rounded-full bg-brand-orange/20 text-brand-orange font-bold text-[10px]">
+                        12+ دولة عربية
+                    </span>
+                </div>
+                
                 <p class="text-xs text-gray-300 leading-relaxed font-normal">
-                    نقدم خدماتنا ونمتلك شركاء نجاح موثقين في 6 دول عربية:
+                    نقدم خدماتنا ونمتلك شركاء نجاح موثقين ومشاريع قائمة في كافة أرجاء الخليج العربي والشرق الأوسط وشمال أفريقيا:
                 </p>
-                <div class="grid grid-cols-2 gap-2 pt-2 text-xs text-gray-300 font-bold">
-                    <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i> جمهورية مصر العربية</div>
-                    <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i> المملكة العربية السعودية</div>
-                    <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i> الإمارات العربية المتحدة</div>
-                    <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i> المملكة الأردنية الهاشمية</div>
-                    <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i> دولة قطر</div>
-                    <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i> سلطنة عُمان وليبيا</div>
+                
+                <div class="grid grid-cols-2 gap-2.5 pt-1 text-xs text-gray-300 font-bold">
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>جمهورية مصر العربية</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>المملكة العربية السعودية</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>الإمارات العربية المتحدة</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>دولة الكويت</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>دولة قطر</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>سلطنة عُمان</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>المملكة الأردنية الهاشمية</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>مملكة البحرين</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>جمهورية العراق</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-purple-900/30 border border-purple-700/30 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-brand-orange text-xs"></i>
+                        <span>دولة ليبيا</span>
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-xl bg-orange-500/10 border border-brand-orange/20 text-center text-[11px] text-brand-peach font-bold">
+                    ✦ نوفر عقوداً رسمية وتنسيقاً مرناً وتحويلات بنكية معتمدة لكافة الدول العربية
                 </div>
             </div>
 

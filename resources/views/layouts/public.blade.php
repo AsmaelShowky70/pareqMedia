@@ -30,21 +30,25 @@
                     },
                     colors: {
                         brand: {
-                            void: '#05010A',
+                            void: '#06010D',
                             dark: '#08020F',
                             darker: '#0C0317',
                             deep: '#120522',
+                            night: '#1B082B',
                             purple: '#1B0733',
                             purpleLight: '#260B46',
                             card: '#1F0B38',
                             hover: '#2D1050',
                             border: '#3F166F',
-                            borderGlow: 'rgba(168, 85, 247, 0.35)',
-                            orange: '#FF5E00',
-                            amber: '#FF9500',
-                            yellow: '#F59E0B',
-                            gold: '#FBBF24',
-                            goldLight: '#FDE68A',
+                            borderGlow: 'rgba(255, 148, 32, 0.35)',
+                            orange: '#FF9420',
+                            orangeHover: '#FF7A00',
+                            peach: '#FFBA70',
+                            bronze: '#BC6200',
+                            amber: '#FF9420',
+                            yellow: '#FFBA70',
+                            gold: '#FFBA70',
+                            goldLight: '#FFE3B8',
                         }
                     },
                     animation: {
@@ -64,12 +68,14 @@
 
     <style>
         :root {
-            --primary-orange: #FF6A00;
-            --primary-amber: #FF9E0B;
-            --primary-gold: #FBBF24;
-            --primary-purple: #160728;
-            --purple-glow: rgba(147, 51, 234, 0.3);
-            --amber-glow: rgba(245, 158, 11, 0.3);
+            --primary-orange: #FF9420;
+            --primary-peach: #FFBA70;
+            --primary-bronze: #BC6200;
+            --primary-dark: #08020F;
+            --primary-night: #1B082B;
+            --primary-purple: #3F147E;
+            --orange-glow: rgba(255, 148, 32, 0.45);
+            --purple-glow: rgba(63, 20, 126, 0.4);
         }
 
         body { 
@@ -241,8 +247,8 @@
           mobileNav: false, 
           previewModal: false, 
           showBackToTop: false,
-          activeMedia: { type: '', src: '', embedSrc: '', title: '', desc: '' },
-          openMedia(mediaType, src, title, desc) {
+          activeMedia: { type: '', src: '', embedSrc: '', title: '', desc: '', aspect: 'landscape', brandItems: [] },
+          openMedia(mediaType, src, title, desc, aspect = 'landscape', brandItems = []) {
               let type = mediaType;
               let embed = '';
               if (type === 'video' && src) {
@@ -267,12 +273,12 @@
                       embed = src;
                   }
               }
-              this.activeMedia = { type: type, src: src, embedSrc: embed, title: title, desc: desc };
+              this.activeMedia = { type: type, src: src, embedSrc: embed, title: title, desc: desc, aspect: aspect, brandItems: brandItems || [] };
               this.previewModal = true;
           },
           closeMedia() {
               this.previewModal = false;
-              this.activeMedia = { type: '', src: '', embedSrc: '', title: '', desc: '' };
+              this.activeMedia = { type: '', src: '', embedSrc: '', title: '', desc: '', aspect: 'landscape', brandItems: [] };
           }
       }"
       @scroll.window="showBackToTop = (window.pageYOffset > 400)">
@@ -295,15 +301,11 @@
     <header class="fixed top-0 inset-x-0 z-50 bg-[#08020F]/85 backdrop-blur-2xl border-b border-purple-900/30 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Brand Identity Logo with Ambient Glow -->
-            <a href="{{ route('home') }}" class="flex items-center gap-3.5 group">
+            <!-- Brand Identity Logo with Ambient Glow (Clean luxury icon as requested) -->
+            <a href="{{ route('home') }}" class="flex items-center group relative">
                 <div class="relative flex items-center justify-center">
-                    <span class="absolute -inset-1.5 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-gold opacity-30 group-hover:opacity-75 blur-md transition duration-300"></span>
-                    <img src="{{ asset('images/logo.png') }}" alt="بريق للتسويق والتصميم" class="relative h-12 w-auto object-contain drop-shadow group-hover:scale-105 transition-transform duration-300">
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-2xl font-black gold-gradient-text tracking-wide leading-none">بريق</span>
-                    <span class="text-[9px] text-brand-amber font-extrabold tracking-widest mt-0.5 uppercase">Creative Media Agency</span>
+                    <span class="absolute -inset-2 rounded-2xl bg-gradient-to-r from-brand-orange to-brand-peach opacity-30 group-hover:opacity-75 blur-md transition duration-300"></span>
+                    <img src="{{ asset('images/logo.png') }}" alt="وكالة بريق للإعلام والتصميم" class="relative h-12 sm:h-14 w-auto object-contain drop-shadow group-hover:scale-105 transition-transform duration-300">
                 </div>
             </a>
 
@@ -311,37 +313,37 @@
             <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-bold text-gray-300">
                 <!-- 1. Home -->
                 <a href="{{ route('home') }}" 
-                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('home') ? 'text-brand-gold' : 'hover:text-brand-gold' }}">
+                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('home') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }}">
                     <span>الرئيسية</span>
-                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-gold {{ request()->routeIs('home') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
+                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-peach {{ request()->routeIs('home') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
                 </a>
 
                 <!-- 2. Services Page -->
                 <a href="{{ route('public.services') }}" 
-                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('public.services') ? 'text-brand-gold' : 'hover:text-brand-gold' }}">
+                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('public.services') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }}">
                     <span>خدماتنا</span>
-                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-gold {{ request()->routeIs('public.services') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
+                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-peach {{ request()->routeIs('public.services') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
                 </a>
 
                 <!-- 3. Portfolio Page -->
                 <a href="{{ route('public.portfolio') }}" 
-                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('public.portfolio') ? 'text-brand-gold' : 'hover:text-brand-gold' }}">
+                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('public.portfolio') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }}">
                     <span>معرض الأعمال</span>
-                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-gold {{ request()->routeIs('public.portfolio') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
+                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-peach {{ request()->routeIs('public.portfolio') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
                 </a>
 
-                <!-- 4. Methodology / About Page -->
-                <a href="{{ route('public.process') }}" 
-                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('public.process') || request()->routeIs('public.about') ? 'text-brand-gold' : 'hover:text-brand-gold' }}">
-                    <span>من نحن ومراحل العمل</span>
-                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-gold {{ request()->routeIs('public.process') || request()->routeIs('public.about') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
+                <!-- 4. About Page -->
+                <a href="{{ route('public.about') }}" 
+                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('public.process') || request()->routeIs('public.about') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }}">
+                    <span>من نحن</span>
+                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-peach {{ request()->routeIs('public.process') || request()->routeIs('public.about') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
                 </a>
 
                 <!-- 5. Contact Page -->
                 <a href="{{ route('public.contact') }}" 
-                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('public.contact') ? 'text-brand-gold' : 'hover:text-brand-gold' }}">
+                   class="relative py-2 transition-colors duration-200 group {{ request()->routeIs('public.contact') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }}">
                     <span>تواصل معنا</span>
-                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-gold {{ request()->routeIs('public.contact') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
+                    <span class="absolute bottom-0 inset-x-0 h-0.5 bg-gradient-to-r from-brand-orange to-brand-peach {{ request()->routeIs('public.contact') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }} transition-transform origin-right duration-300"></span>
                 </a>
             </nav>
 
@@ -396,11 +398,11 @@
             </a>
             @endauth
 
-            <a href="{{ route('home') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('home') ? 'text-brand-gold' : 'hover:text-brand-gold' }} transition-colors">الرئيسية</a>
-            <a href="{{ route('public.services') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.services') ? 'text-brand-gold' : 'hover:text-brand-gold' }} transition-colors">خدماتنا المتكاملة</a>
-            <a href="{{ route('public.portfolio') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.portfolio') ? 'text-brand-gold' : 'hover:text-brand-gold' }} transition-colors">معرض الأعمال الموثق</a>
-            <a href="{{ route('public.process') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.process') ? 'text-brand-gold' : 'hover:text-brand-gold' }} transition-colors">من نحن ومراحل العمل</a>
-            <a href="{{ route('public.contact') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.contact') ? 'text-brand-gold' : 'hover:text-brand-gold' }} transition-colors">تواصل معنا وعرض سعر</a>
+            <a href="{{ route('home') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('home') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">الرئيسية</a>
+            <a href="{{ route('public.services') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.services') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">خدماتنا</a>
+            <a href="{{ route('public.portfolio') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.portfolio') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">معرض الأعمال</a>
+            <a href="{{ route('public.about') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.process') || request()->routeIs('public.about') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">من نحن</a>
+            <a href="{{ route('public.contact') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.contact') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">تواصل معنا</a>
             
             <div class="pt-3 border-t border-purple-800/40">
                 <a href="{{ route('public.contact') }}" @click="mobileNav = false" class="block py-3 text-center rounded-xl bg-gradient-to-r from-brand-orange via-brand-amber to-brand-gold text-brand-dark font-black text-xs shadow-lg">
@@ -558,29 +560,94 @@
          style="display: none;">
         
         <div @click.away="closeMedia()" 
-             class="w-full max-w-4xl glass-card-purple rounded-[2rem] p-6 shadow-2xl relative space-y-4 border border-purple-500/50">
+             :class="activeMedia.aspect === 'vertical' ? 'max-w-md' : (activeMedia.type === 'branding' ? 'max-w-5xl' : 'max-w-4xl')"
+             class="w-full glass-card-purple rounded-[2rem] p-6 shadow-2xl relative space-y-4 border border-purple-500/50 max-h-[92vh] overflow-y-auto">
             
             <button @click="closeMedia()" 
-                    class="absolute -top-12 left-0 text-white hover:text-brand-gold text-2xl transition">
+                    class="absolute -top-12 left-0 text-white hover:text-brand-orange text-2xl transition">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <!-- Media Container -->
-            <div class="aspect-video bg-black rounded-2xl overflow-hidden flex items-center justify-center relative shadow-inner">
-                <template x-if="previewModal && activeMedia.type === 'video'">
-                    <video :src="activeMedia.src" controls autoplay playsinline class="w-full h-full object-contain"></video>
-                </template>
-                <template x-if="previewModal && (activeMedia.type === 'youtube' || activeMedia.type === 'vimeo' || activeMedia.type === 'iframe')">
-                    <iframe :src="activeMedia.embedSrc" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                </template>
-                <template x-if="previewModal && activeMedia.type === 'image'">
-                    <img :src="activeMedia.src" :alt="activeMedia.title" class="w-full h-full object-contain">
-                </template>
-            </div>
+            <!-- Media Container (Standard Video / Reel / Image) -->
+            <template x-if="activeMedia.type !== 'branding'">
+                <div :class="activeMedia.aspect === 'vertical' ? 'aspect-[9/16] max-h-[70vh] mx-auto' : 'aspect-video'"
+                     class="w-full bg-black rounded-2xl overflow-hidden flex items-center justify-center relative shadow-inner">
+                    <template x-if="previewModal && activeMedia.type === 'video'">
+                        <video :src="activeMedia.src" controls autoplay playsinline class="w-full h-full object-contain"></video>
+                    </template>
+                    <template x-if="previewModal && (activeMedia.type === 'youtube' || activeMedia.type === 'vimeo' || activeMedia.type === 'iframe')">
+                        <iframe :src="activeMedia.embedSrc" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </template>
+                    <template x-if="previewModal && activeMedia.type === 'image'">
+                        <img :src="activeMedia.src" :alt="activeMedia.title" class="w-full h-full object-contain">
+                    </template>
+                </div>
+            </template>
 
-            <div class="space-y-1 text-right">
+            <!-- Multi-Item Brand Identity Showcase (بنود الهوية البصرية المتعددة) -->
+            <template x-if="activeMedia.type === 'branding'">
+                <div class="space-y-6">
+                    <div class="relative aspect-video max-h-[50vh] bg-black/60 rounded-2xl overflow-hidden flex items-center justify-center border border-purple-800/60">
+                        <img :src="activeMedia.src" :alt="activeMedia.title" class="w-full h-full object-contain">
+                        <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-brand-orange/90 text-brand-dark font-black text-xs shadow">
+                            هوية بصرية متكاملة
+                        </span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-black text-brand-gold flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-brand-orange"></i>
+                            <span>بنود وحزمة الهوية البصرية المعتمدة للبراند:</span>
+                        </h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                            <div class="p-3 rounded-xl bg-purple-900/30 border border-purple-700/40 text-center space-y-1">
+                                <i class="fa-solid fa-shapes text-brand-orange text-lg"></i>
+                                <div class="font-bold text-white">الشعار الرسمي (Logo)</div>
+                                <div class="text-[10px] text-gray-400">ملفات فيكتور، رمزي، ونصوص</div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-purple-900/30 border border-purple-700/40 text-center space-y-1">
+                                <i class="fa-solid fa-palette text-amber-400 text-lg"></i>
+                                <div class="font-bold text-white">لوحة الألوان (Colors)</div>
+                                <div class="text-[10px] text-gray-400">أكواد HEX, RGB, CMYK, Pantone</div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-purple-900/30 border border-purple-700/40 text-center space-y-1">
+                                <i class="fa-solid fa-font text-purple-300 text-lg"></i>
+                                <div class="font-bold text-white">الخطوط الرسمية (Typography)</div>
+                                <div class="text-[10px] text-gray-400">عربي وإنجليزي لكافة المنصات</div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-purple-900/30 border border-purple-700/40 text-center space-y-1">
+                                <i class="fa-solid fa-book-open text-emerald-400 text-lg"></i>
+                                <div class="font-bold text-white">دليل الهوية (Brandbook)</div>
+                                <div class="text-[10px] text-gray-400">قواعد الاستخدام والمساحات الآمنة</div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-purple-900/30 border border-purple-700/40 text-center space-y-1">
+                                <i class="fa-solid fa-id-card text-blue-400 text-lg"></i>
+                                <div class="font-bold text-white">كروت ومطبوعات</div>
+                                <div class="text-[10px] text-gray-400">بزنس كارد، ورق رسمي، أظرف</div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-purple-900/30 border border-purple-700/40 text-center space-y-1">
+                                <i class="fa-solid fa-box-open text-orange-400 text-lg"></i>
+                                <div class="font-bold text-white">التغليف والعلب (Packaging)</div>
+                                <div class="text-[10px] text-gray-400">أكياس، علب منتجات، استيكرات</div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-purple-900/30 border border-purple-700/40 text-center space-y-1">
+                                <i class="fa-solid fa-hashtag text-cyan-400 text-lg"></i>
+                                <div class="font-bold text-white">قوالب السوشيال ميديا</div>
+                                <div class="text-[10px] text-gray-400">أغلفة، بوستات، وهايلايت ستوري</div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-purple-900/30 border border-purple-700/40 text-center space-y-1">
+                                <i class="fa-solid fa-laptop text-brand-gold text-lg"></i>
+                                <div class="font-bold text-white">موك اب واقعي (3D Mockup)</div>
+                                <div class="text-[10px] text-gray-400">محاكاة الهوية على أرض الواقع</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <div class="space-y-1 text-right pt-2 border-t border-purple-800/40">
                 <h3 class="text-lg font-black text-white" x-text="activeMedia.title"></h3>
-                <p class="text-xs text-gray-300" x-text="activeMedia.desc"></p>
+                <p class="text-xs text-gray-300 leading-relaxed" x-text="activeMedia.desc"></p>
             </div>
         </div>
     </div>

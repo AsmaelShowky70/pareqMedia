@@ -27,3 +27,10 @@ database/*.sqlite
 # fix.php
 unzip.php
 extract_media.py
+ffmpeg.exe
+media/
+media_parsed/
+extracted_media/
+extracted_rtf/
+*.lock
+public/videos/bariq.mov
