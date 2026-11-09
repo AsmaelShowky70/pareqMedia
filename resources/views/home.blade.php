@@ -82,7 +82,7 @@
                         </a>
 
                         <!-- اسحب للأسفل بجانب زر مشاهدة أعمالنا -->
-                        <a href="#stats-summary" class="inline-flex items-center gap-2 px-3 py-2 text-xs text-gray-400 hover:text-brand-orange transition group shrink-0">
+                        <a href="#video-showcase" class="inline-flex items-center gap-2 px-3 py-2 text-xs text-gray-400 hover:text-brand-orange transition group shrink-0">
                             <div class="w-5 h-8 rounded-full border-2 border-gray-400 group-hover:border-brand-orange flex items-start justify-center p-1 transition-colors">
                                 <span class="w-1.5 h-2 rounded-full bg-brand-orange animate-bounce"></span>
                             </div>
@@ -93,75 +93,88 @@
 
             </div>
 
-            <!-- Left Column: Official Animated Video in 3D Sculpted Lightning Bolt (فيديو بريق في مجسم البرق المضيء) -->
-            <div class="lg:col-span-5 flex justify-center items-center relative py-4 lg:py-0">
-                
-                <!-- SVG Definition for Cross-Browser Lightning ClipPath -->
-                <svg class="absolute w-0 h-0" aria-hidden="true" focusable="false">
-                    <defs>
-                        <clipPath id="pariq-lightning-clip" clipPathUnits="objectBoundingBox">
-                            <polygon points="0.38,0 0.82,0 0.56,0.38 0.90,0.38 0.20,1 0.42,0.52 0.12,0.52" />
-                        </clipPath>
-                    </defs>
-                </svg>
-
-                <div class="relative w-64 sm:w-72 lg:w-80 h-80 sm:h-96 lg:h-[420px] flex items-center justify-center group"
-                     x-data="{ isMuted: true }">
+            <!-- Left Column: Official Pariq Logo without circular container and without background (بدون خلفية وبدون شكل دائري) -->
+            <div class="lg:col-span-5 flex justify-center items-center relative py-6 lg:py-0">
+                <div class="relative w-64 sm:w-80 lg:w-[420px] flex items-center justify-center group animate-float-slow">
                     
-                    <!-- 1. Ambient Background Lightning Glow -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-orange/35 via-amber-500/20 to-purple-600/20 blur-3xl animate-pulse-glow pointer-events-none"></div>
+                    <!-- Ambient Soft Warm Glow Behind Logo -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-orange/25 via-amber-500/15 to-purple-600/10 blur-3xl pointer-events-none scale-90"></div>
 
-                    <!-- 2. Outer Sculpted 3D Metallic Golden Lightning Frame -->
-                    <div class="relative w-full h-full p-1.5 transition-transform duration-500 group-hover:scale-105"
-                         style="filter: drop-shadow(0 0 25px rgba(255, 148, 32, 0.75)) drop-shadow(0 15px 35px rgba(0,0,0,0.9));">
-                        
-                        <!-- Golden Beveled Lightning Rim -->
-                        <div class="w-full h-full p-1 bg-gradient-to-b from-[#FFA726] via-[#FF7A00] to-[#BC6200]"
-                             style="clip-path: url(#pariq-lightning-clip); -webkit-clip-path: polygon(38% 0%, 82% 0%, 56% 38%, 90% 38%, 20% 100%, 42% 52%, 12% 52%);">
-                            
-                            <!-- Inner Lightning Core with Video -->
-                            <div class="w-full h-full bg-[#08020F] relative overflow-hidden flex items-center justify-center"
-                                 style="clip-path: url(#pariq-lightning-clip); -webkit-clip-path: polygon(38% 0%, 82% 0%, 56% 38%, 90% 38%, 20% 100%, 42% 52%, 12% 52%);">
-                                
-                                <video id="hero-lightning-video" 
-                                       playsinline 
-                                       preload="auto"
-                                       autoplay
-                                       muted
-                                       loop
-                                       poster="{{ asset('videos/bariq-poster.jpg') }}"
-                                       class="w-full h-full object-cover scale-110 pointer-events-auto cursor-pointer"
-                                       @click="
-                                           $el.muted = !$el.muted;
-                                           isMuted = $el.muted;
-                                       ">
-                                    <source src="{{ asset('videos/bariq.mp4') }}" type="video/mp4">
-                                    <source src="{{ asset('videos/bariq.webm') }}" type="video/webm">
-                                </video>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- Sound Toggle Floating Badge -->
-                    <button type="button" 
-                            @click="
-                                const v = document.getElementById('hero-lightning-video');
-                                v.muted = !v.muted;
-                                isMuted = v.muted;
-                            "
-                            class="absolute -bottom-4 mx-auto px-3.5 py-1.5 rounded-full bg-[#18082B]/95 hover:bg-brand-orange hover:text-brand-dark text-white text-[10px] font-black border border-brand-orange/60 transition flex items-center gap-1.5 shadow-2xl backdrop-blur-md z-30">
-                        <i class="fa-solid" :class="isMuted ? 'fa-volume-xmark text-amber-400' : 'fa-volume-high text-emerald-400'"></i>
-                        <span x-text="isMuted ? 'تشغيل الصوت' : 'كتم الصوت'"></span>
-                    </button>
-
+                    <!-- Clean Transparent Logo without background or circular container -->
+                    <img src="{{ asset('images/logo.png') }}" 
+                         alt="PARIQ AGENCY" 
+                         class="relative w-56 sm:w-72 lg:w-96 object-contain filter drop-shadow-[0_12px_35px_rgba(255,148,32,0.4)] group-hover:scale-105 transition-transform duration-500">
                 </div>
             </div>
 
         </div>
 
+    </div>
+</section>
+
+<!-- =========================================================================
+     2. OFFICIAL PARIQ SHOWREEL VIDEO SECTION (فيديو شو ريل وكالة بريق في مكانه المعتمد)
+     ========================================================================= -->
+<section id="video-showcase" class="py-14 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative z-10">
+    <div class="text-center max-w-2xl mx-auto mb-8 space-y-2">
+        <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
+            فيديو شو ريل وكالة بريق الرسمي
+        </span>
+        <h2 class="text-2xl sm:text-4xl font-black text-white">شاهد إبداع بريق في دقيقة واحدة</h2>
+        <p class="text-xs sm:text-sm text-gray-300">أعمالنا السينمائية ومونتاجنا الإعلاني بملء الشاشة بجودة فائقة</p>
+    </div>
+
+    <!-- 16:9 (1920x1080) Horizontal Video Frame -->
+    <div class="conic-glow-border rounded-3xl overflow-hidden shadow-2xl relative group" 
+         x-data="{ isMuted: true, isPlaying: true }">
+        
+        <div class="relative aspect-video w-full bg-[#08020F] rounded-[1.4rem] overflow-hidden flex items-center justify-center">
+            
+            <video id="pariq-hero-video" 
+                   playsinline 
+                   preload="auto"
+                   autoplay
+                   muted
+                   loop
+                   controls
+                   poster="{{ asset('videos/bariq-poster.jpg') }}"
+                   class="w-full h-full object-contain bg-black">
+                <source src="{{ asset('videos/bariq.mp4') }}" type="video/mp4">
+                <source src="{{ asset('videos/bariq.webm') }}" type="video/webm">
+                متصفحك لا يدعم تشغيل الفيديو المباشر.
+            </video>
+
+            <!-- Top Video Info Bar -->
+            <div class="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-brand-orange/40 text-[9px] sm:text-[11px] text-white font-bold pointer-events-none">
+                <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-orange animate-ping"></span>
+                <span>PARIQ SHOWREEL • 1080×1920</span>
+            </div>
+
+            <!-- Bottom Left Actions: Sound Toggle + Fullscreen Modal -->
+            <div class="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2">
+                <!-- Sound Toggle Button -->
+                <button type="button" 
+                        @click="
+                            const v = document.getElementById('pariq-hero-video');
+                            v.muted = !v.muted;
+                            isMuted = v.muted;
+                            if (v.paused) { v.play(); }
+                        "
+                        class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-[10px] sm:text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1 sm:gap-1.5 shadow-lg active:scale-95">
+                    <i class="fa-solid" :class="isMuted ? 'fa-volume-xmark text-amber-400' : 'fa-volume-high text-emerald-400'"></i>
+                    <span x-text="isMuted ? 'تشغيل الصوت' : 'كتم الصوت'"></span>
+                </button>
+
+                <!-- Fullscreen Modal Button -->
+                <button type="button" 
+                        @click="openMedia('video', '{{ asset('videos/bariq.mp4') }}', 'شو ريل وكالة بريق الرسمي 2026', 'أحدث إنتاجات وكالة بريق للتسويق والتصوير السينمائي والمونتاج الإعلاني')"
+                        class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-[10px] sm:text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1 sm:gap-1.5 shadow-lg active:scale-95">
+                    <i class="fa-solid fa-expand"></i>
+                    <span>نافذة كاملة</span>
+                </button>
+            </div>
+
+        </div>
     </div>
 </section>
 

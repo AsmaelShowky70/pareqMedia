@@ -231,24 +231,24 @@
 
     </div>
 
-    <!-- 3. WEEKLY INCOME INDICATOR BANNER (مؤشر بناءً على الدخل والتحصيل الأسبوعي للوكالة - طلب العميل في ملف السيستم) -->
+    <!-- 3. DAILY INCOME INDICATOR BANNER (مؤشر يتجدد بالمدخلات اليومية - طلب العميل) -->
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-card via-brand-purple to-[#230b38] border border-brand-gold/40 p-4 sm:p-6 shadow-2xl">
         <div class="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none"></div>
         <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
             
-            <!-- Left/Main: Circular Progress + Weekly Revenue Progress Bar -->
+            <!-- Left/Main: Circular Progress + Daily Revenue Progress Bar -->
             <div class="lg:col-span-7 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-                <!-- SVG Circular Meter for Weekly Income -->
+                <!-- SVG Circular Meter for Daily Income -->
                 <div class="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 flex items-center justify-center">
                     <svg class="w-20 h-20 sm:w-24 sm:h-24 transform -rotate-90" viewBox="0 0 36 36">
                         <path class="text-white/10" stroke-width="3.5" stroke="currentColor" fill="none"
                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path class="text-brand-gold transition-all duration-1000 ease-out" stroke-dasharray="{{ min(100, $weeklyIncomeRate) }}, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none"
+                        <path class="text-brand-gold transition-all duration-1000 ease-out" stroke-dasharray="{{ min(100, $dailyIncomeRate) }}, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none"
                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                     </svg>
                     <div class="absolute flex flex-col items-center justify-center text-center">
-                        <span class="text-lg sm:text-xl font-black text-white leading-none">{{ $weeklyIncomeRate }}%</span>
-                        <span class="text-[8px] sm:text-[9px] text-brand-gold font-bold mt-0.5">من الهدف</span>
+                        <span class="text-lg sm:text-xl font-black text-white leading-none">{{ $dailyIncomeRate }}%</span>
+                        <span class="text-[8px] sm:text-[9px] text-brand-gold font-bold mt-0.5">من هدف اليوم</span>
                     </div>
                 </div>
 
@@ -260,31 +260,31 @@
                                 <i class="fa-solid fa-chart-pie"></i>
                             </div>
                             <div>
-                                <h3 class="text-sm sm:text-base font-black text-white">مؤشر الدخل والتحصيل الأسبوعي</h3>
-                                <p class="text-[10px] sm:text-[11px] text-gray-400">متابعة الإيرادات المحققة مقابل المستهدف الأسبوعي للوكالة</p>
+                                <h3 class="text-sm sm:text-base font-black text-white">مؤشر الدخل والتحصيل اليومي</h3>
+                                <p class="text-[10px] sm:text-[11px] text-gray-400">متابعة الإيرادات والمدخلات المالية المحققة اليوم مقارنة بالمستهدف اليومي للوكالة</p>
                             </div>
                         </div>
                         <span class="self-center sm:self-auto px-2.5 py-1 rounded-lg bg-brand-gold/15 text-brand-gold text-xs font-black border border-brand-gold/30 whitespace-nowrap">
-                            الهدف الأسبوعي: {{ number_format($weeklyTarget, 0) }} ج.م
+                            الهدف اليومي: {{ number_format($dailyTarget, 0) }} ج.م
                         </span>
                     </div>
                     
                     <!-- Progress Bar with Vibrant Golden Glow -->
                     <div class="w-full bg-white/10 rounded-full h-3.5 sm:h-4 p-0.5 overflow-hidden">
                         <div class="bg-gradient-to-r from-brand-gold via-amber-400 to-emerald-400 h-full rounded-full transition-all duration-1000 shadow-[0_0_14px_rgba(255,148,32,0.7)]"
-                             style="width: {{ min(100, max(8, $weeklyIncomeRate)) }}%;"></div>
+                             style="width: {{ min(100, max(8, $dailyIncomeRate)) }}%;"></div>
                     </div>
                     
-                    <!-- Weekly breakdown metrics -->
+                    <!-- Daily breakdown metrics -->
                     <div class="flex flex-wrap items-center justify-between text-[11px] sm:text-xs text-gray-300 gap-2">
-                        <span>المتحقق هذا الأسبوع: <strong class="text-emerald-400 font-black">{{ number_format($weeklyRevenue, 0) }} ج.م</strong></span>
-                        <span>المتبقي للهدف: <strong class="text-amber-300 font-black">{{ number_format(max(0, $weeklyTarget - $weeklyRevenue), 0) }} ج.م</strong></span>
-                        @if($weeklyIncomeRate >= 100)
-                            <span class="text-emerald-400 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i>تم تحقيق الهدف الأسبوعي 🚀</span>
-                        @elseif($weeklyIncomeRate >= 60)
-                            <span class="text-amber-400 font-bold flex items-center gap-1"><i class="fa-solid fa-chart-line"></i>أداء مالي أسبوعي ممتاز 🌟</span>
+                        <span>المتحقق اليوم: <strong class="text-emerald-400 font-black">{{ number_format($todayRevenue, 0) }} ج.م</strong></span>
+                        <span>المتبقي لهدف اليوم: <strong class="text-amber-300 font-black">{{ number_format(max(0, $dailyTarget - $todayRevenue), 0) }} ج.م</strong></span>
+                        @if($dailyIncomeRate >= 100)
+                            <span class="text-emerald-400 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i>تم تحقيق هدف اليوم بنجاح 🚀</span>
+                        @elseif($dailyIncomeRate >= 60)
+                            <span class="text-amber-400 font-bold flex items-center gap-1"><i class="fa-solid fa-chart-line"></i>أداء مالي يومي ممتاز 🌟</span>
                         @else
-                            <span class="text-sky-300 font-bold flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left"></i>جاري استكمال تحصيلات الأسبوع 🎯</span>
+                            <span class="text-sky-300 font-bold flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left"></i>جاري استكمال تحصيلات اليوم 🎯</span>
                         @endif
                     </div>
                 </div>
