@@ -231,24 +231,24 @@
 
     </div>
 
-    <!-- 3. DAILY INCOME INDICATOR BANNER (مؤشر يتجدد بالمدخلات اليومية - طلب العميل) -->
+    <!-- 3. DAILY TASK COMPLETION RATE & MOTIVATIONAL BANNER (باند معدل إنجاز المهام اليومية - حسب طلب العميل) -->
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-card via-brand-purple to-[#230b38] border border-brand-gold/40 p-4 sm:p-6 shadow-2xl">
         <div class="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none"></div>
         <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
             
-            <!-- Left/Main: Circular Progress + Daily Revenue Progress Bar -->
+            <!-- Left/Main: Circular Progress + Daily Tasks Progress Bar -->
             <div class="lg:col-span-7 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-                <!-- SVG Circular Meter for Daily Income -->
+                <!-- SVG Circular Meter for Daily Tasks -->
                 <div class="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 flex items-center justify-center">
                     <svg class="w-20 h-20 sm:w-24 sm:h-24 transform -rotate-90" viewBox="0 0 36 36">
                         <path class="text-white/10" stroke-width="3.5" stroke="currentColor" fill="none"
                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path class="text-brand-gold transition-all duration-1000 ease-out" stroke-dasharray="{{ min(100, $dailyIncomeRate) }}, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none"
+                        <path class="text-brand-gold transition-all duration-1000 ease-out" stroke-dasharray="{{ min(100, max(0, $dailyCompletionRate)) }}, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none"
                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                     </svg>
                     <div class="absolute flex flex-col items-center justify-center text-center">
-                        <span class="text-lg sm:text-xl font-black text-white leading-none">{{ $dailyIncomeRate }}%</span>
-                        <span class="text-[8px] sm:text-[9px] text-brand-gold font-bold mt-0.5">من هدف اليوم</span>
+                        <span class="text-lg sm:text-xl font-black text-white leading-none">{{ $dailyCompletionRate }}%</span>
+                        <span class="text-[8px] sm:text-[9px] text-brand-gold font-bold mt-0.5">مكتمل</span>
                     </div>
                 </div>
 
@@ -257,66 +257,56 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                         <div class="flex items-center justify-center sm:justify-start gap-2">
                             <div class="w-7 h-7 rounded-lg bg-brand-gold/15 text-brand-gold flex items-center justify-center text-xs">
-                                <i class="fa-solid fa-chart-pie"></i>
+                                <i class="fa-solid fa-bullseye"></i>
                             </div>
                             <div>
-                                <h3 class="text-sm sm:text-base font-black text-white">مؤشر الدخل والتحصيل اليومي</h3>
-                                <p class="text-[10px] sm:text-[11px] text-gray-400">متابعة الإيرادات والمدخلات المالية المحققة اليوم مقارنة بالمستهدف اليومي للوكالة</p>
+                                <h3 class="text-sm sm:text-base font-black text-white">معدل إنجاز المهام اليومية</h3>
+                                <p class="text-[10px] sm:text-[11px] text-gray-400">متابعة نسبة إنجاز وتسليم مهام وتكليفات اليوم لصناع المحتوى وفريق العمل</p>
                             </div>
                         </div>
                         <span class="self-center sm:self-auto px-2.5 py-1 rounded-lg bg-brand-gold/15 text-brand-gold text-xs font-black border border-brand-gold/30 whitespace-nowrap">
-                            الهدف اليومي: {{ number_format($dailyTarget, 0) }} ج.م
+                            الهدف: 75% فأكثر
                         </span>
                     </div>
                     
                     <!-- Progress Bar with Vibrant Golden Glow -->
                     <div class="w-full bg-white/10 rounded-full h-3.5 sm:h-4 p-0.5 overflow-hidden">
                         <div class="bg-gradient-to-r from-brand-gold via-amber-400 to-emerald-400 h-full rounded-full transition-all duration-1000 shadow-[0_0_14px_rgba(255,148,32,0.7)]"
-                             style="width: {{ min(100, max(8, $dailyIncomeRate)) }}%;"></div>
+                             style="width: {{ min(100, max(12, $dailyCompletionRate)) }}%;"></div>
                     </div>
                     
-                    <!-- Daily breakdown metrics -->
+                    <!-- Breakdown metrics -->
                     <div class="flex flex-wrap items-center justify-between text-[11px] sm:text-xs text-gray-300 gap-2">
-                        <span>المتحقق اليوم: <strong class="text-emerald-400 font-black">{{ number_format($todayRevenue, 0) }} ج.م</strong></span>
-                        <span>المتبقي لهدف اليوم: <strong class="text-amber-300 font-black">{{ number_format(max(0, $dailyTarget - $todayRevenue), 0) }} ج.م</strong></span>
-                        @if($dailyIncomeRate >= 100)
-                            <span class="text-emerald-400 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i>تم تحقيق هدف اليوم بنجاح 🚀</span>
-                        @elseif($dailyIncomeRate >= 60)
-                            <span class="text-amber-400 font-bold flex items-center gap-1"><i class="fa-solid fa-chart-line"></i>أداء مالي يومي ممتاز 🌟</span>
+                        <span>إنجاز مهام اليوم: <strong class="text-white">{{ $dailyCompletionRate }}%</strong> من إجمالي التسكات</span>
+                        <span>مكتمل اليوم: <strong class="text-emerald-400">{{ $taskCounts['completed'] ?? 0 }}</strong> تسك</span>
+                        <span>قيد العمل والانتظار: <strong class="text-amber-300">{{ ($taskCounts['in_progress'] ?? 0) + ($taskCounts['not_started'] ?? 0) }}</strong></span>
+                        @if($dailyCompletionRate >= 75)
+                            <span class="text-emerald-400 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i>الأداء العام ممتاز 🚀</span>
                         @else
-                            <span class="text-sky-300 font-bold flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left"></i>جاري استكمال تحصيلات اليوم 🎯</span>
+                            <span class="text-amber-400 font-bold flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left"></i>جاري تسليم مهام اليوم ⚡</span>
                         @endif
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Treasury Flow & POS Quick Action (ربط التدفق المالي بالخزينة والكاشير) -->
-            <div class="lg:col-span-5 p-3.5 sm:p-4 rounded-xl bg-brand-dark/60 border border-brand-border/80 relative space-y-2.5">
-                <div class="flex items-center justify-between pb-2 border-b border-brand-border/40">
-                    <span class="text-xs font-bold text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-vault text-brand-gold"></i>
-                        <span>ملخص التدفق المالي والخزينة</span>
+            <!-- Right: Motivational Quote Box (الاقتباس التحفيزي المعتمد لفريق بريق) -->
+            <div class="lg:col-span-5 p-3.5 sm:p-4 rounded-xl bg-brand-dark/50 border border-brand-border/60 relative space-y-1.5">
+                <i class="fa-solid fa-quote-right text-brand-gold/20 text-2xl sm:text-3xl absolute top-3 left-3"></i>
+                <div class="relative z-10 space-y-1">
+                    <span class="text-[9px] sm:text-[10px] uppercase tracking-wider text-brand-gold font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-sparkles"></i>
+                        <span>كلمة اليوم التحفيزية لفريق بريق</span>
                     </span>
-                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-black border border-emerald-500/30">
-                        محدث الآن
-                    </span>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 text-center">
-                    <div class="p-2 rounded-lg bg-black/40 border border-brand-border/40">
-                        <div class="text-[10px] text-gray-400 font-medium">رصيد الخزينة</div>
-                        <div class="text-xs sm:text-sm font-black text-brand-gold truncate">{{ number_format($treasuryBalance ?? 0, 0) }} ج.م</div>
-                    </div>
-                    <div class="p-2 rounded-lg bg-black/40 border border-brand-border/40">
-                        <div class="text-[10px] text-gray-400 font-medium">صافي أرباح الشهر</div>
-                        <div class="text-xs sm:text-sm font-black text-emerald-400 truncate">{{ number_format($netProfit, 0) }} ج.م</div>
+                    <p class="text-[11px] sm:text-xs font-bold text-gray-100 leading-relaxed italic">
+                        "النجاح ليس وجهة .. بل رحلة من الإنجازات الصغيرة. استمر، فخطوتك اليوم تصنع فرقاً غداً"
+                    </p>
+                    <div class="text-[10px] sm:text-[11px] text-gray-400 pt-1 border-t border-brand-border/40 flex items-center justify-between">
+                        <span>فريق بريق الإبداعي • شغف بلا حدود</span>
+                        <a href="{{ route('tasks.index') }}" class="text-brand-gold hover:underline font-bold text-[11px]">
+                            جدول المهام والتسليمات ←
+                        </a>
                     </div>
                 </div>
-
-                <a href="{{ route('cashier.index') }}" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-brand-gold to-amber-500 hover:from-amber-500 hover:to-brand-gold text-brand-dark font-black text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
-                    <i class="fa-solid fa-cash-register"></i>
-                    <span>تسجيل دفعة جديدة (كاشير POS)</span>
-                </a>
             </div>
 
         </div>
