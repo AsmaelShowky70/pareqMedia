@@ -66,6 +66,19 @@
             ];
         }
     }
+
+    // تكرار البطاقات حتى 5 كروت في المعرض ثلاثي الأبعاد إذا كان ما تم إدخاله أقل من ذلك حتى يتمكن المعرض من التحرك والدوران بسلاسة
+    if(count($showcasePortfolio) > 0 && count($showcasePortfolio) < 5) {
+        $baseItems = $showcasePortfolio;
+        while(count($showcasePortfolio) < 5) {
+            foreach($baseItems as $bItem) {
+                $copy = $bItem;
+                $copy['id'] = $bItem['id'] . '-rep-' . count($showcasePortfolio);
+                $showcasePortfolio[] = $copy;
+                if(count($showcasePortfolio) >= 5) break;
+            }
+        }
+    }
 @endphp
 
 @if(!empty($showcasePortfolio))
@@ -73,26 +86,41 @@
          x-data="{ 
              activeIdx: 0, 
              autoplayTimer: null,
+             progress: 0,
+             progressTimer: null,
              works: {{ Js::from($showcasePortfolio) }},
              next() { 
                  if (this.works.length <= 1) return;
                  this.activeIdx = (this.activeIdx + 1) % this.works.length; 
+                 this.resetTimer();
              },
              prev() { 
                  if (this.works.length <= 1) return;
                  this.activeIdx = (this.activeIdx - 1 + this.works.length) % this.works.length; 
+                 this.resetTimer();
              },
              startAutoplay() {
                  this.stopAutoplay();
+                 this.progress = 0;
                  if (this.works.length > 1) {
-                     this.autoplayTimer = setInterval(() => { this.next(); }, 10000);
+                     this.progressTimer = setInterval(() => {
+                         if (this.progress < 100) {
+                             this.progress += 1;
+                         }
+                     }, 100);
+                     this.autoplayTimer = setInterval(() => { 
+                         this.next(); 
+                     }, 10000);
                  }
              },
+             resetTimer() {
+                 this.startAutoplay();
+             },
              stopAutoplay() {
-                 if (this.autoplayTimer) {
-                     clearInterval(this.autoplayTimer);
-                     this.autoplayTimer = null;
-                 }
+                 if (this.autoplayTimer) clearInterval(this.autoplayTimer);
+                 if (this.progressTimer) clearInterval(this.progressTimer);
+                 this.autoplayTimer = null;
+                 this.progressTimer = null;
              },
              getCardStyle(idx) {
                  const total = this.works.length;
@@ -112,11 +140,7 @@
                  return `transform: translateX(${translateX}px) scale(${scale}) perspective(1000px) rotateY(${rotateY}deg); z-index: ${zIndex}; opacity: ${opacity};`;
              }
          }"
-         x-init="startAutoplay()"
-         @mouseenter="stopAutoplay()"
-         @mouseleave="startAutoplay()"
-         @touchstart="stopAutoplay()"
-         @touchend="startAutoplay()">
+         x-init="startAutoplay()">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="text-center max-w-2xl mx-auto mb-8 space-y-2">
@@ -124,7 +148,7 @@
                 صالة عرض سينمائية عريضة 3D
             </span>
             <h2 class="text-2xl sm:text-4xl font-black text-white">استعراض تفاعلي لأبرز أعمال بريق</h2>
-            <p class="text-xs sm:text-sm text-gray-300">تصميم عريض سينمائي يتحرك تلقائياً من الشمال لليمين كل 10 ثوانٍ • انقر على أي عمل لفتحه بجودة فائقة</p>
+            <p class="text-xs sm:text-sm text-gray-300">تصميم عريض سينمائي يتحرك تلقائياً كل 10 ثوانٍ • انقر على أي عمل لفتحه بجودة فائقة</p>
         </div>
 
         <!-- 3D Widescreen Track -->
@@ -175,7 +199,7 @@
                 </template>
             </div>
 
-            <!-- Controls (only show if more than 1 item) -->
+            <!-- Controls (show with smooth 10s progress indicator) -->
             <div class="flex items-center justify-center gap-5 sm:gap-7 mt-8" x-show="works.length > 1">
                 <button type="button" @click="prev()" 
                         aria-label="السابق"
@@ -183,13 +207,21 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
-                <div class="flex items-center gap-3 w-48 sm:w-72">
-                    <span class="font-mono text-xs sm:text-sm font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
-                    <div class="flex-grow h-1.5 bg-purple-950 rounded-full overflow-hidden relative border border-purple-800/40">
-                        <div class="h-full bg-gradient-to-r from-brand-orange to-brand-peach transition-all duration-300 rounded-full"
-                             :style="'width: ' + (((activeIdx + 1) / works.length) * 100) + '%'"></div>
+                <!-- Dual Visual Track: Current Item Number + Live 10s Countdown Bar -->
+                <div class="flex flex-col items-center gap-2 w-56 sm:w-80">
+                    <div class="flex items-center justify-between w-full text-[11px] font-mono">
+                        <span class="font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
+                        <span class="text-[10px] text-brand-peach/80 flex items-center gap-1 font-sans">
+                            <i class="fa-solid fa-clock-rotate-left text-[9px] animate-spin-slow"></i>
+                            <span>تبديل تلقائي كل 10ث</span>
+                        </span>
+                        <span class="font-bold text-gray-400" x-text="works.length < 10 ? '0' + works.length : works.length">05</span>
                     </div>
-                    <span class="font-mono text-xs sm:text-sm font-bold text-gray-400" x-text="works.length < 10 ? '0' + works.length : works.length">10</span>
+                    <!-- Dynamic 10-Second Countdown Track -->
+                    <div class="w-full h-2 bg-purple-950/80 rounded-full overflow-hidden relative border border-purple-800/50 p-0.5">
+                        <div class="h-full bg-gradient-to-r from-brand-orange via-amber-400 to-brand-peach rounded-full transition-all duration-100 ease-linear shadow-[0_0_10px_#FF9420]"
+                             :style="'width: ' + progress + '%'"></div>
+                    </div>
                 </div>
 
                 <button type="button" @click="next()" 

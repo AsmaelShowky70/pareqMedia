@@ -335,17 +335,34 @@
                  { id: 9, slug: 'data-analysis', title: 'تحليل البيانات والتقارير', category: 'قياس دقيق للأداء والنتائج', icon: 'fa-solid fa-chart-pie', desc: 'نقيس الأداء، ونحلل النتائج بدقة، ونقدم لك تقارير واضحة تساعدك في اتخاذ قرارات مدروسة.', img: '{{ asset('images/portfolio/ad_result_72.webp') }}' },
                  { id: 10, slug: 'content-writing', title: 'صناعة وكتابة المحتوى', category: 'سيناريوهات ونصوص تسويقية', icon: 'fa-solid fa-pen-nib', desc: 'نكتب محتوى مبتكر بأسلوب احترافي بعيداً عن التكرار، لكي نجذب الجمهور من أول جملة وتصل رسالتك بأسرع شكل وبأسلوب سلس.', img: '{{ asset('images/portfolio/social_3.webp') }}' }
              ],
-             next() { this.activeIdx = (this.activeIdx + 1) % this.services.length; },
-             prev() { this.activeIdx = (this.activeIdx - 1 + this.services.length) % this.services.length; },
+             next() { 
+                 this.activeIdx = (this.activeIdx + 1) % this.services.length; 
+                 this.resetTimer();
+             },
+             prev() { 
+                 this.activeIdx = (this.activeIdx - 1 + this.services.length) % this.services.length; 
+                 this.resetTimer();
+             },
              startAutoplay() {
                  this.stopAutoplay();
-                 this.autoplayTimer = setInterval(() => { this.next(); }, 10000);
+                 this.progress = 0;
+                 this.progressTimer = setInterval(() => {
+                     if (this.progress < 100) {
+                         this.progress += 1;
+                     }
+                 }, 100);
+                 this.autoplayTimer = setInterval(() => { 
+                     this.next(); 
+                 }, 10000);
+             },
+             resetTimer() {
+                 this.startAutoplay();
              },
              stopAutoplay() {
-                 if (this.autoplayTimer) {
-                     clearInterval(this.autoplayTimer);
-                     this.autoplayTimer = null;
-                 }
+                 if (this.autoplayTimer) clearInterval(this.autoplayTimer);
+                 if (this.progressTimer) clearInterval(this.progressTimer);
+                 this.autoplayTimer = null;
+                 this.progressTimer = null;
              },
              getCardStyle(idx) {
                  const total = this.services.length;
@@ -362,11 +379,7 @@
                  return `transform: translateX(${translateX}px) scale(${scale}) perspective(1000px) rotateY(${rotateY}deg); z-index: ${zIndex}; opacity: ${opacity};`;
              }
          }"
-         x-init="startAutoplay()"
-         @mouseenter="stopAutoplay()"
-         @mouseleave="startAutoplay()"
-         @touchstart="stopAutoplay()"
-         @touchend="startAutoplay()">
+         x-init="startAutoplay()">
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
@@ -438,7 +451,7 @@
                 </template>
             </div>
 
-            <!-- Bottom Navigation Controls: Arrows + Progress Bar (01 --------- 10) -->
+            <!-- Bottom Navigation Controls: Arrows + Live 10s Countdown Bar -->
             <div class="flex items-center justify-center gap-5 sm:gap-7 mt-8">
                 <!-- Prev Button -->
                 <button type="button" @click="prev()" 
@@ -447,14 +460,21 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
-                <!-- 01 ---- Progress Track ---- 10 -->
-                <div class="flex items-center gap-3 w-48 sm:w-72">
-                    <span class="font-mono text-xs sm:text-sm font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
-                    <div class="flex-grow h-1.5 bg-purple-950 rounded-full overflow-hidden relative border border-purple-800/40">
-                        <div class="h-full bg-gradient-to-r from-brand-orange to-brand-peach transition-all duration-300 rounded-full"
-                             :style="'width: ' + (((activeIdx + 1) / services.length) * 100) + '%'"></div>
+                <!-- Dual Visual Track: Current Service + Live 10s Countdown Bar -->
+                <div class="flex flex-col items-center gap-2 w-56 sm:w-80">
+                    <div class="flex items-center justify-between w-full text-[11px] font-mono">
+                        <span class="font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
+                        <span class="text-[10px] text-brand-peach/80 flex items-center gap-1 font-sans">
+                            <i class="fa-solid fa-clock-rotate-left text-[9px] animate-spin-slow"></i>
+                            <span>تبديل تلقائي كل 10ث</span>
+                        </span>
+                        <span class="font-bold text-gray-400">10</span>
                     </div>
-                    <span class="font-mono text-xs sm:text-sm font-bold text-gray-400">10</span>
+                    <!-- Dynamic 10-Second Countdown Track -->
+                    <div class="w-full h-2 bg-purple-950/80 rounded-full overflow-hidden relative border border-purple-800/50 p-0.5">
+                        <div class="h-full bg-gradient-to-r from-brand-orange via-amber-400 to-brand-peach rounded-full transition-all duration-100 ease-linear shadow-[0_0_10px_#FF9420]"
+                             :style="'width: ' + progress + '%'"></div>
+                    </div>
                 </div>
 
                 <!-- Next Button -->
@@ -543,6 +563,7 @@
          class="relative select-none">
         
         <div x-ref="slider"
+             dir="ltr"
              @mouseenter="isPaused = true"
              @mouseleave="isPaused = false; stopDrag()"
              @mousedown="startDrag($event)"
@@ -554,52 +575,59 @@
              class="overflow-x-auto pb-4 no-scrollbar cursor-grab active:cursor-grabbing flex items-center gap-5 px-4 sm:px-8 w-full"
              style="scroll-behavior: auto;">
             
+            @php
+                $ribbonItems = collect();
+                if(isset($portfolioItems) && $portfolioItems->count() > 0) {
+                    while($ribbonItems->count() < 12) {
+                        $ribbonItems = $ribbonItems->concat($portfolioItems);
+                    }
+                }
+            @endphp
+
             <div class="flex items-center gap-5 w-max">
-                @for($loopIdx = 0; $loopIdx < 2; $loopIdx++)
-                    @foreach($portfolioItems->take(10) as $item)
-                    @php
-                        $thumbUrl = $item->thumbnail;
-                        $finalThumb = $thumbUrl ? (str_starts_with($thumbUrl, 'http') ? $thumbUrl : asset(ltrim($thumbUrl, '/'))) : asset('images/portfolio/social_1.webp');
-                        $finalMedia = $item->video_url ?: $finalThumb;
-                        $mediaType = $item->video_url ? 'video' : ($item->category === 'branding' ? 'branding' : 'image');
-                        $aspectType = $item->category === 'reels' ? 'vertical' : 'landscape';
-                    @endphp
-                    <div class="w-72 sm:w-80 flex-shrink-0 glass-card-purple rounded-2xl overflow-hidden border border-purple-800/50 hover:border-brand-orange transition-all duration-300 group cursor-pointer shadow-xl hover:-translate-y-2 select-none"
-                         @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')">
+                @foreach($ribbonItems as $item)
+                @php
+                    $thumbUrl = $item->thumbnail;
+                    $finalThumb = $thumbUrl ? (str_starts_with($thumbUrl, 'http') ? $thumbUrl : asset(ltrim($thumbUrl, '/'))) : asset('images/portfolio/social_1.webp');
+                    $finalMedia = $item->video_url ?: $finalThumb;
+                    $mediaType = $item->video_url ? 'video' : ($item->category === 'branding' ? 'branding' : 'image');
+                    $aspectType = $item->category === 'reels' ? 'vertical' : 'landscape';
+                @endphp
+                <div class="w-72 sm:w-80 flex-shrink-0 glass-card-purple rounded-2xl overflow-hidden border border-purple-800/50 hover:border-brand-orange transition-all duration-300 group cursor-pointer shadow-xl hover:-translate-y-2 select-none"
+                     @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')">
+                    
+                    <div class="relative aspect-video bg-black/60 overflow-hidden">
+                        <img src="{{ $finalThumb }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 pointer-events-none">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#150626] via-transparent to-transparent opacity-80 pointer-events-none"></div>
                         
-                        <div class="relative aspect-video bg-black/60 overflow-hidden">
-                            <img src="{{ $finalThumb }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 pointer-events-none">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#150626] via-transparent to-transparent opacity-80 pointer-events-none"></div>
-                            
-                            @if($item->video_url)
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div class="w-12 h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-sm shadow-xl group-hover:scale-115 transition-transform">
-                                    <i class="fa-solid fa-play mr-0.5"></i>
-                                </div>
-                            </div>
-                            @else
-                            <div class="absolute bottom-2 left-2 w-8 h-8 rounded-lg bg-black/70 text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition pointer-events-none">
-                                <i class="fa-solid fa-expand"></i>
-                            </div>
-                            @endif
-
-                            <span class="absolute top-2.5 right-2.5 text-[9px] font-bold px-2.5 py-1 rounded-full bg-black/80 backdrop-blur text-brand-peach border border-purple-500/30 pointer-events-none">
-                                {{ $item->category_arabic }}
-                            </span>
-                        </div>
-
-                        <div class="p-4 space-y-1.5 text-right pointer-events-none">
-                            <h4 class="text-xs sm:text-sm font-black text-white group-hover:text-brand-orange transition-colors line-clamp-1">
-                                {{ $item->title }}
-                            </h4>
-                            <div class="text-[10px] text-gray-400 font-medium">
-                                {{ $item->client_name }} @if($item->client_country) • {{ $item->client_country }} @endif
+                        @if($item->video_url)
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="w-12 h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-sm shadow-xl group-hover:scale-115 transition-transform">
+                                <i class="fa-solid fa-play mr-0.5"></i>
                             </div>
                         </div>
+                        @else
+                        <div class="absolute bottom-2 left-2 w-8 h-8 rounded-lg bg-black/70 text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition pointer-events-none">
+                            <i class="fa-solid fa-expand"></i>
+                        </div>
+                        @endif
 
+                        <span class="absolute top-2.5 right-2.5 text-[9px] font-bold px-2.5 py-1 rounded-full bg-black/80 backdrop-blur text-brand-peach border border-purple-500/30 pointer-events-none">
+                            {{ $item->category_arabic }}
+                        </span>
                     </div>
-                    @endforeach
-                @endfor
+
+                    <div class="p-4 space-y-1.5 text-right pointer-events-none">
+                        <h4 class="text-xs sm:text-sm font-black text-white group-hover:text-brand-orange transition-colors line-clamp-1">
+                            {{ $item->title }}
+                        </h4>
+                        <div class="text-[10px] text-gray-400 font-medium">
+                            {{ $item->client_name }} @if($item->client_country) • {{ $item->client_country }} @endif
+                        </div>
+                    </div>
+
+                </div>
+                @endforeach
             </div>
 
         </div>
