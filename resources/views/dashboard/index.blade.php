@@ -105,172 +105,218 @@
     </div>
     @endif
 
-    <!-- 2. UPGRADED TOP KPI GRID WITH SPARKLINES (متجاوب: 2x2 على الموبايل و 4x1 على الكمبيوتر) -->
+    <!-- 2. UPGRADED TOP KPI GRID WITH SPARKLINES (متطابق بالكامل مع ملف السيستم) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         
-        <!-- Total Revenue -->
-        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-3.5 sm:p-5 relative overflow-hidden group hover:border-brand-gold/60 transition shadow-lg flex flex-col justify-between">
-            <div>
-                <div class="flex items-start sm:items-center justify-between gap-1 mb-1.5">
-                    <span class="text-[11px] sm:text-xs font-bold text-gray-400 line-clamp-1">إجمالي التحصيلات</span>
-                    <span class="px-1.5 py-0.5 rounded-full text-[9px] sm:text-[11px] font-black bg-emerald-500/15 text-emerald-400 flex items-center gap-0.5 border border-emerald-500/30 whitespace-nowrap">
-                        <i class="fa-solid fa-arrow-trend-up text-[8px] sm:text-[10px]"></i>
-                        <span>+27% ↑</span>
-                    </span>
-                </div>
-                <div class="text-lg sm:text-2xl font-black text-white tracking-tight">
-                    {{ number_format($totalRevenue, 0) }} <span class="text-xs sm:text-sm font-bold text-brand-gold">ج.م</span>
-                </div>
-                <div class="mt-1.5 text-[10px] sm:text-[11px] text-emerald-400 truncate">
-                    <span>الخزينة: <strong class="text-white">{{ number_format($treasuryBalance ?? 0, 0) }} ج.م</strong></span>
-                </div>
-            </div>
-            <!-- SVG Sparkline Wave -->
-            <div class="mt-2 -mx-3.5 -mb-3.5 sm:-mx-5 sm:-mb-5 opacity-40 group-hover:opacity-75 transition">
-                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-6 sm:h-8 stroke-emerald-400 fill-emerald-500/10">
-                    <path d="M0,25 Q15,22 30,12 T60,18 T90,6 L100,10 L100,28 L0,28 Z" stroke-width="1.8" />
-                </svg>
-            </div>
-        </div>
-
-        <!-- Net Profit -->
-        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-3.5 sm:p-5 relative overflow-hidden group hover:border-emerald-500/60 transition shadow-lg flex flex-col justify-between">
-            <div>
-                <div class="flex items-start sm:items-center justify-between gap-1 mb-1.5">
-                    <span class="text-[11px] sm:text-xs font-bold text-gray-400 line-clamp-1">صافي الأرباح</span>
-                    <span class="px-1.5 py-0.5 rounded-full text-[9px] sm:text-[11px] font-black bg-emerald-500/15 text-emerald-400 flex items-center gap-0.5 border border-emerald-500/30 whitespace-nowrap">
-                        <i class="fa-solid fa-arrow-trend-up text-[8px] sm:text-[10px]"></i>
-                        <span>+32% ↑</span>
-                    </span>
-                </div>
-                <div class="text-lg sm:text-2xl font-black text-white tracking-tight">
-                    {{ number_format($netProfit, 0) }} <span class="text-xs sm:text-sm font-bold text-emerald-400">ج.م</span>
-                </div>
-                <div class="mt-1.5 text-[10px] sm:text-[11px] text-gray-400 truncate">
-                    <span>المصروف: <strong class="text-rose-400">{{ number_format($totalExpenses, 0) }}</strong></span>
-                </div>
-            </div>
-            <!-- SVG Sparkline Wave -->
-            <div class="mt-2 -mx-3.5 -mb-3.5 sm:-mx-5 sm:-mb-5 opacity-40 group-hover:opacity-75 transition">
-                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-6 sm:h-8 stroke-brand-gold fill-amber-500/10">
-                    <path d="M0,22 Q20,26 40,14 T70,16 T100,4 L100,28 L0,28 Z" stroke-width="1.8" />
-                </svg>
-            </div>
-        </div>
-
-        <!-- Active Tasks -->
-        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-3.5 sm:p-5 relative overflow-hidden group hover:border-indigo-500/60 transition shadow-lg flex flex-col justify-between">
-            <div>
-                <div class="flex items-start sm:items-center justify-between gap-1 mb-1.5">
-                    <span class="text-[11px] sm:text-xs font-bold text-gray-400 line-clamp-1">مهام قيد العمل</span>
-                    <span class="px-1.5 py-0.5 rounded-full text-[9px] sm:text-[11px] font-black bg-indigo-500/15 text-indigo-300 flex items-center gap-0.5 border border-indigo-500/30 whitespace-nowrap">
-                        <i class="fa-solid fa-arrow-trend-up text-[8px] sm:text-[10px]"></i>
+        <!-- 1. Total Revenue (إجمالي التحصيلات) -->
+        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-3.5 sm:p-5 relative overflow-hidden group hover:border-amber-500/60 transition shadow-xl flex flex-col justify-between">
+            <div class="relative z-10">
+                <div class="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center text-base sm:text-xl shadow-inner shrink-0 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black bg-amber-500/15 text-amber-400 flex items-center gap-1 border border-amber-500/30 whitespace-nowrap">
+                        <i class="fa-solid fa-arrow-trend-up text-[9px] sm:text-[10px]"></i>
                         <span>+18% ↑</span>
                     </span>
                 </div>
-                <div class="text-lg sm:text-2xl font-black text-white tracking-tight">
-                    {{ $taskCounts['in_progress'] }} <span class="text-xs sm:text-sm font-normal text-gray-400">من {{ $taskCounts['total'] }}</span>
-                </div>
-                <div class="mt-1.5 text-[10px] sm:text-[11px] text-amber-300 truncate">
-                    <span>بالانتظار: <strong>{{ $taskCounts['not_started'] }}</strong> • مكتمل: <strong class="text-emerald-400">{{ $taskCounts['completed'] }}</strong></span>
+                <div>
+                    <span class="text-xs sm:text-sm font-bold text-gray-300 block mb-0.5">إجمالي التحصيلات</span>
+                    <div class="text-lg sm:text-2xl font-black text-white tracking-tight">
+                        {{ number_format($totalRevenue, 0) }} <span class="text-xs sm:text-sm font-bold text-amber-400">ج.م</span>
+                    </div>
+                    <div class="mt-1 text-[10px] sm:text-xs text-amber-300/80 truncate">
+                        <span>الخزينة: <strong class="text-white">{{ number_format($treasuryBalance ?? 0, 0) }} ج.م</strong></span>
+                    </div>
                 </div>
             </div>
-            <!-- SVG Sparkline Wave -->
-            <div class="mt-2 -mx-3.5 -mb-3.5 sm:-mx-5 sm:-mb-5 opacity-40 group-hover:opacity-75 transition">
-                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-6 sm:h-8 stroke-indigo-400 fill-indigo-500/10">
-                    <path d="M0,20 Q25,8 50,18 T75,10 T100,8 L100,28 L0,28 Z" stroke-width="1.8" />
+            <!-- SVG Sparkline Wave (Glowing Golden) -->
+            <div class="mt-2 -mx-3.5 -mb-3.5 sm:-mx-5 sm:-mb-5 opacity-40 group-hover:opacity-85 transition">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-6 sm:h-9 stroke-amber-400 fill-amber-500/10">
+                    <path d="M0,25 Q15,22 30,12 T60,18 T90,6 L100,10 L100,28 L0,28 Z" stroke-width="2" />
                 </svg>
             </div>
         </div>
 
-        <!-- Clients & Retainers -->
-        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-3.5 sm:p-5 relative overflow-hidden group hover:border-sky-500/60 transition shadow-lg flex flex-col justify-between">
-            <div>
-                <div class="flex items-start sm:items-center justify-between gap-1 mb-1.5">
-                    <span class="text-[11px] sm:text-xs font-bold text-gray-400 line-clamp-1">العملاء النشطون</span>
-                    <span class="px-1.5 py-0.5 rounded-full text-[9px] sm:text-[11px] font-black bg-sky-500/15 text-sky-400 flex items-center gap-0.5 border border-sky-500/30 whitespace-nowrap">
-                        <i class="fa-solid fa-arrow-trend-up text-[8px] sm:text-[10px]"></i>
+        <!-- 2. Net Profit (صافي الأرباح الشهرية) -->
+        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-3.5 sm:p-5 relative overflow-hidden group hover:border-emerald-500/60 transition shadow-xl flex flex-col justify-between">
+            <div class="relative z-10">
+                <div class="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-base sm:text-xl shadow-inner shrink-0 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black bg-emerald-500/15 text-emerald-400 flex items-center gap-1 border border-emerald-500/30 whitespace-nowrap">
+                        <i class="fa-solid fa-arrow-trend-up text-[9px] sm:text-[10px]"></i>
+                        <span>+24% ↑</span>
+                    </span>
+                </div>
+                <div>
+                    <span class="text-xs sm:text-sm font-bold text-gray-300 block mb-0.5">صافي الأرباح الشهرية</span>
+                    <div class="text-lg sm:text-2xl font-black text-white tracking-tight">
+                        {{ number_format($netProfit, 0) }} <span class="text-xs sm:text-sm font-bold text-emerald-400">ج.م</span>
+                    </div>
+                    <div class="mt-1 text-[10px] sm:text-xs text-gray-300 truncate">
+                        <span>المصروفات: <strong class="text-rose-400">{{ number_format($totalExpenses, 0) }} ج.م</strong></span>
+                    </div>
+                </div>
+            </div>
+            <!-- SVG Sparkline Wave (Glowing Emerald) -->
+            <div class="mt-2 -mx-3.5 -mb-3.5 sm:-mx-5 sm:-mb-5 opacity-40 group-hover:opacity-85 transition">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-6 sm:h-9 stroke-emerald-400 fill-emerald-500/10">
+                    <path d="M0,22 Q20,26 40,14 T70,16 T100,4 L100,28 L0,28 Z" stroke-width="2" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- 3. Active Tasks (مهام العمل النشطة) -->
+        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-3.5 sm:p-5 relative overflow-hidden group hover:border-purple-500/60 transition shadow-xl flex flex-col justify-between">
+            <div class="relative z-10">
+                <div class="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 flex items-center justify-center text-base sm:text-xl shadow-inner shrink-0 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black bg-purple-500/15 text-purple-300 flex items-center gap-1 border border-purple-500/30 whitespace-nowrap">
+                        <i class="fa-solid fa-arrow-trend-up text-[9px] sm:text-[10px]"></i>
+                        <span>+10% ↑</span>
+                    </span>
+                </div>
+                <div>
+                    <span class="text-xs sm:text-sm font-bold text-gray-300 block mb-0.5">مهام العمل النشطة</span>
+                    <div class="text-lg sm:text-2xl font-black text-white tracking-tight">
+                        {{ $taskCounts['in_progress'] }} <span class="text-xs sm:text-sm font-normal text-purple-300">من {{ $taskCounts['total'] }}</span>
+                    </div>
+                    <div class="mt-1 text-[10px] sm:text-xs text-purple-300/80 truncate">
+                        <span>قيد العمل: <strong class="text-white">{{ $taskCounts['in_progress'] }}</strong> • بالانتظار: <strong class="text-amber-300">{{ $taskCounts['not_started'] }}</strong></span>
+                    </div>
+                </div>
+            </div>
+            <!-- SVG Sparkline Wave (Glowing Purple) -->
+            <div class="mt-2 -mx-3.5 -mb-3.5 sm:-mx-5 sm:-mb-5 opacity-40 group-hover:opacity-85 transition">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-6 sm:h-9 stroke-purple-400 fill-purple-500/10">
+                    <path d="M0,20 Q25,8 50,18 T75,10 T100,8 L100,28 L0,28 Z" stroke-width="2" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- 4. Clients & Projects (العملاء والمشاريع الحالية) -->
+        <div class="bg-brand-card/90 border border-brand-border/70 rounded-2xl p-3.5 sm:p-5 relative overflow-hidden group hover:border-sky-500/60 transition shadow-xl flex flex-col justify-between">
+            <div class="relative z-10">
+                <div class="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center text-base sm:text-xl shadow-inner shrink-0 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black bg-sky-500/15 text-sky-400 flex items-center gap-1 border border-sky-500/30 whitespace-nowrap">
+                        <i class="fa-solid fa-arrow-trend-up text-[9px] sm:text-[10px]"></i>
                         <span>+14% ↑</span>
                     </span>
                 </div>
-                <div class="text-lg sm:text-2xl font-black text-white tracking-tight">
-                    {{ $totalClientsCount }} <span class="text-xs sm:text-sm font-bold text-sky-400">عميل</span>
-                </div>
-                <div class="mt-1.5 text-[10px] sm:text-[11px] text-gray-400 flex items-center justify-between truncate">
-                    <span>المشاريع: <strong class="text-white">{{ $activeProjectsCount }}</strong></span>
-                    <a href="{{ route('clients.index') }}" class="text-brand-gold hover:underline font-bold">CRM ←</a>
+                <div>
+                    <span class="text-xs sm:text-sm font-bold text-gray-300 block mb-0.5">العملاء والمشاريع الحالية</span>
+                    <div class="text-lg sm:text-2xl font-black text-white tracking-tight">
+                        {{ $totalClientsCount }} <span class="text-xs sm:text-sm font-bold text-sky-400">عميل</span>
+                    </div>
+                    <div class="mt-1 text-[10px] sm:text-xs text-gray-300 flex items-center justify-between truncate">
+                        <span>المشاريع الجارية: <strong class="text-white">{{ $activeProjectsCount }}</strong></span>
+                        <a href="{{ route('clients.index') }}" class="text-sky-400 hover:underline font-bold">CRM ←</a>
+                    </div>
                 </div>
             </div>
-            <!-- SVG Sparkline Wave -->
-            <div class="mt-2 -mx-3.5 -mb-3.5 sm:-mx-5 sm:-mb-5 opacity-40 group-hover:opacity-75 transition">
-                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-6 sm:h-8 stroke-sky-400 fill-sky-500/10">
-                    <path d="M0,24 Q30,20 50,12 T80,14 T100,6 L100,28 L0,28 Z" stroke-width="1.8" />
+            <!-- SVG Sparkline Wave (Glowing Sky) -->
+            <div class="mt-2 -mx-3.5 -mb-3.5 sm:-mx-5 sm:-mb-5 opacity-40 group-hover:opacity-85 transition">
+                <svg viewBox="0 0 100 28" preserveAspectRatio="none" class="w-full h-6 sm:h-9 stroke-sky-400 fill-sky-500/10">
+                    <path d="M0,24 Q30,20 50,12 T80,14 T100,6 L100,28 L0,28 Z" stroke-width="2" />
                 </svg>
             </div>
         </div>
 
     </div>
 
-    <!-- 3. DAILY COMPLETION RATE & MOTIVATIONAL BANNER (باند معدل الإنجاز اليومي والتحفيز) -->
+    <!-- 3. WEEKLY INCOME INDICATOR BANNER (مؤشر بناءً على الدخل والتحصيل الأسبوعي للوكالة - طلب العميل في ملف السيستم) -->
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-card via-brand-purple to-[#230b38] border border-brand-gold/40 p-4 sm:p-6 shadow-2xl">
         <div class="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-brand-gold/10 blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-center">
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center">
             
-            <!-- Left/Main: Circular Progress + Progress Bar -->
+            <!-- Left/Main: Circular Progress + Weekly Revenue Progress Bar -->
             <div class="lg:col-span-7 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-                <!-- SVG Circular Meter -->
+                <!-- SVG Circular Meter for Weekly Income -->
                 <div class="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 flex items-center justify-center">
                     <svg class="w-20 h-20 sm:w-24 sm:h-24 transform -rotate-90" viewBox="0 0 36 36">
                         <path class="text-white/10" stroke-width="3.5" stroke="currentColor" fill="none"
                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path class="text-brand-gold transition-all duration-1000 ease-out" stroke-dasharray="{{ $dailyCompletionRate }}, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none"
+                        <path class="text-brand-gold transition-all duration-1000 ease-out" stroke-dasharray="{{ min(100, $weeklyIncomeRate) }}, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none"
                               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                     </svg>
-                    <div class="absolute flex flex-col items-center justify-center">
-                        <span class="text-lg sm:text-xl font-black text-white">{{ $dailyCompletionRate }}%</span>
-                        <span class="text-[8px] sm:text-[9px] text-brand-gold font-bold">مكتمل</span>
+                    <div class="absolute flex flex-col items-center justify-center text-center">
+                        <span class="text-lg sm:text-xl font-black text-white leading-none">{{ $weeklyIncomeRate }}%</span>
+                        <span class="text-[8px] sm:text-[9px] text-brand-gold font-bold mt-0.5">من الهدف</span>
                     </div>
                 </div>
 
                 <!-- Info and Horizontal Bar -->
-                <div class="space-y-2 w-full text-center sm:text-right">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-1.5 sm:gap-2">
-                            <i class="fa-solid fa-bullseye text-brand-gold text-sm sm:text-base"></i>
-                            <h3 class="text-xs sm:text-base font-black text-white">معدل الإنجاز اليومي للوكالة</h3>
+                <div class="space-y-2.5 w-full text-center sm:text-right">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <div class="flex items-center justify-center sm:justify-start gap-2">
+                            <div class="w-7 h-7 rounded-lg bg-brand-gold/15 text-brand-gold flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-chart-pie"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm sm:text-base font-black text-white">مؤشر الدخل والتحصيل الأسبوعي</h3>
+                                <p class="text-[10px] sm:text-[11px] text-gray-400">متابعة الإيرادات المحققة مقابل المستهدف الأسبوعي للوكالة</p>
+                            </div>
                         </div>
-                        <span class="text-[11px] sm:text-xs font-black text-amber-300">الهدف: 75% فأكثر</span>
+                        <span class="self-center sm:self-auto px-2.5 py-1 rounded-lg bg-brand-gold/15 text-brand-gold text-xs font-black border border-brand-gold/30 whitespace-nowrap">
+                            الهدف الأسبوعي: {{ number_format($weeklyTarget, 0) }} ج.م
+                        </span>
                     </div>
                     
-                    <!-- Progress Bar with Glow -->
-                    <div class="w-full bg-white/10 rounded-full h-3 sm:h-3.5 p-0.5 overflow-hidden">
-                        <div class="bg-gradient-to-r from-brand-gold via-amber-400 to-amber-200 h-full rounded-full transition-all duration-1000 shadow-[0_0_12px_rgba(255,148,32,0.6)]"
-                             style="width: {{ min(100, max(12, $dailyCompletionRate)) }}%;"></div>
+                    <!-- Progress Bar with Vibrant Golden Glow -->
+                    <div class="w-full bg-white/10 rounded-full h-3.5 sm:h-4 p-0.5 overflow-hidden">
+                        <div class="bg-gradient-to-r from-brand-gold via-amber-400 to-emerald-400 h-full rounded-full transition-all duration-1000 shadow-[0_0_14px_rgba(255,148,32,0.7)]"
+                             style="width: {{ min(100, max(8, $weeklyIncomeRate)) }}%;"></div>
                     </div>
                     
-                    <div class="flex items-center justify-between text-[11px] sm:text-xs text-gray-300">
-                        <span>إنجاز مهام اليوم: <strong>{{ $dailyCompletionRate }}%</strong></span>
-                        <span class="text-emerald-400 font-bold"><i class="fa-solid fa-check ml-1"></i>الأداء العام ممتاز</span>
+                    <!-- Weekly breakdown metrics -->
+                    <div class="flex flex-wrap items-center justify-between text-[11px] sm:text-xs text-gray-300 gap-2">
+                        <span>المتحقق هذا الأسبوع: <strong class="text-emerald-400 font-black">{{ number_format($weeklyRevenue, 0) }} ج.م</strong></span>
+                        <span>المتبقي للهدف: <strong class="text-amber-300 font-black">{{ number_format(max(0, $weeklyTarget - $weeklyRevenue), 0) }} ج.م</strong></span>
+                        @if($weeklyIncomeRate >= 100)
+                            <span class="text-emerald-400 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i>تم تحقيق الهدف الأسبوعي 🚀</span>
+                        @elseif($weeklyIncomeRate >= 60)
+                            <span class="text-amber-400 font-bold flex items-center gap-1"><i class="fa-solid fa-chart-line"></i>أداء مالي أسبوعي ممتاز 🌟</span>
+                        @else
+                            <span class="text-sky-300 font-bold flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left"></i>جاري استكمال تحصيلات الأسبوع 🎯</span>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Motivational Quote Box (الاقتباس التحفيزي المعتمد) -->
-            <div class="lg:col-span-5 p-3.5 sm:p-4 rounded-xl bg-brand-dark/50 border border-brand-border/60 relative">
-                <i class="fa-solid fa-quote-right text-brand-gold/20 text-2xl sm:text-3xl absolute top-3 left-3"></i>
-                <div class="relative z-10 space-y-1">
-                    <span class="text-[9px] sm:text-[10px] uppercase tracking-wider text-brand-gold font-bold flex items-center gap-1">
-                        <i class="fa-solid fa-sparkles"></i>
-                        <span>كلمة اليوم التحفيزية لفريق بريق</span>
+            <!-- Right: Treasury Flow & POS Quick Action (ربط التدفق المالي بالخزينة والكاشير) -->
+            <div class="lg:col-span-5 p-3.5 sm:p-4 rounded-xl bg-brand-dark/60 border border-brand-border/80 relative space-y-2.5">
+                <div class="flex items-center justify-between pb-2 border-b border-brand-border/40">
+                    <span class="text-xs font-bold text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-vault text-brand-gold"></i>
+                        <span>ملخص التدفق المالي والخزينة</span>
                     </span>
-                    <p class="text-[11px] sm:text-xs font-bold text-gray-100 leading-relaxed italic">
-                        "النجاح ليس وجهة .. بل رحلة من الإنجازات الصغيرة. استمر، فخطوتك اليوم تصنع فرقاً غداً"
-                    </p>
-                    <div class="text-[10px] sm:text-[11px] text-gray-400 pt-1 border-t border-brand-border/40 flex items-center justify-between">
-                        <span>فريق بريق الإبداعي • شغف بلا حدود</span>
-                        <span class="text-amber-400">✨ Bariq</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-black border border-emerald-500/30">
+                        محدث الآن
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-center">
+                    <div class="p-2 rounded-lg bg-black/40 border border-brand-border/40">
+                        <div class="text-[10px] text-gray-400 font-medium">رصيد الخزينة</div>
+                        <div class="text-xs sm:text-sm font-black text-brand-gold truncate">{{ number_format($treasuryBalance ?? 0, 0) }} ج.م</div>
+                    </div>
+                    <div class="p-2 rounded-lg bg-black/40 border border-brand-border/40">
+                        <div class="text-[10px] text-gray-400 font-medium">صافي أرباح الشهر</div>
+                        <div class="text-xs sm:text-sm font-black text-emerald-400 truncate">{{ number_format($netProfit, 0) }} ج.م</div>
                     </div>
                 </div>
+
+                <a href="{{ route('cashier.index') }}" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-brand-gold to-amber-500 hover:from-amber-500 hover:to-brand-gold text-brand-dark font-black text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
+                    <i class="fa-solid fa-cash-register"></i>
+                    <span>تسجيل دفعة جديدة (كاشير POS)</span>
+                </a>
             </div>
 
         </div>
