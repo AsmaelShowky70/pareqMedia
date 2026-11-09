@@ -353,14 +353,6 @@
 
             <!-- Action Buttons -->
             <div class="hidden sm:flex items-center gap-3">
-                @auth
-                <a href="{{ route('dashboard') }}" 
-                   class="px-4 py-2.5 rounded-xl bg-purple-900/60 hover:bg-purple-800/80 border border-purple-500/30 text-purple-200 font-bold text-xs transition duration-200 shadow-md flex items-center gap-2">
-                    <i class="fa-solid fa-gauge-high text-brand-gold"></i>
-                    <span>لوحة التحكم</span>
-                </a>
-                @endauth
-
                 <a href="{{ route('public.contact') }}" 
                    class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-xs font-black rounded-xl group bg-gradient-to-br from-brand-orange via-brand-amber to-brand-gold shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 transition-all duration-300">
                     <span class="relative px-5 py-2.5 transition-all ease-in duration-200 bg-brand-dark/30 rounded-[10px] group-hover:bg-opacity-0 text-white flex items-center gap-2">
@@ -372,12 +364,6 @@
 
             <!-- Mobile Hamburger Button -->
             <div class="flex items-center gap-2 lg:hidden">
-                @auth
-                <a href="{{ route('dashboard') }}" class="px-3 py-1.5 rounded-xl bg-brand-amber text-brand-dark font-black text-xs flex items-center gap-1 shadow">
-                    <i class="fa-solid fa-gauge-high"></i>
-                    <span>اللوحة</span>
-                </a>
-                @endauth
                 <button @click="mobileNav = !mobileNav" class="text-gray-300 hover:text-brand-gold p-2 transition-colors">
                     <i class="fa-solid fa-bars-staggered text-xl"></i>
                 </button>
@@ -395,13 +381,6 @@
              x-transition:leave-end="opacity-0 -translate-y-4"
              class="lg:hidden bg-[#110423]/95 backdrop-blur-2xl border-b border-purple-800/50 px-6 py-5 space-y-3.5 text-sm font-bold shadow-2xl max-h-[85vh] overflow-y-auto">
             
-            @auth
-            <a href="{{ route('dashboard') }}" @click="mobileNav = false" class="w-full py-3 px-4 rounded-xl bg-gradient-to-l from-brand-amber to-brand-gold text-brand-dark font-black text-center flex items-center justify-center gap-2 shadow">
-                <i class="fa-solid fa-gauge-high"></i>
-                <span>الانتقال للوحة التحكم وإدارة المهام</span>
-            </a>
-            @endauth
-
             <a href="{{ route('home') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('home') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">الرئيسية</a>
             <a href="{{ route('public.services') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.services') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">خدماتنا</a>
             <a href="{{ route('public.portfolio') }}" @click="mobileNav = false" class="block py-1.5 {{ request()->routeIs('public.portfolio') ? 'text-brand-orange font-black' : 'hover:text-brand-orange' }} transition-colors">أعمالنا</a>
