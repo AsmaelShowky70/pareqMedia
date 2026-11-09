@@ -12,7 +12,13 @@
     selectedService: null,
     addPortfolioModal: false, 
     editPortfolioModal: false, 
-    selectedPortfolio: null 
+    selectedPortfolio: null,
+    addPartnerModal: false,
+    editPartnerModal: false,
+    selectedPartner: null,
+    addTestimonialModal: false,
+    editTestimonialModal: false,
+    selectedTestimonial: null
 }">
 
     <!-- Tab navigation -->
@@ -29,6 +35,20 @@
                 class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
             <i class="fa-solid fa-photo-film"></i>
             <span>معرض الفيديوهات والأعمال ({{ $portfolioItems->count() }})</span>
+        </button>
+
+        <button type="button" @click="tab = 'partners'" 
+                :class="tab === 'partners' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
+                class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
+            <i class="fa-solid fa-handshake"></i>
+            <span>شركاء النجاح والعلامات التجارية ({{ isset($partners) ? $partners->count() : 0 }})</span>
+        </button>
+
+        <button type="button" @click="tab = 'testimonials'" 
+                :class="tab === 'testimonials' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
+                class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
+            <i class="fa-solid fa-comments"></i>
+            <span>آراء العملاء وفيديوهات الفيدباك ({{ isset($testimonials) ? $testimonials->count() : 0 }})</span>
         </button>
 
         <button type="button" @click="tab = 'inquiries'" 
@@ -638,6 +658,486 @@
 
                 <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
                     <button @click="editPortfolioModal = false" type="button" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-brand-hover">إلغاء</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">حفظ التعديلات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. PARTNERS TAB (إدارة وتعديل شركاء النجاح والعلامات التجارية) -->
+    <div x-show="tab === 'partners'" class="space-y-4" style="display: none;">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-brand-card/60 border border-brand-border/60 p-4 rounded-2xl">
+            <div>
+                <h3 class="text-xs font-bold text-white">إدارة شركاء النجاح والعلامات التجارية في الصفحة الرئيسية</h3>
+                <p class="text-[11px] text-gray-400">يمكنك هنا إضافة أو تعديل شعارات كبرى الشركات والمؤسسات التي تثق في وكالة بريق وتنعكس في الشريط المتحرك تلقائياً.</p>
+            </div>
+            <button @click="addPartnerModal = true" type="button" 
+                    class="px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 shadow-lg flex items-center gap-2 self-start sm:self-auto whitespace-nowrap">
+                <i class="fa-solid fa-plus-circle"></i>
+                <span>إضافة شريك / علامة تجارية جديدة</span>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            @forelse($partners as $partner)
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-4 flex flex-col justify-between hover:border-brand-yellow/50 transition shadow group">
+                <div class="space-y-3 text-center">
+                    <div class="w-16 h-16 rounded-xl bg-white/5 border border-brand-border/60 p-2 mx-auto flex items-center justify-center overflow-hidden">
+                        @if($partner->logo_url)
+                        <img src="{{ str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset(ltrim($partner->logo_url, '/')) }}" alt="{{ $partner->name }}" class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform">
+                        @else
+                        <i class="fa-solid fa-building text-2xl text-brand-gold"></i>
+                        @endif
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-xs truncate" title="{{ $partner->name }}">{{ $partner->name }}</h4>
+                        <span class="text-[10px] text-brand-gold/80 block mt-0.5">{{ $partner->category ?? 'شريك نجاح' }}</span>
+                    </div>
+                </div>
+
+                <div class="pt-3 mt-2 border-t border-brand-border/40 flex items-center justify-between text-xs">
+                    <span class="text-[10px] font-bold {{ $partner->is_active ? 'text-emerald-400' : 'text-rose-400' }}">
+                        {{ $partner->is_active ? 'نشط' : 'معطل' }}
+                    </span>
+
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" 
+                                @click="selectedPartner = {{ json_encode($partner) }}; editPartnerModal = true" 
+                                class="p-1.5 text-brand-gold hover:text-white transition" title="تعديل الشريك">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <form method="POST" action="{{ route('cms.partners.destroy', $partner->id) }}" onsubmit="return confirm('هل أنت متأكد من حذف هذا الشريك؟')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="p-1.5 text-gray-400 hover:text-rose-400 transition" title="حذف">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-span-full text-center py-12 text-gray-400">
+                لا توجد علامات تجارية مسجلة. انقر على "إضافة شريك / علامة تجارية جديدة" للبدء.
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- 5. TESTIMONIALS TAB (إدارة آراء العملاء وفيديوهات الفيدباك) -->
+    <div x-show="tab === 'testimonials'" class="space-y-4" style="display: none;">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-brand-card/60 border border-brand-border/60 p-4 rounded-2xl">
+            <div>
+                <h3 class="text-xs font-bold text-white">إدارة آراء العملاء وفيديوهات الفيدباك (شكل جو ميديا الدائري ثلاثي الأبعاد)</h3>
+                <p class="text-[11px] text-gray-400">يمكنك هنا إضافة وتعديل فيديوهات الريلز الطولية وشهادات وتقييمات العملاء الموثقة التي تظهر في قسم الفيدباك بالصفحة الرئيسية.</p>
+            </div>
+            <button @click="addTestimonialModal = true" type="button" 
+                    class="px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 shadow-lg flex items-center gap-2 self-start sm:self-auto whitespace-nowrap">
+                <i class="fa-solid fa-plus-circle"></i>
+                <span>إضافة فيدباك / رأي عميل جديد</span>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            @forelse($testimonials as $test)
+            <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden flex flex-col justify-between hover:border-brand-yellow/50 transition shadow group">
+                <div>
+                    <!-- Header Info -->
+                    <div class="p-4 border-b border-brand-border/50 flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold {{ $test->type === 'video_reel' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : ($test->type === 'image_review' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30') }}">
+                            @if($test->type === 'video_reel')
+                                <i class="fa-solid fa-mobile-screen ml-1"></i> فيديو ريلز طولي
+                            @elseif($test->type === 'image_review')
+                                <i class="fa-solid fa-image ml-1"></i> صورة فيدباك
+                            @else
+                                <i class="fa-solid fa-comment-dots ml-1"></i> تقييم كتابي موثق
+                            @endif
+                        </span>
+                        <div class="text-brand-gold text-xs flex gap-0.5">
+                            @for($i = 0; $i < ($test->rating ?? 5); $i++)
+                            <i class="fa-solid fa-star"></i>
+                            @endfor
+                        </div>
+                    </div>
+
+                    <!-- Visual / Media Preview if any -->
+                    @if($test->thumbnail || $test->media_url)
+                    <div class="relative aspect-video bg-black/60 overflow-hidden">
+                        @if($test->thumbnail)
+                        <img src="{{ str_starts_with($test->thumbnail, 'http') ? $test->thumbnail : asset(ltrim($test->thumbnail, '/')) }}" alt="{{ $test->client_name }}" class="w-full h-full object-cover">
+                        @endif
+                        @if($test->type === 'video_reel')
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-full bg-brand-yellow text-brand-dark flex items-center justify-center text-sm shadow">
+                                <i class="fa-solid fa-play mr-0.5"></i>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                    @endif
+
+                    <!-- Content & Client Info -->
+                    <div class="p-4 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white text-sm">{{ $test->client_name }}</h4>
+                            <span class="text-[11px] text-gray-400">{{ $test->client_country }}</span>
+                        </div>
+                        @if($test->client_title)
+                        <div class="text-xs text-brand-gold font-semibold">{{ $test->client_title }}</div>
+                        @endif
+                        <p class="text-xs text-gray-300 leading-relaxed line-clamp-3 italic">"{{ $test->content }}"</p>
+                    </div>
+                </div>
+
+                <!-- Footer & Actions -->
+                <div class="p-4 pt-2 border-t border-brand-border/40 flex items-center justify-between text-xs">
+                    <span class="text-[11px] font-bold {{ $test->is_active ? 'text-emerald-400' : 'text-rose-400' }}">
+                        {{ $test->is_active ? 'ظاهر بالموقع' : 'معطل' }}
+                    </span>
+
+                    <div class="flex items-center gap-2">
+                        <button type="button" 
+                                @click="selectedTestimonial = {{ json_encode($test) }}; editTestimonialModal = true" 
+                                class="px-3 py-1.5 rounded-lg bg-brand-purple hover:bg-brand-hover text-brand-gold hover:text-white border border-brand-border text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>تعديل</span>
+                        </button>
+                        <form method="POST" action="{{ route('cms.testimonials.destroy', $test->id) }}" onsubmit="return confirm('هل أنت متأكد من حذف هذا الفيدباك؟')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="p-1.5 text-gray-400 hover:text-rose-400 transition" title="حذف">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-span-full text-center py-12 text-gray-400">
+                لا توجد تقييمات أو فيدباك مضاف حتى الآن. انقر على "إضافة فيدباك / رأي عميل جديد" للبدء.
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- MODAL: ADD PARTNER -->
+    <div x-show="addPartnerModal" 
+         x-transition 
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
+         style="display: none;">
+        <div @click.away="addPartnerModal = false" 
+             class="w-full max-w-md bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-handshake text-brand-gold"></i>
+                    <span>إضافة شريك نجاح أو علامة تجارية</span>
+                </h3>
+                <button @click="addPartnerModal = false" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form method="POST" action="{{ route('cms.partners.store') }}" enctype="multipart/form-data" class="space-y-3 text-xs">
+                @csrf
+                <div>
+                    <label class="block font-bold text-gray-300 mb-1">اسم الشريك / العلامة التجارية <span class="text-red-400">*</span></label>
+                    <input type="text" name="name" required placeholder="مثال: Mercedes-Benz أو مطاعم شاورماكر" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-300 mb-1">المجال / التصنيف</label>
+                    <input type="text" name="category" placeholder="مثال: سيارات فاخرة / أغذية ومطاعم / رعاية صحية" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                </div>
+
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-amber-300">
+                        <i class="fa-solid fa-image ml-1"></i>
+                        شعار الشريك (اللوجو)
+                    </label>
+                    <div>
+                        <label class="block text-[11px] text-brand-gold font-bold mb-1">رفع لوجو من جهازك (PNG/WebP/SVG شفاف):</label>
+                        <input type="file" name="logo_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-gray-400 mb-1">أو كتابة رابط/مسار لوجو مباشر:</label>
+                        <input type="text" name="logo_url" placeholder="/images/clients/client_78.webp" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" name="is_active" value="1" id="partner_active" checked class="rounded bg-brand-purple border-brand-border text-brand-gold">
+                    <label for="partner_active" class="text-xs text-gray-300 cursor-pointer">تفعيل وظهور الشريك فوراً في الشريط المتحرك بالصفحة الرئيسية</label>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
+                    <button @click="addPartnerModal = false" type="button" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-brand-hover">إلغاء</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">إضافة الشريك</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT PARTNER -->
+    <div x-show="editPartnerModal" 
+         x-transition 
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
+         style="display: none;">
+        <div @click.away="editPartnerModal = false" 
+             class="w-full max-w-md bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-brand-gold"></i>
+                    <span>تعديل بيانات الشريك والعلامة التجارية</span>
+                </h3>
+                <button @click="editPartnerModal = false" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form method="POST" :action="'{{ url('cms/partners') }}/' + (selectedPartner ? selectedPartner.id : '')" enctype="multipart/form-data" class="space-y-3 text-xs">
+                @csrf
+                @method('PUT')
+                <div>
+                    <label class="block font-bold text-gray-300 mb-1">اسم الشريك / العلامة التجارية <span class="text-red-400">*</span></label>
+                    <input type="text" name="name" required x-bind:value="selectedPartner ? selectedPartner.name : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-300 mb-1">المجال / التصنيف</label>
+                    <input type="text" name="category" x-bind:value="selectedPartner ? selectedPartner.category : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                </div>
+
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-amber-300">
+                        <i class="fa-solid fa-image ml-1"></i>
+                        شعار الشريك (اللوجو)
+                    </label>
+                    <div>
+                        <label class="block text-[11px] text-brand-gold font-bold mb-1">تغيير اللوجو من جهازك:</label>
+                        <input type="file" name="logo_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-gray-400 mb-1">أو رابط الشعار الحالي:</label>
+                        <input type="text" name="logo_url" x-bind:value="selectedPartner ? selectedPartner.logo_url : ''" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" name="is_active" value="1" id="edit_partner_active" :checked="selectedPartner && selectedPartner.is_active" class="rounded bg-brand-purple border-brand-border text-brand-gold">
+                    <label for="edit_partner_active" class="text-xs text-gray-300 cursor-pointer">الشريك مفعل ونشط في الموقع</label>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
+                    <button @click="editPartnerModal = false" type="button" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-brand-hover">إلغاء</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">حفظ التعديلات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD TESTIMONIAL -->
+    <div x-show="addTestimonialModal" 
+         x-transition 
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
+         style="display: none;">
+        <div @click.away="addTestimonialModal = false" 
+             class="w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-comments text-brand-gold"></i>
+                    <span>إضافة رأي عميل أو فيديو فيدباك جديد</span>
+                </h3>
+                <button @click="addTestimonialModal = false" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form method="POST" action="{{ route('cms.testimonials.store') }}" enctype="multipart/form-data" class="space-y-3 text-xs">
+                @csrf
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">اسم العميل <span class="text-red-400">*</span></label>
+                        <input type="text" name="client_name" required placeholder="مثال: د. عبد الرحمن المجيدي" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">الشركة أو المنصب</label>
+                        <input type="text" name="client_title" placeholder="مثال: مجمع ماجستي الطبي" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">الدولة / المدينة</label>
+                        <input type="text" name="client_country" placeholder="الرياض، السعودية" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-amber-300 mb-1">نوع الفيدباك <span class="text-red-400">*</span></label>
+                        <select name="type" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <option value="video_reel">فيديو ريلز طولي (Reel 9:16)</option>
+                            <option value="image_review">صورة تقييم معتمدة</option>
+                            <option value="text_review">تقييم كتابي موثق</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">التقييم بالنجوم</label>
+                        <select name="rating" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <option value="5">⭐⭐⭐⭐⭐ (5 نجوم)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 نجوم)</option>
+                            <option value="3">⭐⭐⭐ (3 نجوم)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-300 mb-1">نص الشهادة / تجربة العميل <span class="text-red-400">*</span></label>
+                    <textarea name="content" rows="3" required placeholder="اكتب تفاصيل تجربة العميل مع وكالة بريق وما حققته له الحملات أو الفيديوهات..." class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold"></textarea>
+                </div>
+
+                <!-- Video / Reel File or URL -->
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-brand-gold">
+                        <i class="fa-solid fa-play ml-1"></i>
+                        فيديو الفيدباك (لفيديوهات الريلز)
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">رفع فيديو من جهازك (MP4):</label>
+                            <input type="file" name="video_file" accept="video/mp4,video/webm,video/mov" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-purple file:text-brand-gold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط/مسار الفيديو المباشر:</label>
+                            <input type="text" name="media_url" placeholder="/videos/promo_reels_1.mp4" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thumbnail -->
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-amber-300">
+                        <i class="fa-solid fa-image ml-1"></i>
+                        صورة الغلاف / صورة التقييم
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-brand-gold font-bold mb-1">رفع صورة من جهازك:</label>
+                            <input type="file" name="thumbnail_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">أو رابط/مسار صورة الغلاف:</label>
+                            <input type="text" name="thumbnail" placeholder="/images/portfolio/social_4.webp" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" name="is_active" value="1" id="test_active" checked class="rounded bg-brand-purple border-brand-border text-brand-gold">
+                    <label for="test_active" class="text-xs text-gray-300 cursor-pointer">تفعيل وظهور الفيدباك فوراً في الشكل الدائري ثلاثي الأبعاد بالصفحة الرئيسية</label>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
+                    <button @click="addTestimonialModal = false" type="button" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-brand-hover">إلغاء</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">إضافة الفيدباك</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT TESTIMONIAL -->
+    <div x-show="editTestimonialModal" 
+         x-transition 
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
+         style="display: none;">
+        <div @click.away="editTestimonialModal = false" 
+             class="w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-brand-gold"></i>
+                    <span>تعديل رأي العميل / فيديو الفيدباك</span>
+                </h3>
+                <button @click="editTestimonialModal = false" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form method="POST" :action="'{{ url('cms/testimonials') }}/' + (selectedTestimonial ? selectedTestimonial.id : '')" enctype="multipart/form-data" class="space-y-3 text-xs">
+                @csrf
+                @method('PUT')
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">اسم العميل <span class="text-red-400">*</span></label>
+                        <input type="text" name="client_name" required x-bind:value="selectedTestimonial ? selectedTestimonial.client_name : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">الشركة أو المنصب</label>
+                        <input type="text" name="client_title" x-bind:value="selectedTestimonial ? selectedTestimonial.client_title : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">الدولة / المدينة</label>
+                        <input type="text" name="client_country" x-bind:value="selectedTestimonial ? selectedTestimonial.client_country : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-amber-300 mb-1">نوع الفيدباك <span class="text-red-400">*</span></label>
+                        <select name="type" x-bind:value="selectedTestimonial ? selectedTestimonial.type : 'video_reel'" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <option value="video_reel">فيديو ريلز طولي (Reel 9:16)</option>
+                            <option value="image_review">صورة تقييم معتمدة</option>
+                            <option value="text_review">تقييم كتابي موثق</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">التقييم بالنجوم</label>
+                        <select name="rating" x-bind:value="selectedTestimonial ? selectedTestimonial.rating : 5" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <option value="5">⭐⭐⭐⭐⭐ (5 نجوم)</option>
+                            <option value="4">⭐⭐⭐⭐ (4 نجوم)</option>
+                            <option value="3">⭐⭐⭐ (3 نجوم)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-300 mb-1">نص الشهادة / تجربة العميل <span class="text-red-400">*</span></label>
+                    <textarea name="content" rows="3" required x-bind:value="selectedTestimonial ? selectedTestimonial.content : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold"></textarea>
+                </div>
+
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-brand-gold">
+                        <i class="fa-solid fa-play ml-1"></i>
+                        فيديو الفيدباك (لفيديوهات الريلز)
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">تغيير ملف الفيديو (MP4):</label>
+                            <input type="file" name="video_file" accept="video/mp4,video/webm,video/mov" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-purple file:text-brand-gold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط/مسار الفيديو المباشر:</label>
+                            <input type="text" name="media_url" x-bind:value="selectedTestimonial ? selectedTestimonial.media_url : ''" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-amber-300">
+                        <i class="fa-solid fa-image ml-1"></i>
+                        صورة الغلاف / صورة التقييم
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-brand-gold font-bold mb-1">تغيير صورة الغلاف من جهازك:</label>
+                            <input type="file" name="thumbnail_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">أو رابط/مسار صورة الغلاف:</label>
+                            <input type="text" name="thumbnail" x-bind:value="selectedTestimonial ? selectedTestimonial.thumbnail : ''" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" name="is_active" value="1" id="edit_test_active" :checked="selectedTestimonial && selectedTestimonial.is_active" class="rounded bg-brand-purple border-brand-border text-brand-gold">
+                    <label for="edit_test_active" class="text-xs text-gray-300 cursor-pointer">الفيدباك مفعل ونشط في الموقع</label>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
+                    <button @click="editTestimonialModal = false" type="button" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-brand-hover">إلغاء</button>
                     <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">حفظ التعديلات</button>
                 </div>
             </form>

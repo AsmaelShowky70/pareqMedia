@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Inquiry;
+use App\Models\Partner;
 use App\Models\PortfolioItem;
 use App\Models\Service;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -19,8 +21,20 @@ class HomeController extends Controller
             $featuredItems = $portfolioItems->take(6);
         }
         $clients = Client::where('status', 'active')->take(12)->get();
+        
+        try {
+            $partners = Partner::where('is_active', true)->orderBy('sort_order')->get();
+        } catch (\Throwable $e) {
+            $partners = collect();
+        }
 
-        return view('home', compact('services', 'portfolioItems', 'featuredItems', 'clients'));
+        try {
+            $testimonials = Testimonial::where('is_active', true)->orderBy('sort_order')->get();
+        } catch (\Throwable $e) {
+            $testimonials = collect();
+        }
+
+        return view('home', compact('services', 'portfolioItems', 'featuredItems', 'clients', 'partners', 'testimonials'));
     }
 
     public function services()

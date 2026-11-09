@@ -170,6 +170,104 @@ try {
         }
         echo "<li style='color:green;'>✔️ تم بنجاح مزامنة وتحديث جميع الخدمات الـ 10 الرسمية في قاعدة البيانات.</li>";
 
+        // 3.6 Create and Sync Partners Table
+        $pdo->exec("CREATE TABLE IF NOT EXISTS `partners` (
+            `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `name` varchar(255) NOT NULL,
+            `category` varchar(255) DEFAULT NULL,
+            `logo_url` varchar(255) DEFAULT NULL,
+            `sort_order` int(11) NOT NULL DEFAULT 0,
+            `is_active` tinyint(1) NOT NULL DEFAULT 1,
+            `created_at` timestamp NULL DEFAULT NULL,
+            `updated_at` timestamp NULL DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        $pCount = $pdo->query("SELECT COUNT(*) FROM partners")->fetchColumn();
+        if ($pCount == 0) {
+            $defaultPartners = [
+                ['name' => 'Mercedes-Benz', 'category' => 'سيارات فاخرة', 'logo_url' => null, 'sort_order' => 1],
+                ['name' => 'سيمنز Siemens', 'category' => 'هندسة وتكنولوجيا', 'logo_url' => null, 'sort_order' => 2],
+                ['name' => 'داماك DAMAC', 'category' => 'تطوير عقاري', 'logo_url' => null, 'sort_order' => 3],
+                ['name' => 'بنده Panda', 'category' => 'تجزئة وسوبرماركت', 'logo_url' => null, 'sort_order' => 4],
+                ['name' => 'بلتون Beltone', 'category' => 'استثمار ومالية', 'logo_url' => null, 'sort_order' => 5],
+                ['name' => 'GSK Global', 'category' => 'أدوية وصحة', 'logo_url' => null, 'sort_order' => 6],
+                ['name' => 'باتشي Patchi', 'category' => 'شوكولاتة وهدايا', 'logo_url' => null, 'sort_order' => 7],
+                ['name' => 'مجمع ماجستي الطبي', 'category' => 'رعاية صحية', 'logo_url' => null, 'sort_order' => 8],
+                ['name' => 'The Met Hub', 'category' => 'مجمعات تجارية', 'logo_url' => null, 'sort_order' => 9],
+                ['name' => 'Shawrmaker Jordan', 'category' => 'سلسلة مطاعم', 'logo_url' => null, 'sort_order' => 10],
+                ['name' => 'صيدليات رحيق', 'category' => 'صيدليات ودواء', 'logo_url' => null, 'sort_order' => 11],
+                ['name' => 'Fox ATVs Oman', 'category' => 'سياحة وترفيه', 'logo_url' => null, 'sort_order' => 12],
+                ['name' => 'Crystal Auto', 'category' => 'خدمات سيارات', 'logo_url' => null, 'sort_order' => 13],
+                ['name' => 'جامعة قطر', 'category' => 'تعليم عالي', 'logo_url' => null, 'sort_order' => 14],
+            ];
+            $inPart = $pdo->prepare("INSERT INTO partners (name, category, logo_url, sort_order, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, 1, NOW(), NOW())");
+            foreach ($defaultPartners as $dp) {
+                $inPart->execute([$dp['name'], $dp['category'], $dp['logo_url'], $dp['sort_order']]);
+            }
+            echo "<li style='color:green;'>✔️ تم إنشاء جدول شركاء النجاح `partners` وتجهيز الشركاء الافتراضيين.</li>";
+        }
+
+        // 3.7 Create and Sync Testimonials Table
+        $pdo->exec("CREATE TABLE IF NOT EXISTS `testimonials` (
+            `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `client_name` varchar(255) NOT NULL,
+            `client_title` varchar(255) DEFAULT NULL,
+            `client_country` varchar(255) DEFAULT NULL,
+            `type` varchar(50) NOT NULL DEFAULT 'video_reel',
+            `content` text DEFAULT NULL,
+            `rating` int(11) NOT NULL DEFAULT 5,
+            `media_url` varchar(255) DEFAULT NULL,
+            `thumbnail` varchar(255) DEFAULT NULL,
+            `sort_order` int(11) NOT NULL DEFAULT 0,
+            `is_active` tinyint(1) NOT NULL DEFAULT 1,
+            `created_at` timestamp NULL DEFAULT NULL,
+            `updated_at` timestamp NULL DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        $tCount = $pdo->query("SELECT COUNT(*) FROM testimonials")->fetchColumn();
+        if ($tCount == 0) {
+            $defaultTestimonials = [
+                [
+                    'client_name' => 'أ. حسام الدين غانم',
+                    'client_title' => 'مؤسس Shawrmaker',
+                    'client_country' => 'عمان، الأردن',
+                    'type' => 'video_reel',
+                    'content' => 'شهادة وتجربة تصوير الفيديوهات الترويجية وزيادة المبيعات بنسبة 140%',
+                    'rating' => 5,
+                    'media_url' => '/videos/food_commercial.mp4',
+                    'thumbnail' => '/images/portfolio/social_4.webp',
+                    'sort_order' => 1
+                ],
+                [
+                    'client_name' => 'د. عبد الرحمن المجيدي',
+                    'client_title' => 'مجمع ماجستي الطبي',
+                    'client_country' => 'الرياض، السعودية',
+                    'type' => 'video_reel',
+                    'content' => 'تجربة مضاعفة حجوزات العيادات بنسبة 180% خلال أول شهرين مع وكالة بريق',
+                    'rating' => 5,
+                    'media_url' => '/videos/promo_reels_1.mp4',
+                    'thumbnail' => '/images/portfolio/ramez_qlight.webp',
+                    'sort_order' => 2
+                ],
+                [
+                    'client_name' => 'م. سيف النمر',
+                    'client_title' => 'مدير تسويق شركة ألبان',
+                    'client_country' => 'القاهرة، مصر',
+                    'type' => 'text_review',
+                    'content' => 'الاحترافية في التزام مواعيد التسليم وتصميم الهوية الإعلانية جعلت بريق شريكنا الدائم لكافة علاماتنا التجارية. أنصح بهم بشدة لكل صاحب مشروع يريد نمواً حقيقياً.',
+                    'rating' => 5,
+                    'media_url' => null,
+                    'thumbnail' => null,
+                    'sort_order' => 3
+                ],
+            ];
+            $inTest = $pdo->prepare("INSERT INTO testimonials (client_name, client_title, client_country, type, content, rating, media_url, thumbnail, sort_order, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW(), NOW())");
+            foreach ($defaultTestimonials as $dt) {
+                $inTest->execute([$dt['client_name'], $dt['client_title'], $dt['client_country'], $dt['type'], $dt['content'], $dt['rating'], $dt['media_url'], $dt['thumbnail'], $dt['sort_order']]);
+            }
+            echo "<li style='color:green;'>✔️ تم إنشاء جدول آراء العملاء `testimonials` وإضافة الفيدباك الافتراضي بنجاح.</li>";
+        }
+
         // Clear compiled views
         $cachedViews = glob(__DIR__ . '/storage/framework/views/*.php');
         if ($cachedViews) {

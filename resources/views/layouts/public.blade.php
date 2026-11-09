@@ -560,8 +560,22 @@
                     <template x-if="previewModal && (activeMedia.type === 'youtube' || activeMedia.type === 'vimeo' || activeMedia.type === 'iframe')">
                         <iframe :src="activeMedia.embedSrc" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </template>
-                    <template x-if="previewModal && activeMedia.type === 'image'">
+                    <template x-if="previewModal && activeMedia.type === 'image' && activeMedia.src">
                         <img :src="activeMedia.src" :alt="activeMedia.title" class="w-full h-full object-contain">
+                    </template>
+                    <template x-if="previewModal && (!activeMedia.src || activeMedia.type === 'text')">
+                        <div class="p-6 sm:p-10 text-center space-y-4 max-w-lg mx-auto my-auto">
+                            <div class="w-14 h-14 rounded-2xl bg-brand-orange/20 text-brand-orange flex items-center justify-center text-2xl mx-auto shadow-inner">
+                                <i class="fa-solid fa-quote-right"></i>
+                            </div>
+                            <div class="text-amber-400 text-base flex justify-center gap-1">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-sm sm:text-base text-gray-100 italic leading-relaxed" x-text="'«' + activeMedia.desc + '»'"></p>
+                            <div class="pt-3 border-t border-purple-800/40">
+                                <h4 class="text-sm font-black text-brand-orange" x-text="activeMedia.title"></h4>
+                            </div>
+                        </div>
                     </template>
                 </div>
             </template>

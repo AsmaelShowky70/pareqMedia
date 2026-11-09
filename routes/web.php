@@ -129,6 +129,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cms/portfolio/{portfolioItem}', [PortfolioAdminController::class, 'destroyPortfolioItem'])->name('cms.portfolio.destroy');
     Route::post('/cms/inquiries/{inquiry}/status', [PortfolioAdminController::class, 'updateInquiryStatus'])->name('cms.inquiries.status');
 
+    // Partners & Testimonials CMS Management
+    Route::post('/cms/partners', [PortfolioAdminController::class, 'storePartner'])->name('cms.partners.store');
+    Route::put('/cms/partners/{partner}', [PortfolioAdminController::class, 'updatePartner'])->name('cms.partners.update');
+    Route::delete('/cms/partners/{partner}', [PortfolioAdminController::class, 'destroyPartner'])->name('cms.partners.destroy');
+    Route::post('/cms/testimonials', [PortfolioAdminController::class, 'storeTestimonial'])->name('cms.testimonials.store');
+    Route::put('/cms/testimonials/{testimonial}', [PortfolioAdminController::class, 'updateTestimonial'])->name('cms.testimonials.update');
+    Route::delete('/cms/testimonials/{testimonial}', [PortfolioAdminController::class, 'destroyTestimonial'])->name('cms.testimonials.destroy');
+
     // Users & Roles Management
     Route::resource('users', UserController::class);
 });

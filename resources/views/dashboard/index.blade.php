@@ -322,77 +322,87 @@
         </div>
     </div>
 
-    <!-- 4. TASK SUMMARY 4-COLOR STATUS CARDS (2x2 على الموبايل و 4x1 على الكمبيوتر) -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-        
-        <!-- 1. Completed Tasks -->
-        <div class="p-3 sm:p-4 rounded-2xl bg-emerald-950/20 border-2 border-emerald-500/40 hover:border-emerald-500 transition shadow-lg group">
-            <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[11px] sm:text-xs font-bold text-emerald-300">مهام مكتملة</span>
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs sm:text-sm font-bold shadow">
-                    <i class="fa-solid fa-circle-check"></i>
-                </div>
-            </div>
-            <div class="text-2xl sm:text-3xl font-black text-white group-hover:text-emerald-400 transition-colors">
-                {{ $taskCounts['completed'] }}
-            </div>
-            <div class="mt-1.5 text-[10px] sm:text-[11px] text-emerald-400/90 font-medium flex items-center justify-between">
-                <span>تم إنجازها بنجاح</span>
-                <i class="fa-solid fa-check-double text-[10px]"></i>
-            </div>
+    <!-- 4. TASK SUMMARY 4-COLOR STATUS CARDS (متطابق بالكامل مع باند تلخيص عدد المهام بملف السيستم) -->
+    <div class="space-y-2.5">
+        <div class="flex items-center justify-between">
+            <h3 class="text-xs sm:text-sm font-black text-white flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-brand-gold"></i>
+                <span>باند تلخيص عدد المهام (مكتملة - قيد التنفيذ - متبقية - متأخرة)</span>
+            </h3>
+            <span class="text-[10px] text-gray-400">إجمالي مهام الوكالة: <strong class="text-white">{{ $taskCounts['total'] ?? 0 }}</strong> تسك</span>
         </div>
 
-        <!-- 2. In Progress Tasks -->
-        <div class="p-3 sm:p-4 rounded-2xl bg-sky-950/20 border-2 border-sky-500/40 hover:border-sky-500 transition shadow-lg group">
-            <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[11px] sm:text-xs font-bold text-sky-300">قيد التنفيذ</span>
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xs sm:text-sm font-bold shadow">
-                    <i class="fa-solid fa-arrows-rotate fa-spin"></i>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+            
+            <!-- 1. Completed Tasks -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-emerald-950/20 border-2 border-emerald-500/40 hover:border-emerald-500 transition shadow-lg group">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] sm:text-xs font-bold text-emerald-300">مهام مكتملة</span>
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs sm:text-sm font-bold shadow">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+                <div class="text-2xl sm:text-3xl font-black text-white group-hover:text-emerald-400 transition-colors">
+                    {{ $taskCounts['completed'] }}
+                </div>
+                <div class="mt-1.5 text-[10px] sm:text-[11px] text-emerald-400/90 font-medium flex items-center justify-between">
+                    <span>تم إنجازها بنجاح</span>
+                    <i class="fa-solid fa-check-double text-[10px]"></i>
                 </div>
             </div>
-            <div class="text-2xl sm:text-3xl font-black text-white group-hover:text-sky-400 transition-colors">
-                {{ $taskCounts['in_progress'] }}
-            </div>
-            <div class="mt-1.5 text-[10px] sm:text-[11px] text-sky-300 font-medium flex items-center justify-between">
-                <span>جاري العمل عليها</span>
-                <i class="fa-solid fa-person-digging text-[10px]"></i>
-            </div>
-        </div>
 
-        <!-- 3. Remaining Tasks -->
-        <div class="p-3 sm:p-4 rounded-2xl bg-amber-950/20 border-2 border-amber-500/40 hover:border-amber-500 transition shadow-lg group">
-            <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[11px] sm:text-xs font-bold text-amber-300">مهام متبقية</span>
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs sm:text-sm font-bold shadow">
-                    <i class="fa-solid fa-hourglass-half"></i>
+            <!-- 2. In Progress Tasks -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-sky-950/20 border-2 border-sky-500/40 hover:border-sky-500 transition shadow-lg group">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] sm:text-xs font-bold text-sky-300">قيد التنفيذ</span>
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xs sm:text-sm font-bold shadow">
+                        <i class="fa-solid fa-arrows-rotate fa-spin"></i>
+                    </div>
+                </div>
+                <div class="text-2xl sm:text-3xl font-black text-white group-hover:text-sky-400 transition-colors">
+                    {{ $taskCounts['in_progress'] }}
+                </div>
+                <div class="mt-1.5 text-[10px] sm:text-[11px] text-sky-300 font-medium flex items-center justify-between">
+                    <span>جاري العمل عليها</span>
+                    <i class="fa-solid fa-person-digging text-[10px]"></i>
                 </div>
             </div>
-            <div class="text-2xl sm:text-3xl font-black text-white group-hover:text-amber-400 transition-colors">
-                {{ $taskCounts['remaining'] }}
-            </div>
-            <div class="mt-1.5 text-[10px] sm:text-[11px] text-amber-300 font-medium flex items-center justify-between">
-                <span>في قائمة الانتظار</span>
-                <i class="fa-solid fa-list-ol text-[10px]"></i>
-            </div>
-        </div>
 
-        <!-- 4. Overdue Tasks -->
-        <div class="p-3 sm:p-4 rounded-2xl bg-rose-950/20 border-2 border-rose-500/40 hover:border-rose-500 transition shadow-lg group">
-            <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[11px] sm:text-xs font-bold text-rose-300">متأخرة</span>
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs sm:text-sm font-bold shadow">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
+            <!-- 3. Remaining Tasks -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-amber-950/20 border-2 border-amber-500/40 hover:border-amber-500 transition shadow-lg group">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] sm:text-xs font-bold text-amber-300">مهام متبقية</span>
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs sm:text-sm font-bold shadow">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                </div>
+                <div class="text-2xl sm:text-3xl font-black text-white group-hover:text-amber-400 transition-colors">
+                    {{ $taskCounts['remaining'] }}
+                </div>
+                <div class="mt-1.5 text-[10px] sm:text-[11px] text-amber-300 font-medium flex items-center justify-between">
+                    <span>في قائمة الانتظار</span>
+                    <i class="fa-solid fa-list-ol text-[10px]"></i>
                 </div>
             </div>
-            <div class="text-2xl sm:text-3xl font-black text-rose-400 group-hover:text-rose-300 transition-colors">
-                {{ $taskCounts['overdue'] }}
-            </div>
-            <div class="mt-1.5 text-[10px] sm:text-[11px] text-rose-300 font-medium flex items-center justify-between">
-                <span>تتطلب متابعة سريعة</span>
-                <i class="fa-solid fa-bell text-[10px]"></i>
-            </div>
-        </div>
 
+            <!-- 4. Overdue Tasks -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-rose-950/20 border-2 border-rose-500/40 hover:border-rose-500 transition shadow-lg group">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] sm:text-xs font-bold text-rose-300">متأخرة</span>
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs sm:text-sm font-bold shadow">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                </div>
+                <div class="text-2xl sm:text-3xl font-black text-rose-400 group-hover:text-rose-300 transition-colors">
+                    {{ $taskCounts['overdue'] }}
+                </div>
+                <div class="mt-1.5 text-[10px] sm:text-[11px] text-rose-300 font-medium flex items-center justify-between">
+                    <span>تتطلب متابعة سريعة</span>
+                    <i class="fa-solid fa-bell text-[10px]"></i>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <!-- 5. DEPARTMENT & EMPLOYEE DISTRIBUTION (توزيع المهام حسب القسم والموظف) -->

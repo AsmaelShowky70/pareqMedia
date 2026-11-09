@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inquiry;
+use App\Models\Partner;
 use App\Models\PortfolioItem;
 use App\Models\Service;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -17,7 +19,19 @@ class PortfolioAdminController extends Controller
         $inquiries = Inquiry::latest()->paginate(15);
         $serviceCategories = Service::getCategories();
 
-        return view('cms.index', compact('services', 'portfolioItems', 'inquiries', 'serviceCategories'));
+        try {
+            $partners = Partner::orderBy('sort_order')->latest()->get();
+        } catch (\Throwable $e) {
+            $partners = collect();
+        }
+
+        try {
+            $testimonials = Testimonial::orderBy('sort_order')->latest()->get();
+        } catch (\Throwable $e) {
+            $testimonials = collect();
+        }
+
+        return view('cms.index', compact('services', 'portfolioItems', 'inquiries', 'serviceCategories', 'partners', 'testimonials'));
     }
 
     public function storeService(Request $request)
@@ -204,5 +218,169 @@ class PortfolioAdminController extends Controller
         ]);
 
         return back()->with('success', 'تم تحديث حالة طلب الاستشارة.');
+    }
+
+    // =========================================================================
+    // PARTNERS CRUD (شركاء النجاح والعلامات التجارية)
+    // =========================================================================
+    public function storePartner(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'nullable|string|max:255',
+            'logo_url' => 'nullable|string',
+            'logo_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:10240',
+        ]);
+
+        if ($request->hasFile('logo_file')) {
+            $file = $request->file('logo_file');
+            $uploadPath = public_path('uploads/partners');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['logo_url'] = '/uploads/partners/' . $filename;
+        }
+
+        $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['sort_order'] = Partner::count() + 1;
+
+        Partner::create($validated);
+
+        return back()->with('success', 'تمت إضافة الشريك أو العلامة التجارية بنجاح وتظهر في الموقع الرئيسي فوراً.');
+    }
+
+    public function updatePartner(Request $request, Partner $partner)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'nullable|string|max:255',
+            'logo_url' => 'nullable|string',
+            'logo_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:10240',
+        ]);
+
+        if ($request->hasFile('logo_file')) {
+            $file = $request->file('logo_file');
+            $uploadPath = public_path('uploads/partners');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['logo_url'] = '/uploads/partners/' . $filename;
+        }
+
+        $validated['is_active'] = $request->boolean('is_active');
+
+        $partner->update($validated);
+
+        return back()->with('success', 'تم تعديل بيانات الشريك بنجاح.');
+    }
+
+    public function destroyPartner(Partner $partner)
+    {
+        $partner->delete();
+
+        return back()->with('success', 'تم حذف الشريك بنجاح.');
+    }
+
+    // =========================================================================
+    // TESTIMONIALS CRUD (آراء العملاء وفيديوهات الفيدباك)
+    // =========================================================================
+    public function storeTestimonial(Request $request)
+    {
+        $validated = $request->validate([
+            'client_name' => 'required|string|max:255',
+            'client_title' => 'nullable|string|max:255',
+            'client_country' => 'nullable|string|max:255',
+            'type' => 'required|string|in:video_reel,image_review,text_review',
+            'content' => 'nullable|string',
+            'rating' => 'nullable|integer|min:1|max:5',
+            'media_url' => 'nullable|string',
+            'thumbnail' => 'nullable|string',
+            'thumbnail_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'video_file' => 'nullable|mimes:mp4,webm,mov|max:51200',
+        ]);
+
+        if ($request->hasFile('thumbnail_file')) {
+            $file = $request->file('thumbnail_file');
+            $uploadPath = public_path('uploads/testimonials');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['thumbnail'] = '/uploads/testimonials/' . $filename;
+        }
+
+        if ($request->hasFile('video_file')) {
+            $file = $request->file('video_file');
+            $uploadPath = public_path('uploads/testimonials/videos');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['media_url'] = '/uploads/testimonials/videos/' . $filename;
+        }
+
+        $validated['rating'] = $validated['rating'] ?? 5;
+        $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['sort_order'] = Testimonial::count() + 1;
+
+        Testimonial::create($validated);
+
+        return back()->with('success', 'تمت إضافة رأي/فيديو الفيدباك بنجاح ويظهر في الموقع فوراً.');
+    }
+
+    public function updateTestimonial(Request $request, Testimonial $testimonial)
+    {
+        $validated = $request->validate([
+            'client_name' => 'required|string|max:255',
+            'client_title' => 'nullable|string|max:255',
+            'client_country' => 'nullable|string|max:255',
+            'type' => 'required|string|in:video_reel,image_review,text_review',
+            'content' => 'nullable|string',
+            'rating' => 'nullable|integer|min:1|max:5',
+            'media_url' => 'nullable|string',
+            'thumbnail' => 'nullable|string',
+            'thumbnail_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'video_file' => 'nullable|mimes:mp4,webm,mov|max:51200',
+        ]);
+
+        if ($request->hasFile('thumbnail_file')) {
+            $file = $request->file('thumbnail_file');
+            $uploadPath = public_path('uploads/testimonials');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['thumbnail'] = '/uploads/testimonials/' . $filename;
+        }
+
+        if ($request->hasFile('video_file')) {
+            $file = $request->file('video_file');
+            $uploadPath = public_path('uploads/testimonials/videos');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['media_url'] = '/uploads/testimonials/videos/' . $filename;
+        }
+
+        $validated['is_active'] = $request->boolean('is_active');
+        $testimonial->update($validated);
+
+        return back()->with('success', 'تم تعديل بيانات الفيدباك بنجاح.');
+    }
+
+    public function destroyTestimonial(Testimonial $testimonial)
+    {
+        $testimonial->delete();
+
+        return back()->with('success', 'تم حذف الفيدباك بنجاح.');
     }
 }

@@ -210,14 +210,18 @@ class DashboardController extends Controller
 
         $weeklyIncomeRate = $weeklyTarget > 0 ? min(100, round(($weeklyRevenue / $weeklyTarget) * 100)) : 0;
 
-        // Daily Progress Completion Rate
+        // Daily Progress Completion Rate (نسبة الإنجاز الحقيقية تتغير ديناميكياً بكل مهمة يتم إنجازها)
         $hasDailyDeadline = Schema::hasColumn('tasks', 'daily_delivery_deadline');
         if ($hasDailyDeadline) {
             $totalDailyTasks = Task::whereNotNull('daily_delivery_deadline')->count();
             $completedDailyTasks = Task::whereNotNull('daily_delivery_deadline')->where('status', 'completed')->count();
-            $dailyCompletionRate = $totalDailyTasks > 0 ? round(($completedDailyTasks / $totalDailyTasks) * 100) : 75;
+            if ($totalDailyTasks > 0) {
+                $dailyCompletionRate = round(($completedDailyTasks / $totalDailyTasks) * 100);
+            } else {
+                $dailyCompletionRate = $taskCounts['total'] > 0 ? round(($completedTasksCount / $taskCounts['total']) * 100) : 0;
+            }
         } else {
-            $dailyCompletionRate = $taskCounts['total'] > 0 ? round(($completedTasksCount / max(1, $taskCounts['total'])) * 100) : 75;
+            $dailyCompletionRate = $taskCounts['total'] > 0 ? round(($completedTasksCount / $taskCounts['total']) * 100) : 0;
         }
 
         // Department Task Distribution (باند توزيع المهام حسب القسم)

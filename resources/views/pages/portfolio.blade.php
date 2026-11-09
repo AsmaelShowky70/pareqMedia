@@ -66,19 +66,6 @@
             ];
         }
     }
-
-    // تكرار البطاقات حتى 5 كروت في المعرض ثلاثي الأبعاد إذا كان ما تم إدخاله أقل من ذلك حتى يتمكن المعرض من التحرك والدوران بسلاسة
-    if(count($showcasePortfolio) > 0 && count($showcasePortfolio) < 5) {
-        $baseItems = $showcasePortfolio;
-        while(count($showcasePortfolio) < 5) {
-            foreach($baseItems as $bItem) {
-                $copy = $bItem;
-                $copy['id'] = $bItem['id'] . '-rep-' . count($showcasePortfolio);
-                $showcasePortfolio[] = $copy;
-                if(count($showcasePortfolio) >= 5) break;
-            }
-        }
-    }
 @endphp
 
 @if(!empty($showcasePortfolio))
@@ -153,12 +140,16 @@
 
         <!-- 3D Widescreen Track -->
         <div class="relative py-4">
-            <div class="relative h-[270px] sm:h-[330px] md:h-[370px] lg:h-[400px] w-full flex items-center justify-center overflow-hidden">
+            <div class="relative h-[270px] sm:h-[330px] md:h-[370px] lg:h-[400px] w-full flex items-center justify-center overflow-hidden"
+                 :class="works.length === 1 ? '!h-[280px] sm:!h-[360px] md:!h-[420px] lg:!h-[460px]' : ''">
                 <template x-for="(item, idx) in works" :key="item.id + '-' + idx">
                     <div @click="activeIdx === idx ? openMedia(item.mediaType, item.finalMedia, item.title, item.desc, item.aspect) : (activeIdx = idx)"
                          :style="getCardStyle(idx)"
-                         :class="activeIdx === idx ? 'border-2 border-brand-orange shadow-[0_0_55px_rgba(255,148,32,0.45)] ring-2 ring-brand-orange/50' : 'border border-purple-800/60 hover:border-brand-orange/60'"
-                         class="absolute w-[310px] sm:w-[440px] md:w-[530px] lg:w-[610px] h-[230px] sm:h-[290px] md:h-[330px] lg:h-[360px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ease-out shadow-2xl group flex flex-col justify-between select-none bg-[#0D031A]">
+                         :class="[
+                             activeIdx === idx ? 'border-2 border-brand-orange shadow-[0_0_55px_rgba(255,148,32,0.45)] ring-2 ring-brand-orange/50' : 'border border-purple-800/60 hover:border-brand-orange/60',
+                             works.length === 1 ? '!w-[320px] sm:!w-[520px] md:!w-[680px] lg:!w-[800px] !h-[260px] sm:!h-[340px] md:!h-[400px] lg:!h-[440px]' : 'w-[310px] sm:w-[440px] md:w-[530px] lg:w-[610px] h-[230px] sm:h-[290px] md:h-[330px] lg:h-[360px]'
+                         ]"
+                         class="absolute rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ease-out shadow-2xl group flex flex-col justify-between select-none bg-[#0D031A]">
                          
                          <!-- Full Background Artwork -->
                          <img :src="item.thumb" :alt="item.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-108">
