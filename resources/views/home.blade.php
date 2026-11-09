@@ -93,45 +93,69 @@
 
             </div>
 
-            <!-- Left Column: Official Animated Lightning Video (الفيديو نفسه مكان اللوجو بدون شكل دائري - مدمج مع الخلفية) -->
+            <!-- Left Column: Official Animated Video in 3D Sculpted Lightning Bolt (فيديو بريق في مجسم البرق المضيء) -->
             <div class="lg:col-span-5 flex justify-center items-center relative py-4 lg:py-0">
-                <div class="relative w-full max-w-lg lg:max-w-xl flex items-center justify-center group"
+                
+                <!-- SVG Definition for Cross-Browser Lightning ClipPath -->
+                <svg class="absolute w-0 h-0" aria-hidden="true" focusable="false">
+                    <defs>
+                        <clipPath id="pariq-lightning-clip" clipPathUnits="objectBoundingBox">
+                            <polygon points="0.38,0 0.82,0 0.56,0.38 0.90,0.38 0.20,1 0.42,0.52 0.12,0.52" />
+                        </clipPath>
+                    </defs>
+                </svg>
+
+                <div class="relative w-64 sm:w-72 lg:w-80 h-80 sm:h-96 lg:h-[420px] flex items-center justify-center group"
                      x-data="{ isMuted: true }">
                     
-                    <!-- Floating Subtle Ambient Glow behind the lightning -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-orange/20 via-purple-600/15 to-transparent blur-2xl pointer-events-none rounded-3xl"></div>
+                    <!-- 1. Ambient Background Lightning Glow -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-orange/35 via-amber-500/20 to-purple-600/20 blur-3xl animate-pulse-glow pointer-events-none"></div>
 
-                    <!-- Lightning Video Frame without circular crop -->
-                    <div class="relative w-full aspect-video flex items-center justify-center">
-                        <video id="hero-lightning-video" 
-                               playsinline 
-                               preload="auto"
-                               autoplay
-                               muted
-                               loop
-                               poster="{{ asset('videos/bariq-poster.jpg') }}"
-                               class="w-full h-full object-contain mix-blend-screen pointer-events-auto cursor-pointer"
-                               @click="
-                                   $el.muted = !$el.muted;
-                                   isMuted = $el.muted;
-                               ">
-                            <source src="{{ asset('videos/bariq.mp4') }}" type="video/mp4">
-                            <source src="{{ asset('videos/bariq.webm') }}" type="video/webm">
-                            متصفحك لا يدعم تشغيل الفيديو المباشر.
-                        </video>
+                    <!-- 2. Outer Sculpted 3D Metallic Golden Lightning Frame -->
+                    <div class="relative w-full h-full p-1.5 transition-transform duration-500 group-hover:scale-105"
+                         style="filter: drop-shadow(0 0 25px rgba(255, 148, 32, 0.75)) drop-shadow(0 15px 35px rgba(0,0,0,0.9));">
+                        
+                        <!-- Golden Beveled Lightning Rim -->
+                        <div class="w-full h-full p-1 bg-gradient-to-b from-[#FFA726] via-[#FF7A00] to-[#BC6200]"
+                             style="clip-path: url(#pariq-lightning-clip); -webkit-clip-path: polygon(38% 0%, 82% 0%, 56% 38%, 90% 38%, 20% 100%, 42% 52%, 12% 52%);">
+                            
+                            <!-- Inner Lightning Core with Video -->
+                            <div class="w-full h-full bg-[#08020F] relative overflow-hidden flex items-center justify-center"
+                                 style="clip-path: url(#pariq-lightning-clip); -webkit-clip-path: polygon(38% 0%, 82% 0%, 56% 38%, 90% 38%, 20% 100%, 42% 52%, 12% 52%);">
+                                
+                                <video id="hero-lightning-video" 
+                                       playsinline 
+                                       preload="auto"
+                                       autoplay
+                                       muted
+                                       loop
+                                       poster="{{ asset('videos/bariq-poster.jpg') }}"
+                                       class="w-full h-full object-cover scale-110 pointer-events-auto cursor-pointer"
+                                       @click="
+                                           $el.muted = !$el.muted;
+                                           isMuted = $el.muted;
+                                       ">
+                                    <source src="{{ asset('videos/bariq.mp4') }}" type="video/mp4">
+                                    <source src="{{ asset('videos/bariq.webm') }}" type="video/webm">
+                                </video>
 
-                        <!-- Subtle Sound Toggle Button -->
-                        <button type="button" 
-                                @click="
-                                    const v = document.getElementById('hero-lightning-video');
-                                    v.muted = !v.muted;
-                                    isMuted = v.muted;
-                                "
-                                class="absolute bottom-1 left-2 px-2.5 py-1 rounded-xl bg-black/75 hover:bg-brand-orange hover:text-brand-dark text-white text-[10px] font-bold border border-white/20 transition flex items-center gap-1.5 opacity-75 hover:opacity-100 z-20 backdrop-blur-md shadow">
-                            <i class="fa-solid" :class="isMuted ? 'fa-volume-xmark text-amber-400' : 'fa-volume-high text-emerald-400'"></i>
-                            <span x-text="isMuted ? 'تشغيل الصوت' : 'كتم الصوت'"></span>
-                        </button>
+                            </div>
+
+                        </div>
+
                     </div>
+
+                    <!-- Sound Toggle Floating Badge -->
+                    <button type="button" 
+                            @click="
+                                const v = document.getElementById('hero-lightning-video');
+                                v.muted = !v.muted;
+                                isMuted = v.muted;
+                            "
+                            class="absolute -bottom-4 mx-auto px-3.5 py-1.5 rounded-full bg-[#18082B]/95 hover:bg-brand-orange hover:text-brand-dark text-white text-[10px] font-black border border-brand-orange/60 transition flex items-center gap-1.5 shadow-2xl backdrop-blur-md z-30">
+                        <i class="fa-solid" :class="isMuted ? 'fa-volume-xmark text-amber-400' : 'fa-volume-high text-emerald-400'"></i>
+                        <span x-text="isMuted ? 'تشغيل الصوت' : 'كتم الصوت'"></span>
+                    </button>
 
                 </div>
             </div>
@@ -280,31 +304,45 @@
 </section>
 
 <!-- =========================================================================
-     5. 10 SERVICES INTERACTIVE CIRCULAR/ORBIT SHOWCASE (الخدمات - 10 خدمات بدون تسعير وبدون باقة)
-     (تقليب في شكل دائري مع صورة وزر ينقل على القسم الخاص بكل خدمة)
+     5. 10 SERVICES 3D COVERFLOW CAROUSEL (شكل تقليب دائري ثلاثي الأبعاد زي essenceadvertising.com)
      ========================================================================= -->
 <section id="services-summary" class="py-24 bg-gradient-to-b from-[#08020F] via-[#140626] to-[#0A0216] relative z-10 overflow-hidden"
          x-data="{ 
              activeIdx: 0, 
              services: [
-                 { id: 1, slug: 'video-shooting', title: 'تصوير الفيديو', icon: 'fa-solid fa-video', desc: 'تصوير فيديوهات دعائية، بروموهات، كواليس، أو محتوى مخصص للسوشيال ميديا، بأسلوب عصري وجودة عالية تعبر عن هويتك.', img: '{{ asset('images/portfolio/social_4.webp') }}' },
-                 { id: 2, slug: 'video-editing', title: 'مونتاج الفيديو', icon: 'fa-solid fa-film', desc: 'نستخدم أحدث برامج المونتاج لنقدم فيديوهات عصرية عالية الجودة، بتأثيرات بصرية وصوتية احترافية، وتلوين دقيق، مما يضمن إخراجاً جذاباً يحقق أهدافك ويوصل رسالتك بوضوح.', img: '{{ asset('images/portfolio/social_2.webp') }}' },
-                 { id: 3, slug: 'social-media', title: 'إدارة وسائل التواصل الاجتماعي', icon: 'fa-solid fa-share-nodes', desc: 'نُدير حساباتك على مختلف المنصات من خلال إنشاء محتوى جذاب، وتصميم منشورات احترافية، والتفاعل مع الجمهور، إلى جانب دراسة أفضل أوقات النشر لتحقيق أقصى وصول وتفاعل.', img: '{{ asset('images/portfolio/social_1.webp') }}' },
-                 { id: 4, slug: 'paid-ads', title: 'الإعلانات الممولة', icon: 'fa-solid fa-chart-line', desc: 'نصمم ونُدير حملات إعلانية احترافية تستهدف جمهورك بدقة عبر المنصات الرقمية المختلفة، لزيادة الانتشار وتحقيق أهدافك التسويقية.', img: '{{ asset('images/portfolio/ad_result_69.webp') }}' },
-                 { id: 5, slug: 'photography', title: 'تصوير صور', icon: 'fa-solid fa-camera', desc: 'جلسات تصوير احترافية للمنتجات، الأماكن، الفعاليات، أو فريق العمل، باستخدام أحدث المعدات لإبراز كل التفاصيل بأعلى دقة.', img: '{{ asset('images/portfolio/free_delivery.webp') }}' },
-                 { id: 6, slug: 'graphic-design', title: 'تصميم الجرافيك', icon: 'fa-solid fa-bezier-curve', desc: 'إبداع في التصميم البصري يعكس هوية علامتك التجارية ويجذب انتباه جمهورك المستهدف.', img: '{{ asset('images/portfolio/ramez_qlight.webp') }}' },
-                 { id: 7, slug: 'branding', title: 'البراندينج والهوية البصرية', icon: 'fa-solid fa-palette', desc: 'نساعدك على بناء هوية قوية لعلامتك التجارية من الألف إلى الياء، تعزز وجودك في السوق وتزيد من ثقة العملاء.', img: '{{ asset('images/portfolio/logo_1.webp') }}' },
-                 { id: 8, slug: 'marketing-strategy', title: 'إعداد الخطط والاستراتيجيات', icon: 'fa-solid fa-lightbulb', desc: 'نضع خطط تسويقية شاملة ومخصصة تناسب أهدافك، مدعومة بتحليل السوق والمنافسين.', img: '{{ asset('images/portfolio/ad_result_70.webp') }}' },
-                 { id: 9, slug: 'data-analysis', title: 'تحليل البيانات والتقارير', icon: 'fa-solid fa-chart-pie', desc: 'نقيس الأداء، ونحلل النتائج بدقة، ونقدم لك تقارير واضحة تساعدك في اتخاذ قرارات مدروسة.', img: '{{ asset('images/portfolio/ad_result_72.webp') }}' },
-                 { id: 10, slug: 'content-writing', title: 'كتابة المحتوى', icon: 'fa-solid fa-pen-nib', desc: 'نكتب محتوى مبتكر بأسلوب احترافي بعيداً عن التكرار، لكي نجذب الجمهور من أول جملة وتصل رسالتك بأسرع شكل وبأسلوب سلس.', img: '{{ asset('images/portfolio/social_3.webp') }}' }
+                 { id: 1, slug: 'video-shooting', title: 'تصوير الفيديو السينمائي', category: 'إنتاج سينمائي 4K', icon: 'fa-solid fa-video', desc: 'تصوير فيديوهات دعائية، بروموهات، كواليس، أو محتوى مخصص للسوشيال ميديا، بأسلوب عصري وجودة عالية تعبر عن هويتك.', img: '{{ asset('images/portfolio/social_4.webp') }}' },
+                 { id: 2, slug: 'video-editing', title: 'مونتاج الفيديو السريع', category: 'ريلز وبرومو فائق الجاذبية', icon: 'fa-solid fa-film', desc: 'نستخدم أحدث برامج المونتاج لنقدم فيديوهات عصرية عالية الجودة، بتأثيرات بصرية وصوتية احترافية، وتلوين دقيق، مما يضمن إخراجاً جذاباً يحقق أهدافك ويوصل رسالتك بوضوح.', img: '{{ asset('images/portfolio/social_2.webp') }}' },
+                 { id: 3, slug: 'social-media', title: 'إدارة وسائل التواصل الاجتماعي', category: 'نمو وتفاعل رقمي', icon: 'fa-solid fa-share-nodes', desc: 'نُدير حساباتك على مختلف المنصات من خلال إنشاء محتوى جذاب، وتصميم منشورات احترافية، والتفاعل مع الجمهور، إلى جانب دراسة أفضل أوقات النشر لتحقيق أقصى وصول وتفاعل.', img: '{{ asset('images/portfolio/social_1.webp') }}' },
+                 { id: 4, slug: 'paid-ads', title: 'الإعلانات الممولة', category: 'حملات بأعلى عائد ROAS', icon: 'fa-solid fa-chart-line', desc: 'نصمم ونُدير حملات إعلانية احترافية تستهدف جمهورك بدقة عبر المنصات الرقمية المختلفة، لزيادة الانتشار وتحقيق أهدافك التسويقية.', img: '{{ asset('images/portfolio/ad_result_69.webp') }}' },
+                 { id: 5, slug: 'photography', title: 'جلسات التصوير الفوتوغرافي', category: 'منتجات وأماكن وفعاليات', icon: 'fa-solid fa-camera', desc: 'جلسات تصوير احترافية للمنتجات، الأماكن، الفعاليات، أو فريق العمل، باستخدام أحدث المعدات لإبراز كل التفاصيل بأعلى دقة.', img: '{{ asset('images/portfolio/free_delivery.webp') }}' },
+                 { id: 6, slug: 'graphic-design', title: 'تصميم الجرافيك الإبداعي', category: 'أغلفة وسوشيال ميديا', icon: 'fa-solid fa-bezier-curve', desc: 'إبداع في التصميم البصري يعكس هوية علامتك التجارية ويجذب انتباه جمهورك المستهدف.', img: '{{ asset('images/portfolio/ramez_qlight.webp') }}' },
+                 { id: 7, slug: 'branding', title: 'الهوية البصرية والبراندينج', category: 'بناء العلامات التجارية', icon: 'fa-solid fa-palette', desc: 'نساعدك على بناء هوية قوية لعلامتك التجارية من الألف إلى الياء، تعزز وجودك في السوق وتزيد من ثقة العملاء.', img: '{{ asset('images/portfolio/logo_1.webp') }}' },
+                 { id: 8, slug: 'marketing-strategy', title: 'إعداد الخطط والاستراتيجيات', category: 'تحليل ودراسة سوق شاملة', icon: 'fa-solid fa-lightbulb', desc: 'نضع خطط تسويقية شاملة ومخصصة تناسب أهدافك، مدعومة بتحليل السوق والمنافسين.', img: '{{ asset('images/portfolio/ad_result_70.webp') }}' },
+                 { id: 9, slug: 'data-analysis', title: 'تحليل البيانات والتقارير', category: 'قياس دقيق للأداء والنتائج', icon: 'fa-solid fa-chart-pie', desc: 'نقيس الأداء، ونحلل النتائج بدقة، ونقدم لك تقارير واضحة تساعدك في اتخاذ قرارات مدروسة.', img: '{{ asset('images/portfolio/ad_result_72.webp') }}' },
+                 { id: 10, slug: 'content-writing', title: 'صناعة وكتابة المحتوى', category: 'سيناريوهات ونصوص تسويقية', icon: 'fa-solid fa-pen-nib', desc: 'نكتب محتوى مبتكر بأسلوب احترافي بعيداً عن التكرار، لكي نجذب الجمهور من أول جملة وتصل رسالتك بأسرع شكل وبأسلوب سلس.', img: '{{ asset('images/portfolio/social_3.webp') }}' }
              ],
              next() { this.activeIdx = (this.activeIdx + 1) % this.services.length; },
-             prev() { this.activeIdx = (this.activeIdx - 1 + this.services.length) % this.services.length; }
+             prev() { this.activeIdx = (this.activeIdx - 1 + this.services.length) % this.services.length; },
+             getCardStyle(idx) {
+                 const total = this.services.length;
+                 let diff = idx - this.activeIdx;
+                 if (diff > total / 2) diff -= total;
+                 if (diff < -total / 2) diff += total;
+                 const absDiff = Math.abs(diff);
+                 if (absDiff > 2) return 'display: none;';
+                 const translateX = diff * (window.innerWidth < 640 ? 230 : (window.innerWidth < 1024 ? 280 : 330));
+                 const scale = 1 - (absDiff * 0.14);
+                 const rotateY = diff * -18;
+                 const zIndex = 30 - (absDiff * 10);
+                 const opacity = 1 - (absDiff * 0.35);
+                 return `transform: translateX(${translateX}px) scale(${scale}) perspective(1000px) rotateY(${rotateY}deg); z-index: ${zIndex}; opacity: ${opacity};`;
+             }
          }">
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <!-- Header with Title and "عرض جميع الخدمات" Button -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div class="space-y-3">
                 <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
                     حلول إبداعية متكاملة
@@ -327,88 +365,75 @@
             </div>
         </div>
 
-        <!-- Interactive 3D Circular Orbit / Coverflow Showcase -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+        <!-- 3D Coverflow Horizontal Carousel Container (essenceadvertising.com style) -->
+        <div class="relative py-6">
             
-            <!-- Left/Center: Active Service Spotlight & Image Showcase (7 Cols) -->
-            <div class="lg:col-span-7">
-                <div class="glass-card-purple rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 border border-brand-orange/40 shadow-2xl relative overflow-hidden space-y-4 sm:space-y-6">
-                    
-                    <!-- Top Badge & Navigation Controls -->
-                    <div class="flex items-center justify-between">
-                        <div class="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-brand-orange/15 border border-brand-orange/30 text-brand-orange text-[11px] sm:text-xs font-bold">
-                            <span class="font-mono text-xs sm:text-sm" x-text="'0' + (activeIdx + 1)"></span>
-                            <span class="text-gray-400">•</span>
-                            <span x-text="services[activeIdx].title"></span>
-                        </div>
-
-                        <div class="flex items-center gap-1.5 sm:gap-2">
-                            <button @click="prev()" type="button" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-900/60 hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow active:scale-95 text-xs sm:text-sm" aria-label="السابق">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </button>
-                            <button @click="next()" type="button" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-900/60 hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow active:scale-95 text-xs sm:text-sm" aria-label="التالي">
-                                <i class="fa-solid fa-arrow-left"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Image Preview of the Selected Service -->
-                    <div class="relative aspect-video rounded-xl sm:rounded-2xl overflow-hidden bg-black/60 border border-purple-800/60 group">
-                        <img :src="services[activeIdx].img" :alt="services[activeIdx].title" class="w-full h-full object-cover transition-all duration-500 transform group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                        <div class="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 text-white font-bold text-xs sm:text-sm flex items-center gap-2">
-                            <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-brand-orange text-brand-dark flex items-center justify-center text-xs sm:text-sm shadow">
-                                <i :class="services[activeIdx].icon"></i>
-                            </div>
-                            <span x-text="services[activeIdx].title"></span>
-                        </div>
-                    </div>
-
-                    <!-- Title & Full Description -->
-                    <div class="space-y-2 sm:space-y-3">
-                        <h3 class="text-xl sm:text-2xl lg:text-3xl font-black text-white" x-text="services[activeIdx].title"></h3>
-                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed" x-text="services[activeIdx].desc"></p>
-                    </div>
-
-                    <!-- Direct Deep Link to Service Section in /services -->
-                    <div class="pt-3 sm:pt-4 border-t border-purple-800/40 flex items-center justify-between">
-                        <a :href="'{{ route('public.services') }}#' + services[activeIdx].slug" 
-                           class="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-brand-dark font-black text-[11px] sm:text-xs transition shadow-lg active:scale-95">
-                            <span>عرض تفاصيل هذه الخدمة</span>
-                            <i class="fa-solid fa-arrow-left text-[9px] sm:text-[10px]"></i>
-                        </a>
-
-                        <span class="text-[11px] sm:text-xs text-gray-400 font-mono" x-text="(activeIdx + 1) + ' / 10'"></span>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Right: Orbiting Selector List of the 10 Services (5 Cols) -->
-            <div class="lg:col-span-5 space-y-2 sm:space-y-2.5 max-h-64 sm:max-h-80 lg:max-h-[620px] overflow-y-auto pr-1">
+            <!-- Carousel Track -->
+            <div class="relative h-[430px] sm:h-[470px] w-full flex items-center justify-center overflow-hidden">
                 <template x-for="(srv, idx) in services" :key="srv.id">
-                    <div @click="activeIdx = idx" 
-                         :class="activeIdx === idx ? 'bg-gradient-to-l from-brand-orange/20 to-[#1F0B38] border-brand-orange shadow-lg shadow-orange-500/10 scale-[1.02]' : 'bg-[#150626]/80 border-purple-800/40 hover:border-purple-600 opacity-75 hover:opacity-100'"
-                         class="p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer flex items-center justify-between group">
-                        
-                        <div class="flex items-center gap-3">
-                            <div :class="activeIdx === idx ? 'bg-brand-orange text-brand-dark' : 'bg-purple-900/50 text-gray-300 group-hover:text-brand-orange'"
-                                 class="w-10 h-10 rounded-xl flex items-center justify-center text-sm transition-colors shadow">
-                                <i :class="srv.icon"></i>
-                            </div>
-                            <div>
-                                <h4 :class="activeIdx === idx ? 'text-brand-orange font-black' : 'text-white font-bold'" 
-                                    class="text-xs sm:text-sm transition-colors" x-text="srv.title"></h4>
-                                <span class="text-[10px] text-gray-400 block line-clamp-1" x-text="srv.desc"></span>
-                            </div>
-                        </div>
-
-                        <span :class="activeIdx === idx ? 'text-brand-orange translate-x-0' : 'text-gray-500 group-hover:text-gray-300 translate-x-1 group-hover:translate-x-0'"
-                              class="text-xs transition-transform">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </span>
+                    <div @click="activeIdx = idx"
+                         :style="getCardStyle(idx)"
+                         :class="activeIdx === idx ? 'border-2 border-brand-orange shadow-[0_0_50px_rgba(255,148,32,0.35)]' : 'border border-purple-800/50 hover:border-brand-orange/60'"
+                         class="absolute w-[270px] sm:w-[320px] md:w-[360px] h-[390px] sm:h-[430px] rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ease-out shadow-2xl group flex flex-col justify-between select-none bg-[#110423]">
+                         
+                         <!-- Full Background Card Image with Gradient Overlay -->
+                         <img :src="srv.img" :alt="srv.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-108">
+                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                         
+                         <!-- Top Category & Number Pill -->
+                         <div class="relative z-10 p-5 flex items-center justify-between">
+                             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-brand-orange/40 text-[11px] font-black text-brand-orange font-mono"
+                                   x-text="'0' + srv.id"></span>
+                             <div class="w-9 h-9 rounded-2xl bg-brand-orange text-brand-dark flex items-center justify-center text-xs shadow-lg">
+                                 <i :class="srv.icon"></i>
+                             </div>
+                         </div>
+                         
+                         <!-- Bottom Content: Category, Title, Description, and Link Button -->
+                         <div class="relative z-10 p-5 sm:p-6 space-y-2 text-right">
+                             <div class="text-[10px] sm:text-[11px] font-bold text-brand-peach uppercase tracking-wider" x-text="srv.category"></div>
+                             <h3 class="text-base sm:text-xl font-black text-white group-hover:text-brand-orange transition-colors" x-text="srv.title"></h3>
+                             <p class="text-[11px] sm:text-xs text-gray-300 line-clamp-2 leading-relaxed" x-text="srv.desc"></p>
+                             
+                             <div class="pt-2">
+                                 <a :href="'{{ route('public.services') }}#' + srv.slug" 
+                                    @click.stop
+                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-brand-dark font-black text-[11px] transition shadow-lg active:scale-95">
+                                     <span>عرض تفاصيل هذه الخدمة</span>
+                                     <i class="fa-solid fa-arrow-left text-[9px]"></i>
+                                 </a>
+                             </div>
+                         </div>
+                         
                     </div>
                 </template>
+            </div>
+
+            <!-- Bottom Navigation Controls: Arrows + Progress Bar (01 --------- 10) -->
+            <div class="flex items-center justify-center gap-5 sm:gap-7 mt-8">
+                <!-- Prev Button -->
+                <button type="button" @click="prev()" 
+                        aria-label="الخدمة السابقة"
+                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#150626] border border-purple-800/60 hover:border-brand-orange hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow-lg active:scale-95">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <!-- 01 ---- Progress Track ---- 10 -->
+                <div class="flex items-center gap-3 w-48 sm:w-72">
+                    <span class="font-mono text-xs sm:text-sm font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
+                    <div class="flex-grow h-1.5 bg-purple-950 rounded-full overflow-hidden relative border border-purple-800/40">
+                        <div class="h-full bg-gradient-to-r from-brand-orange to-brand-peach transition-all duration-300 rounded-full"
+                             :style="'width: ' + (((activeIdx + 1) / services.length) * 100) + '%'"></div>
+                    </div>
+                    <span class="font-mono text-xs sm:text-sm font-bold text-gray-400">10</span>
+                </div>
+
+                <!-- Next Button -->
+                <button type="button" @click="next()" 
+                        aria-label="الخدمة التالية"
+                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#150626] border border-purple-800/60 hover:border-brand-orange hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow-lg active:scale-95">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
             </div>
 
         </div>
@@ -437,53 +462,119 @@
         </a>
     </div>
 
-    <!-- Continuous Scrolling Interactive Works Ribbon -->
-    <div class="overflow-x-auto pb-4 no-scrollbar">
-        <div class="flex items-center gap-5 px-4 sm:px-8 w-max">
-            @foreach($portfolioItems->take(10) as $item)
-            @php
-                $thumbUrl = $item->thumbnail;
-                $finalThumb = $thumbUrl ? (str_starts_with($thumbUrl, 'http') ? $thumbUrl : asset(ltrim($thumbUrl, '/'))) : asset('images/portfolio/social_1.webp');
-                $finalMedia = $item->video_url ?: $finalThumb;
-                $mediaType = $item->video_url ? 'video' : ($item->category === 'branding' ? 'branding' : 'image');
-                $aspectType = $item->category === 'reels' ? 'vertical' : 'landscape';
-            @endphp
-            <div class="w-72 sm:w-80 flex-shrink-0 glass-card-purple rounded-2xl overflow-hidden border border-purple-800/50 hover:border-brand-orange transition-all duration-300 group cursor-pointer shadow-xl hover:-translate-y-2"
-                 @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')">
-                
-                <div class="relative aspect-video bg-black/60 overflow-hidden">
-                    <img src="{{ $finalThumb }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#150626] via-transparent to-transparent opacity-80"></div>
-                    
-                    @if($item->video_url)
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="w-12 h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-sm shadow-xl group-hover:scale-115 transition-transform">
-                            <i class="fa-solid fa-play mr-0.5"></i>
+    <!-- Continuous Auto-Scrolling Ribbon with Mouse/Touch Grab & Speed Dragging (edigitaal style) -->
+    <div x-data="{
+             isDown: false,
+             startX: 0,
+             scrollLeft: 0,
+             isPaused: false,
+             speed: 1.2,
+             initTicker() {
+                 const el = this.$refs.slider;
+                 if (!el) return;
+                 const run = () => {
+                     if (!this.isDown && !this.isPaused) {
+                         el.scrollLeft += this.speed;
+                         if (el.scrollLeft >= (el.scrollWidth / 2)) {
+                             el.scrollLeft = 0;
+                         }
+                     }
+                     requestAnimationFrame(run);
+                 };
+                 requestAnimationFrame(run);
+             },
+             startDrag(e) {
+                 this.isDown = true;
+                 this.startX = e.pageX - this.$refs.slider.offsetLeft;
+                 this.scrollLeft = this.$refs.slider.scrollLeft;
+             },
+             stopDrag() {
+                 this.isDown = false;
+             },
+             drag(e) {
+                 if (!this.isDown) return;
+                 e.preventDefault();
+                 const x = e.pageX - this.$refs.slider.offsetLeft;
+                 const walk = (x - this.startX) * 2.2;
+                 this.$refs.slider.scrollLeft = this.scrollLeft - walk;
+             },
+             startTouch(e) {
+                 this.isDown = true;
+                 this.startX = e.touches[0].pageX - this.$refs.slider.offsetLeft;
+                 this.scrollLeft = this.$refs.slider.scrollLeft;
+             },
+             touchDrag(e) {
+                 if (!this.isDown) return;
+                 const x = e.touches[0].pageX - this.$refs.slider.offsetLeft;
+                 const walk = (x - this.startX) * 2.2;
+                 this.$refs.slider.scrollLeft = this.scrollLeft - walk;
+             }
+         }"
+         x-init="initTicker()"
+         class="relative select-none">
+        
+        <div x-ref="slider"
+             @mouseenter="isPaused = true"
+             @mouseleave="isPaused = false; stopDrag()"
+             @mousedown="startDrag($event)"
+             @mouseup="stopDrag()"
+             @mousemove="drag($event)"
+             @touchstart.passive="startTouch($event)"
+             @touchend="stopDrag()"
+             @touchmove="touchDrag($event)"
+             class="overflow-x-auto pb-4 no-scrollbar cursor-grab active:cursor-grabbing flex items-center gap-5 px-4 sm:px-8 w-full"
+             style="scroll-behavior: auto;">
+            
+            <div class="flex items-center gap-5 w-max">
+                @for($loopIdx = 0; $loopIdx < 2; $loopIdx++)
+                    @foreach($portfolioItems->take(10) as $item)
+                    @php
+                        $thumbUrl = $item->thumbnail;
+                        $finalThumb = $thumbUrl ? (str_starts_with($thumbUrl, 'http') ? $thumbUrl : asset(ltrim($thumbUrl, '/'))) : asset('images/portfolio/social_1.webp');
+                        $finalMedia = $item->video_url ?: $finalThumb;
+                        $mediaType = $item->video_url ? 'video' : ($item->category === 'branding' ? 'branding' : 'image');
+                        $aspectType = $item->category === 'reels' ? 'vertical' : 'landscape';
+                    @endphp
+                    <div class="w-72 sm:w-80 flex-shrink-0 glass-card-purple rounded-2xl overflow-hidden border border-purple-800/50 hover:border-brand-orange transition-all duration-300 group cursor-pointer shadow-xl hover:-translate-y-2 select-none"
+                         @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')">
+                        
+                        <div class="relative aspect-video bg-black/60 overflow-hidden">
+                            <img src="{{ $finalThumb }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 pointer-events-none">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#150626] via-transparent to-transparent opacity-80 pointer-events-none"></div>
+                            
+                            @if($item->video_url)
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div class="w-12 h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-sm shadow-xl group-hover:scale-115 transition-transform">
+                                    <i class="fa-solid fa-play mr-0.5"></i>
+                                </div>
+                            </div>
+                            @else
+                            <div class="absolute bottom-2 left-2 w-8 h-8 rounded-lg bg-black/70 text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition pointer-events-none">
+                                <i class="fa-solid fa-expand"></i>
+                            </div>
+                            @endif
+
+                            <span class="absolute top-2.5 right-2.5 text-[9px] font-bold px-2.5 py-1 rounded-full bg-black/80 backdrop-blur text-brand-peach border border-purple-500/30 pointer-events-none">
+                                {{ $item->category_arabic }}
+                            </span>
                         </div>
-                    </div>
-                    @else
-                    <div class="absolute bottom-2 left-2 w-8 h-8 rounded-lg bg-black/70 text-white flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition">
-                        <i class="fa-solid fa-expand"></i>
-                    </div>
-                    @endif
 
-                    <span class="absolute top-2.5 right-2.5 text-[9px] font-bold px-2.5 py-1 rounded-full bg-black/80 backdrop-blur text-brand-peach border border-purple-500/30">
-                        {{ $item->category_arabic }}
-                    </span>
-                </div>
+                        <div class="p-4 space-y-1.5 text-right pointer-events-none">
+                            <h4 class="text-xs sm:text-sm font-black text-white group-hover:text-brand-orange transition-colors line-clamp-1">
+                                {{ $item->title }}
+                            </h4>
+                            <div class="text-[10px] text-gray-400 font-medium">
+                                {{ $item->client_name }} @if($item->client_country) • {{ $item->client_country }} @endif
+                            </div>
+                        </div>
 
-                <div class="p-4 space-y-1.5 text-right">
-                    <h4 class="text-xs sm:text-sm font-black text-white group-hover:text-brand-orange transition-colors line-clamp-1">
-                        {{ $item->title }}
-                    </h4>
-                    <div class="text-[10px] text-gray-400 font-medium">
-                        {{ $item->client_name }} @if($item->client_country) • {{ $item->client_country }} @endif
                     </div>
-                </div>
-
+                    @endforeach
+                @endfor
             </div>
-            @endforeach
+
         </div>
+
     </div>
 </section>
 
@@ -686,83 +777,93 @@
 </section>
 
 <!-- =========================================================================
-     9. WHY CHOOSE BARIQ (باند ليه تختار بريق - 4 مميزات بشكل مبسط زي جو ميديا)
+     9. WHY CHOOSE BARIQ (باند ليه تختار بريق - متطابق مع تصميم جو ميديا في ملف العميل)
      ========================================================================= -->
-<section class="py-20 bg-gradient-to-b from-[#08020F] via-[#100422] to-[#16062C] relative z-10 border-t border-purple-900/50">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-12">
+<section class="py-20 relative z-10 border-t border-purple-900/40">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div class="space-y-3">
-            <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                جاهز نخلي علامتك تظهر بشكل مختلف؟
-            </h2>
-            <p class="text-xs sm:text-sm text-gray-300 max-w-xl mx-auto">
-                تواصل معنا اليوم ودعنا نحول أفكارك إلى واقع يحقق أهدافك
-            </p>
-        </div>
-
-        <!-- 4 Connected Features with Line Indicator -->
-        <div class="relative py-2 sm:py-4">
+        <!-- Unified Luxury Card (Goo Media Style from Client Doc) -->
+        <div class="glass-card-purple rounded-3xl p-8 sm:p-12 border border-brand-orange/40 shadow-2xl relative overflow-hidden text-center space-y-10">
             
-            <!-- Connected Horizontal Line -->
-            <div class="hidden sm:block absolute top-6 left-12 right-12 h-0.5 bg-gradient-to-r from-brand-orange via-brand-peach to-brand-orange z-0 opacity-40"></div>
+            <!-- Ambient Background Energy Gradients -->
+            <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-brand-orange/15 blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-purple-600/20 blur-3xl pointer-events-none"></div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 relative z-10">
+            <!-- Headline & Subtitle with Clean Overflow & Typography -->
+            <div class="space-y-3 relative z-10">
+                <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-normal">
+                    جاهز نخلي علامتك تظهر بشكل مختلف؟
+                </h2>
+                <p class="text-xs sm:text-sm text-gray-300 max-w-xl mx-auto">
+                    تواصل معنا اليوم ودعنا نحول أفكارك إلى واقع يحقق أهدافك
+                </p>
+            </div>
+
+            <!-- Connected Horizontal Timeline (4 Features on Center Line) -->
+            <div class="relative py-4 z-10">
                 
-                <!-- Feature 1 -->
-                <div class="flex flex-col items-center text-center space-y-2.5 sm:space-y-3">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-base sm:text-lg font-black shadow-lg shadow-orange-500/30">
-                        <i class="fa-solid fa-comments"></i>
-                    </div>
-                    <div class="glass-card-purple rounded-xl sm:rounded-2xl p-3.5 sm:p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
-                        <h4 class="text-xs sm:text-sm font-black text-white mb-1">تواصل مباشر</h4>
-                        <p class="text-[10px] sm:text-[11px] text-gray-300">نرد بسرعة ونفهم احتياجك بدقة دون وسطاء</p>
-                    </div>
-                </div>
+                <!-- Center Horizontal Connected Line -->
+                <div class="hidden md:block absolute top-7 left-14 right-14 h-1 bg-gradient-to-r from-brand-orange via-brand-peach to-brand-orange opacity-40 z-0"></div>
 
-                <!-- Feature 2 -->
-                <div class="flex flex-col items-center text-center space-y-2.5 sm:space-y-3">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-base sm:text-lg font-black shadow-lg shadow-orange-500/30">
-                        <i class="fa-solid fa-bolt"></i>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 relative z-10">
+                    
+                    <!-- Feature 1: تواصل مباشر -->
+                    <div class="flex flex-col items-center text-center space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark flex items-center justify-center text-xl font-black shadow-lg shadow-orange-500/30 ring-4 ring-[#16062C]">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-black text-white">تواصل مباشر</h4>
+                            <p class="text-[11px] text-gray-300 mt-1">نرد بسرعة ونفهم احتياجك</p>
+                        </div>
                     </div>
-                    <div class="glass-card-purple rounded-xl sm:rounded-2xl p-3.5 sm:p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
-                        <h4 class="text-xs sm:text-sm font-black text-white mb-1">تنفيذ سريع</h4>
-                        <p class="text-[10px] sm:text-[11px] text-gray-300">خطوات واضحة وجداول تسليم دقيقة بدون تأخير</p>
-                    </div>
-                </div>
 
-                <!-- Feature 3 -->
-                <div class="flex flex-col items-center text-center space-y-2.5 sm:space-y-3">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-base sm:text-lg font-black shadow-lg shadow-orange-500/30">
-                        <i class="fa-solid fa-bullseye"></i>
+                    <!-- Feature 2: تنفيذ سريع -->
+                    <div class="flex flex-col items-center text-center space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark flex items-center justify-center text-xl font-black shadow-lg shadow-orange-500/30 ring-4 ring-[#16062C]">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-black text-white">تنفيذ سريع</h4>
+                            <p class="text-[11px] text-gray-300 mt-1">خطوات واضحة دون تأخير</p>
+                        </div>
                     </div>
-                    <div class="glass-card-purple rounded-xl sm:rounded-2xl p-3.5 sm:p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
-                        <h4 class="text-xs sm:text-sm font-black text-white mb-1">نحقق الهدف</h4>
-                        <p class="text-[10px] sm:text-[11px] text-gray-300">نتيجة ملموسة وعائد حقيقي لنمو علامتك</p>
-                    </div>
-                </div>
 
-                <!-- Feature 4 -->
-                <div class="flex flex-col items-center text-center space-y-2.5 sm:space-y-3">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-base sm:text-lg font-black shadow-lg shadow-orange-500/30">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <!-- Feature 3: تحقيق الهدف -->
+                    <div class="flex flex-col items-center text-center space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark flex items-center justify-center text-xl font-black shadow-lg shadow-orange-500/30 ring-4 ring-[#16062C]">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-black text-white">تحقيق الهدف</h4>
+                            <p class="text-[11px] text-gray-300 mt-1">خطة ملموسة لعلامتك</p>
+                        </div>
                     </div>
-                    <div class="glass-card-purple rounded-xl sm:rounded-2xl p-3.5 sm:p-5 w-full border border-purple-800/60 hover:border-brand-orange transition">
-                        <h4 class="text-xs sm:text-sm font-black text-white mb-1">إبداع بلا حدود</h4>
-                        <p class="text-[10px] sm:text-[11px] text-gray-300">أفكار استثنائية تصنع الفارق في السوق الرقمي</p>
+
+                    <!-- Feature 4: إبداع بلا حدود -->
+                    <div class="flex flex-col items-center text-center space-y-3">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF7A00] to-brand-orange text-brand-dark flex items-center justify-center text-xl font-black shadow-lg shadow-orange-500/30 ring-4 ring-[#16062C]">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-black text-white">إبداع بلا حدود</h4>
+                            <p class="text-[11px] text-gray-300 mt-1">أفكار تسويقية مبتكرة</p>
+                        </div>
                     </div>
+
                 </div>
 
             </div>
 
-        </div>
+            <!-- Golden Action CTA Button -->
+            <div class="pt-2 relative z-10">
+                <a href="{{ route('public.contact') }}" 
+                   class="inline-flex items-center gap-3 px-10 py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/40 group">
+                    <span>تواصل معنا الآن</span>
+                    <i class="fa-solid fa-paper-plane group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                </a>
+            </div>
 
-        <!-- Big CTA Button -->
-        <div class="pt-2 sm:pt-4">
-            <a href="{{ route('public.contact') }}" 
-               class="inline-flex items-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs sm:text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 group">
-                <i class="fa-solid fa-paper-plane group-hover:rotate-12 transition-transform"></i>
-                <span>تواصل معنا الآن</span>
-            </a>
         </div>
 
     </div>
