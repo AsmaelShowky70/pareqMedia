@@ -29,6 +29,41 @@
                         cairo: ['Cairo', 'sans-serif'],
                     },
                     colors: {
+                        purple: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#8b6cf7',
+                            500: '#3E24C5',
+                            600: '#3E24C5',
+                            700: '#3F147E',
+                            800: '#3F147E',
+                            900: '#1B082B',
+                            950: '#0E031A',
+                        },
+                        violet: {
+                            400: '#8b6cf7',
+                            500: '#3E24C5',
+                            600: '#3E24C5',
+                            700: '#3F147E',
+                            800: '#3F147E',
+                            900: '#1B082B',
+                        },
+                        amber: {
+                            300: '#FFD199',
+                            400: '#FFBA70',
+                            500: '#FF9420',
+                            600: '#BC6200',
+                            700: '#944E00',
+                        },
+                        orange: {
+                            300: '#FFD199',
+                            400: '#FFBA70',
+                            500: '#FF9420',
+                            600: '#FF7A00',
+                            700: '#BC6200',
+                        },
                         brand: {
                             black: '#000000',
                             void: '#07010e',
@@ -37,7 +72,7 @@
                             darker: '#0a0213',
                             deep: '#140626',
                             card: '#1B082B',
-                            cardHover: '#230b38',
+                            cardHover: '#260B46',
                             plum: '#1B082B',
                             violet: '#3F147E',
                             electric: '#3E24C5',
@@ -84,15 +119,21 @@
             --primary-purple: #3F147E;
             --primary-night: #1B082B;
             --primary-black: #000000;
-            --orange-glow: rgba(255, 148, 32, 0.55);
-            --electric-glow: rgba(62, 36, 197, 0.5);
-            --purple-glow: rgba(63, 20, 126, 0.5);
+            --orange-glow: rgba(255, 148, 32, 0.6);
+            --electric-glow: rgba(62, 36, 197, 0.6);
+            --purple-glow: rgba(63, 20, 126, 0.6);
         }
 
         body { 
             font-family: 'Cairo', sans-serif; 
-            background-color: #07010e; 
-            color: #F8FAFC;
+            background-color: #080210; 
+            background-image: 
+                radial-gradient(at 15% 15%, rgba(62, 36, 197, 0.25) 0px, transparent 55%),
+                radial-gradient(at 85% 20%, rgba(255, 148, 32, 0.20) 0px, transparent 50%),
+                radial-gradient(at 80% 75%, rgba(63, 20, 126, 0.30) 0px, transparent 60%),
+                radial-gradient(at 20% 85%, rgba(188, 98, 0, 0.18) 0px, transparent 55%);
+            background-attachment: fixed;
+            color: #FFFFFF;
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
@@ -102,14 +143,14 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 450px;
-            height: 450px;
+            width: 480px;
+            height: 480px;
             border-radius: 50%;
             pointer-events: none;
             z-index: 1;
             transform: translate(-50%, -50%);
-            background: radial-gradient(circle, rgba(255, 148, 32, 0.16) 0%, rgba(62, 36, 197, 0.18) 40%, transparent 70%);
-            filter: blur(40px);
+            background: radial-gradient(circle, rgba(255, 148, 32, 0.22) 0%, rgba(62, 36, 197, 0.25) 45%, transparent 75%);
+            filter: blur(45px);
             opacity: 0;
             transition: opacity 0.6s ease;
         }
@@ -122,10 +163,10 @@
             position: fixed;
             top: 0;
             left: 0;
-            height: 3px;
+            height: 3.5px;
             width: 0%;
             background: linear-gradient(90deg, #3E24C5 0%, #FF9420 50%, #FFBA70 100%);
-            box-shadow: 0 0 16px rgba(255, 148, 32, 0.85), 0 0 24px rgba(62, 36, 197, 0.7);
+            box-shadow: 0 0 18px rgba(255, 148, 32, 0.95), 0 0 28px rgba(62, 36, 197, 0.9);
             z-index: 9999;
             transition: width 0.1s ease-out;
         }
@@ -140,7 +181,7 @@
         }
 
         .purple-gradient-text {
-            background: linear-gradient(135deg, #FFFFFF 0%, #B8A8FF 35%, #3E24C5 75%, #3F147E 100%);
+            background: linear-gradient(135deg, #FFFFFF 0%, #C4B5FD 25%, #3E24C5 75%, #3F147E 100%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -157,7 +198,7 @@
             position: absolute;
             border-radius: 50%;
             pointer-events: none;
-            filter: blur(130px);
+            filter: blur(90px);
             z-index: 0;
             will-change: transform;
         }
@@ -175,8 +216,8 @@
         }
 
         @keyframes pulseGlow {
-            0%, 100% { opacity: 0.65; transform: scale(1); }
-            50% { opacity: 0.95; transform: scale(1.05); }
+            0%, 100% { opacity: 0.75; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.08); }
         }
 
         @keyframes radarWave {
@@ -216,16 +257,16 @@
 
         /* Glassmorphism Classes */
         .glass-card-purple {
-            background: linear-gradient(145deg, rgba(27, 8, 43, 0.90) 0%, rgba(14, 3, 24, 0.96) 100%);
+            background: linear-gradient(145deg, rgba(27, 8, 43, 0.94) 0%, rgba(63, 20, 126, 0.35) 50%, rgba(14, 3, 24, 0.98) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(62, 36, 197, 0.38);
-            box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.85), 0 0 25px rgba(62, 36, 197, 0.12);
+            border: 1.5px solid rgba(62, 36, 197, 0.55);
+            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(62, 36, 197, 0.25);
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .glass-card-purple:hover {
-            border-color: rgba(255, 148, 32, 0.75);
-            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 148, 32, 0.25), 0 0 45px rgba(62, 36, 197, 0.25);
+            border-color: #FF9420;
+            box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 148, 32, 0.4), 0 0 50px rgba(62, 36, 197, 0.35);
             transform: translateY(-4px);
         }
 
@@ -234,13 +275,13 @@
             position: relative;
             z-index: 1;
             border-radius: 1.5rem;
-            padding: 2px;
-            background: linear-gradient(135deg, rgba(255, 148, 32, 0.75), rgba(62, 36, 197, 0.85), rgba(255, 186, 112, 0.75));
-            box-shadow: 0 0 35px rgba(255, 148, 32, 0.25), 0 0 60px rgba(62, 36, 197, 0.3);
+            padding: 2.5px;
+            background: linear-gradient(135deg, #FF9420, #3E24C5, #FFBA70, #3F147E);
+            box-shadow: 0 0 45px rgba(62, 36, 197, 0.45), 0 0 70px rgba(255, 148, 32, 0.35);
             transition: all 0.4s ease;
         }
         .conic-glow-border:hover {
-            box-shadow: 0 0 45px rgba(255, 148, 32, 0.45), 0 0 85px rgba(62, 36, 197, 0.45);
+            box-shadow: 0 0 55px rgba(255, 148, 32, 0.55), 0 0 95px rgba(62, 36, 197, 0.55);
             transform: translateY(-4px);
         }
 
@@ -326,14 +367,14 @@
 
     <!-- Ambient Background Lighting Layer (Fixed viewport layer with vibrant Bariq electric purple & warm amber glow) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="glow-orb w-[650px] h-[650px] bg-[#3E24C5]/20 top-28 right-1/4 animate-float-slow"></div>
-        <div class="glow-orb w-[550px] h-[550px] bg-[#FF9420]/15 top-1/3 -left-36 animate-float-reverse"></div>
-        <div class="glow-orb w-[700px] h-[700px] bg-[#3F147E]/30 top-2/3 -right-32 animate-float-slow"></div>
-        <div class="glow-orb w-[550px] h-[550px] bg-[#BC6200]/15 -bottom-20 left-1/3 animate-pulse-glow"></div>
+        <div class="glow-orb w-[850px] h-[850px] bg-[#3E24C5]/30 top-10 right-1/4 animate-float-slow"></div>
+        <div class="glow-orb w-[750px] h-[750px] bg-[#FF9420]/22 top-1/3 -left-24 animate-float-reverse"></div>
+        <div class="glow-orb w-[900px] h-[900px] bg-[#3F147E]/40 top-2/3 -right-24 animate-float-slow"></div>
+        <div class="glow-orb w-[750px] h-[750px] bg-[#BC6200]/22 -bottom-20 left-1/3 animate-pulse-glow"></div>
     </div>
 
     <!-- UNIVERSAL HEADER & GLASSMORPHIC NAVBAR (شريط تنقل احترافي مع دعم الصفحات المنفصلة) -->
-    <header class="fixed top-0 inset-x-0 z-50 bg-[#08020F]/90 backdrop-blur-2xl border-b border-purple-900/30 transition-all duration-300">
+    <header class="fixed top-0 inset-x-0 z-50 bg-[#1B082B]/85 backdrop-blur-2xl border-b-2 border-[#3E24C5]/40 shadow-[0_4px_30px_rgba(62,36,197,0.25)] transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
             <!-- Brand Identity Logo (Clean, crisp logo with PARIQ AGENCY only, zero glow or glare) -->
@@ -387,9 +428,9 @@
             <!-- Action Buttons -->
             <div class="hidden sm:flex items-center gap-3">
                 <a href="{{ route('public.contact') }}" 
-                   class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-xs font-black rounded-xl group bg-gradient-to-br from-brand-orange via-brand-amber to-brand-gold shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 transition-all duration-300">
-                    <span class="relative px-5 py-2.5 transition-all ease-in duration-200 bg-brand-dark/30 rounded-[10px] group-hover:bg-opacity-0 text-white flex items-center gap-2">
-                        <i class="fa-solid fa-bolt text-brand-gold group-hover:rotate-12 transition-transform"></i>
+                   class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-xs font-black rounded-xl group bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] shadow-[0_0_20px_rgba(255,148,32,0.4)] hover:shadow-[0_0_35px_rgba(255,148,32,0.7)] transition-all duration-300 active:scale-95">
+                    <span class="relative px-5 py-2.5 transition-all ease-in duration-200 bg-[#1B082B] rounded-[10px] group-hover:bg-opacity-0 text-white flex items-center gap-2 font-bold">
+                        <i class="fa-solid fa-bolt text-[#FF9420] group-hover:rotate-12 transition-transform"></i>
                         <span>طلب استشارة مجانية</span>
                     </span>
                 </a>
@@ -434,7 +475,7 @@
     </main>
 
     <!-- UNIVERSAL FOOTER -->
-    <footer class="bg-brand-void border-t border-purple-900/50 py-16 px-4 sm:px-6 lg:px-8 relative z-10 text-xs text-gray-400 mt-auto">
+    <footer class="bg-gradient-to-b from-[#080210] via-[#1B082B] to-[#000000] border-t-2 border-[#3E24C5]/40 shadow-[0_-10px_40px_rgba(62,36,197,0.2)] py-16 px-4 sm:px-6 lg:px-8 relative z-10 text-xs text-gray-300 mt-auto">
         <div class="max-w-7xl mx-auto space-y-12">
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-right">
@@ -444,24 +485,24 @@
                     <div class="flex items-center gap-3">
                         <img src="{{ asset('images/logo.png') }}" alt="بريق" class="h-10 w-auto object-contain">
                         <div>
-                            <div class="text-xl font-black gold-gradient-text">بريق للإعلام والتصميم</div>
-                            <div class="text-[10px] text-brand-amber font-bold">PARIQ CREATIVE AGENCY</div>
+                            <div class="text-xl font-black text-white">بريق <span class="text-[#FF9420]">للإعلام والتصميم</span></div>
+                            <div class="text-[10px] text-[#FFBA70] font-bold">PARIQ CREATIVE AGENCY</div>
                         </div>
                     </div>
-                    <p class="text-xs text-gray-400 leading-relaxed">
+                    <p class="text-xs text-gray-300 leading-relaxed">
                         وكالة إبداعية متكاملة متخصصة في التصوير السينمائي، المونتاج فائق السرعة والجودة، تصميم الهويات البصرية، وإدارة الحملات الإعلانية القائمة على أعلى عائد استثماري.
                     </p>
                     <div class="flex items-center gap-2.5 text-base">
-                        <a href="https://wa.me/201062330838?text=مرحباً%20بريق" target="_blank" class="w-9 h-9 rounded-xl bg-purple-950/60 hover:bg-emerald-600 hover:text-white border border-purple-800/40 flex items-center justify-center transition text-gray-300">
+                        <a href="https://wa.me/201062330838?text=مرحباً%20بريق" target="_blank" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-emerald-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-emerald-400 flex items-center justify-center transition shadow-lg text-white">
                             <i class="fa-brands fa-whatsapp"></i>
                         </a>
-                        <a href="https://facebook.com" target="_blank" class="w-9 h-9 rounded-xl bg-purple-950/60 hover:bg-blue-600 hover:text-white border border-purple-800/40 flex items-center justify-center transition text-gray-300">
+                        <a href="https://facebook.com" target="_blank" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-blue-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-blue-400 flex items-center justify-center transition shadow-lg text-white">
                             <i class="fa-brands fa-facebook-f"></i>
                         </a>
-                        <a href="https://instagram.com" target="_blank" class="w-9 h-9 rounded-xl bg-purple-950/60 hover:bg-pink-600 hover:text-white border border-purple-800/40 flex items-center justify-center transition text-gray-300">
+                        <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-pink-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-pink-400 flex items-center justify-center transition shadow-lg text-white">
                             <i class="fa-brands fa-instagram"></i>
                         </a>
-                        <a href="https://tiktok.com" target="_blank" class="w-9 h-9 rounded-xl bg-purple-950/60 hover:bg-white hover:text-black border border-purple-800/40 flex items-center justify-center transition text-gray-300">
+                        <a href="https://tiktok.com" target="_blank" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-white hover:text-black border-2 border-[#3E24C5]/60 hover:border-white flex items-center justify-center transition shadow-lg text-white">
                             <i class="fa-brands fa-tiktok"></i>
                         </a>
                     </div>
@@ -469,46 +510,55 @@
 
                 <!-- Navigation Links -->
                 <div class="space-y-3">
-                    <h4 class="text-sm font-black text-white border-b border-purple-800/40 pb-2">روابط المنصة الرئيسية</h4>
+                    <h4 class="text-sm font-black text-white border-b-2 border-[#3E24C5]/50 pb-2 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-[#FF9420]"></span>
+                        <span>روابط المنصة الرئيسية</span>
+                    </h4>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="{{ route('home') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> الصفحة الرئيسية</a></li>
-                        <li><a href="{{ route('public.services') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> كافة الخدمات</a></li>
-                        <li><a href="{{ route('public.portfolio') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> أعمالنا المعتمدة</a></li>
-                        <li><a href="{{ route('public.process') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> منهجية العمل ومن نحن</a></li>
-                        <li><a href="{{ route('public.contact') }}" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-angle-left text-[10px] text-brand-amber"></i> طلب استشارة وعرض سعر</a></li>
+                        <li><a href="{{ route('home') }}" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-angle-left text-[10px] text-[#FF9420]"></i> الصفحة الرئيسية</a></li>
+                        <li><a href="{{ route('public.services') }}" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-angle-left text-[10px] text-[#FF9420]"></i> كافة الخدمات</a></li>
+                        <li><a href="{{ route('public.portfolio') }}" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-angle-left text-[10px] text-[#FF9420]"></i> أعمالنا المعتمدة</a></li>
+                        <li><a href="{{ route('public.process') }}" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-angle-left text-[10px] text-[#FF9420]"></i> منهجية العمل ومن نحن</a></li>
+                        <li><a href="{{ route('public.contact') }}" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-angle-left text-[10px] text-[#FF9420]"></i> طلب استشارة وعرض سعر</a></li>
                     </ul>
                 </div>
 
                 <!-- Creative Services -->
                 <div class="space-y-3">
-                    <h4 class="text-sm font-black text-white border-b border-purple-800/40 pb-2">أبرز خدماتنا</h4>
+                    <h4 class="text-sm font-black text-white border-b-2 border-[#3E24C5]/50 pb-2 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-[#3E24C5]"></span>
+                        <span>أبرز خدماتنا</span>
+                    </h4>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="{{ route('public.services') }}#shooting" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-video text-[10px] text-amber-400"></i> تصوير سينمائي 4K</a></li>
-                        <li><a href="{{ route('public.services') }}#editing" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-film text-[10px] text-purple-400"></i> مونتاج ريلز وبرومو سريع</a></li>
-                        <li><a href="{{ route('public.services') }}#design" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-bezier-curve text-[10px] text-yellow-400"></i> تصميم هويات وأغلفة CTR</a></li>
-                        <li><a href="{{ route('public.services') }}#ads" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-chart-line text-[10px] text-emerald-400"></i> إعلانات ممولة وميديا باينج</a></li>
-                        <li><a href="{{ route('public.services') }}#social" class="hover:text-brand-gold transition flex items-center gap-2"><i class="fa-solid fa-share-nodes text-[10px] text-orange-400"></i> إدارة حسابات السوشيال ميديا</a></li>
+                        <li><a href="{{ route('public.services') }}#shooting" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-video text-[10px] text-[#FFBA70]"></i> تصوير سينمائي 4K</a></li>
+                        <li><a href="{{ route('public.services') }}#editing" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-film text-[10px] text-[#3E24C5]"></i> مونتاج ريلز وبرومو سريع</a></li>
+                        <li><a href="{{ route('public.services') }}#design" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-bezier-curve text-[10px] text-[#FF9420]"></i> تصميم هويات وأغلفة CTR</a></li>
+                        <li><a href="{{ route('public.services') }}#ads" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-chart-line text-[10px] text-[#FFBA70]"></i> إعلانات ممولة وميديا باينج</a></li>
+                        <li><a href="{{ route('public.services') }}#social" class="hover:text-[#FF9420] transition flex items-center gap-2 text-gray-200"><i class="fa-solid fa-share-nodes text-[10px] text-[#BC6200]"></i> إدارة حسابات السوشيال ميديا</a></li>
                     </ul>
                 </div>
 
                 <!-- Contact & Regional Coverage -->
                 <div class="space-y-3">
-                    <h4 class="text-sm font-black text-white border-b border-purple-800/40 pb-2">التواصل والتغطية الإقليمية</h4>
-                    <div class="space-y-2 text-xs text-gray-300">
+                    <h4 class="text-sm font-black text-white border-b-2 border-[#3E24C5]/50 pb-2 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-[#FFBA70]"></span>
+                        <span>التواصل والتغطية الإقليمية</span>
+                    </h4>
+                    <div class="space-y-2 text-xs text-gray-200">
                         <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-phone text-brand-amber text-xs"></i>
-                            <span dir="ltr" class="font-mono font-bold">+20 106 233 0838</span>
+                            <i class="fa-solid fa-phone text-[#FF9420] text-xs"></i>
+                            <span dir="ltr" class="font-mono font-bold text-white">+20 106 233 0838</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-envelope text-brand-amber text-xs"></i>
-                            <span class="font-mono">contact@pariqagency.com</span>
+                            <i class="fa-solid fa-envelope text-[#FF9420] text-xs"></i>
+                            <span class="font-mono text-white">contact@pariqagency.com</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-globe text-brand-amber text-xs"></i>
+                            <i class="fa-solid fa-globe text-[#3E24C5] text-xs"></i>
                             <span>مصر • السعودية • الإمارات • الأردن • قطر • عمان</span>
                         </div>
                         <div class="pt-2">
-                            <a href="{{ route('public.contact') }}" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-brand-yellow/15 text-brand-gold hover:bg-brand-yellow hover:text-brand-dark transition font-bold border border-brand-yellow/30 text-[11px]">
+                            <a href="{{ route('public.contact') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF9420] to-[#FFBA70] text-black font-black hover:brightness-110 transition text-[11px] shadow-[0_0_20px_rgba(255,148,32,0.4)]">
                                 <i class="fa-solid fa-comment-dots"></i>
                                 <span>حجز جلسة استشارة فورية</span>
                             </a>
@@ -519,16 +569,16 @@
             </div>
 
             <!-- Bottom Copyright -->
-            <div class="pt-8 border-t border-purple-900/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-right">
-                <div class="text-[11px] text-gray-400">
-                    مفتاح نجاحك في التسويق والإبداع • جميع الحقوق محفوظة © {{ date('Y') }} وكالة بريق للإعلام والتصميم.
+            <div class="pt-8 border-t border-[#3E24C5]/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-right">
+                <div class="text-[11px] text-gray-300">
+                    مفتاح نجاحك في التسويق والإبداع • جميع الحقوق محفوظة © {{ date('Y') }} <span class="text-white font-bold">وكالة بريق للإعلام والتصميم</span>.
                 </div>
-                <div class="flex items-center gap-4 text-[11px] text-gray-400">
-                    <a href="{{ route('public.services') }}" class="hover:text-brand-gold">خدماتنا</a>
+                <div class="flex items-center gap-4 text-[11px] text-gray-300">
+                    <a href="{{ route('public.services') }}" class="hover:text-[#FF9420] transition">خدماتنا</a>
                     <span>•</span>
-                    <a href="{{ route('public.portfolio') }}" class="hover:text-brand-gold">أعمالنا</a>
+                    <a href="{{ route('public.portfolio') }}" class="hover:text-[#FF9420] transition">أعمالنا</a>
                     <span>•</span>
-                    <a href="{{ route('public.contact') }}" class="hover:text-brand-gold">تواصل معنا</a>
+                    <a href="{{ route('public.contact') }}" class="hover:text-[#FF9420] transition">تواصل معنا</a>
                 </div>
             </div>
 

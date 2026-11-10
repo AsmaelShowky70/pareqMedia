@@ -12,12 +12,13 @@
     
     <!-- Animated Interactive Ambient Mesh / Particle Canvas in Background (GoMedia Style) -->
     <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <canvas id="hero-particle-canvas" class="w-full h-full opacity-60"></canvas>
-        <div class="absolute inset-0 bg-radial-gradient from-transparent via-[#08020F]/60 to-[#06010D]"></div>
+        <canvas id="hero-particle-canvas" class="w-full h-full opacity-70"></canvas>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-15%,rgba(62,36,197,0.40),rgba(63,20,126,0.22)_45%,transparent_80%)]"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#080210]/60 to-[#080210]"></div>
         
-        <!-- Ambient Glowing Rings -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full border border-amber-500/10 animate-pulse-glow pointer-events-none"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[950px] h-[950px] rounded-full border border-purple-500/10 pointer-events-none"></div>
+        <!-- Ambient Glowing Rings with Vibrant Electric Indigo & Brand Orange -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full border-2 border-[#3E24C5]/35 shadow-[0_0_60px_rgba(62,36,197,0.30)] animate-pulse-glow pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[950px] h-[950px] rounded-full border-2 border-[#FF9420]/25 shadow-[0_0_60px_rgba(255,148,32,0.20)] pointer-events-none"></div>
     </div>
 
     <div class="max-w-7xl mx-auto relative z-10 w-full">
@@ -38,53 +39,52 @@
             <div class="lg:col-span-7 space-y-6 text-center lg:text-right">
                 
                 <!-- Slogan Pill with Radiant Brand Colors (بريق مفتاح نجاحك في التسويق) -->
-                <div class="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#18082B]/90 border border-brand-orange/40 text-white text-[11px] sm:text-sm font-extrabold shadow-[0_0_25px_rgba(255,148,32,0.3)] animate-pulse-glow max-w-full">
-                    <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-brand-orange animate-ping shrink-0"></span>
-                    <span class="text-brand-orange text-xs sm:text-base">✦</span>
-                    <span class="tracking-wide">بريق ، مفتاح نجاحك في التسويق</span>
-                    <span class="text-brand-orange text-xs sm:text-base">✦</span>
+                <div class="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#1B082B]/95 border-2 border-[#FF9420]/70 text-white text-[11px] sm:text-sm font-extrabold shadow-[0_0_30px_rgba(255,148,32,0.45)] animate-pulse-glow max-w-full">
+                    <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FF9420] animate-ping shrink-0"></span>
+                    <span class="text-[#FF9420] text-xs sm:text-base">✦</span>
+                    <span class="tracking-wide text-white">بريق ، مفتاح نجاحك في التسويق</span>
+                    <span class="text-[#FF9420] text-xs sm:text-base">✦</span>
                 </div>
 
-                <!-- Main Headline (مع حل مشكلة قطع كلمة التسويق من الأسفل نهائياً) -->
+                <!-- Main Headline -->
                 <div class="space-y-3 sm:space-y-4">
                     <h1 class="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-normal tracking-tight">
                         بريق مفتاح نجاحك 
-                        <span class="gold-gradient-text block mt-1 sm:mt-2 text-4xl sm:text-6xl lg:text-7xl xl:text-8xl leading-normal pb-3 overflow-visible">في التسويق</span>
+                        <span class="bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#FF9420] bg-clip-text text-transparent block mt-1 sm:mt-2 text-4xl sm:text-6xl lg:text-7xl xl:text-8xl leading-normal pb-3 overflow-visible drop-shadow-[0_4px_30px_rgba(255,148,32,0.45)]">في التسويق</span>
                     </h1>
 
                     <!-- Subtitle under slogan in smaller font as requested -->
-                    <p class="text-base sm:text-xl lg:text-2xl text-gray-200 font-bold max-w-2xl leading-relaxed pt-1">
+                    <p class="text-base sm:text-xl lg:text-2xl text-gray-100 font-bold max-w-2xl leading-relaxed pt-1">
                         نصنع لعلامتك التجارية بريقاً استثنائياً في العالم الرقمي
                     </p>
-                    <p class="text-xs sm:text-sm text-gray-400 max-w-xl leading-relaxed font-normal">
+                    <p class="text-xs sm:text-sm text-gray-300 max-w-xl leading-relaxed font-normal">
                         منظومة إبداعية متكاملة تجمع بين التصوير السينمائي، المونتاج فائق الجاذبية، وتصميم الهويات البصرية، وإدارة الحملات الإعلانية القائمة على أعلى عائد استثماري.
                     </p>
                 </div>
 
                 <!-- Hero Action Buttons & Scroll Indicator -->
-                <!-- Actions & Scroll Indicator (اسحب للأسفل بجانب مشاهدة أعمالنا في نفس السطر) -->
                 <div class="pt-2">
                     <div class="flex flex-wrap items-center lg:justify-start justify-center gap-3 sm:gap-4 w-full">
-                        <!-- زر تواصل معنا -->
+                        <!-- زر تواصل معنا (Glowing Brand Gradient) -->
                         <a href="{{ route('public.contact') }}" 
-                           class="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs sm:text-sm hover:brightness-110 active:scale-95 transition shadow-2xl shadow-orange-500/30 flex items-center justify-center gap-2.5 group">
+                           class="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black text-xs sm:text-sm hover:brightness-110 active:scale-95 transition shadow-[0_0_35px_rgba(255,148,32,0.55)] flex items-center justify-center gap-2.5 group">
                             <span>تواصل معنا الآن</span>
                             <i class="fa-solid fa-paper-plane text-xs group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
                         </a>
 
-                        <!-- زر مشاهدة أعمالنا -->
+                        <!-- زر مشاهدة أعمالنا (Electric Indigo Border & Ambient Night BG) -->
                         <a href="{{ route('public.portfolio') }}" 
-                           class="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-[#19092E]/80 hover:bg-[#250C44] border-2 border-brand-orange/50 hover:border-brand-orange text-white font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2 backdrop-blur-md group">
-                            <span class="w-6 h-6 rounded-full bg-brand-orange/20 text-brand-orange flex items-center justify-center group-hover:scale-110 transition-transform">
+                           class="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-[#1B082B]/90 hover:bg-[#250C44] border-2 border-[#3E24C5] hover:border-[#FF9420] text-white font-bold text-xs sm:text-sm transition shadow-[0_0_25px_rgba(62,36,197,0.35)] flex items-center justify-center gap-2 backdrop-blur-md group">
+                            <span class="w-6 h-6 rounded-full bg-[#FF9420]/20 text-[#FF9420] flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <i class="fa-solid fa-play text-[10px]"></i>
                             </span>
                             <span>مشاهدة أعمالنا</span>
                         </a>
 
                         <!-- اسحب للأسفل بجانب زر مشاهدة أعمالنا -->
-                        <a href="#video-showcase" class="inline-flex items-center gap-2 px-3 py-2 text-xs text-gray-400 hover:text-brand-orange transition group shrink-0">
-                            <div class="w-5 h-8 rounded-full border-2 border-gray-400 group-hover:border-brand-orange flex items-start justify-center p-1 transition-colors">
-                                <span class="w-1.5 h-2 rounded-full bg-brand-orange animate-bounce"></span>
+                        <a href="#video-showcase" class="inline-flex items-center gap-2 px-3 py-2 text-xs text-gray-300 hover:text-[#FF9420] transition group shrink-0">
+                            <div class="w-5 h-8 rounded-full border-2 border-gray-400 group-hover:border-[#FF9420] flex items-start justify-center p-1 transition-colors">
+                                <span class="w-1.5 h-2 rounded-full bg-[#FF9420] animate-bounce"></span>
                             </div>
                             <span class="font-bold tracking-wider text-[11px] whitespace-nowrap">اسحب للأسفل</span>
                         </a>
@@ -93,12 +93,12 @@
 
             </div>
 
-            <!-- Left Column: Official Pariq Logo without circular container and without background (بدون خلفية وبدون شكل دائري) -->
+            <!-- Left Column: Official Pariq Logo without circular container and without background -->
             <div class="lg:col-span-5 flex justify-center items-center relative py-6 lg:py-0">
                 <div class="relative w-64 sm:w-80 lg:w-[420px] flex items-center justify-center group animate-float-slow">
                     
                     <!-- Ambient Soft Warm Glow Behind Logo -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-orange/25 via-amber-500/15 to-purple-600/10 blur-3xl pointer-events-none scale-90"></div>
+                    <div class="absolute inset-0 bg-gradient-to-tr from-[#FF9420]/30 via-[#3E24C5]/25 to-[#3F147E]/20 blur-3xl pointer-events-none scale-90"></div>
 
                     <!-- Clean Transparent Logo without background or circular container -->
                     <img src="{{ asset('images/logo.png') }}" 
@@ -188,19 +188,19 @@
         
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             <!-- Card 1: Projects (Featured active orange border/glow as in Image 2) -->
-            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/90 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border border-[#FF9420] shadow-[0_0_25px_rgba(255,148,32,0.22)]">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FF9420]/15 border border-[#FF9420]/40 text-[#FF9420] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/95 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border-2 border-[#FF9420] shadow-[0_0_35px_rgba(255,148,32,0.45)]">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FF9420]/25 border border-[#FF9420] text-[#FF9420] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#FF9420] flex items-center justify-center font-mono">
                     <span>+</span><span x-text="projects">{{ $stats['projects_count'] ?? 480 }}</span>
                 </div>
-                <div class="text-[11px] sm:text-xs text-gray-200 mt-1 font-bold">{{ $stats['projects_label'] ?? 'مشروع مكتمل بنجاح' }}</div>
+                <div class="text-[11px] sm:text-xs text-white mt-1 font-bold">{{ $stats['projects_label'] ?? 'مشروع مكتمل بنجاح' }}</div>
             </div>
 
             <!-- Card 2: Clients -->
-            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/90 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border border-[#3E24C5]/35 hover:border-[#FF9420] hover:shadow-[0_0_25px_rgba(255,148,32,0.2)]">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#3E24C5]/20 border border-[#3E24C5]/50 text-[#FFBA70] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/95 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border-2 border-[#3E24C5]/70 hover:border-[#FF9420] shadow-[0_0_25px_rgba(62,36,197,0.35)] hover:shadow-[0_0_35px_rgba(255,148,32,0.4)]">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#3E24C5]/30 border border-[#3E24C5] text-[#FFBA70] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-users"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
@@ -210,8 +210,8 @@
             </div>
 
             <!-- Card 3: Years -->
-            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/90 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border border-[#3E24C5]/35 hover:border-[#FF9420] hover:shadow-[0_0_25px_rgba(255,148,32,0.2)]">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#BC6200]/20 border border-[#FFBA70]/40 text-[#FFBA70] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/95 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border-2 border-[#3E24C5]/70 hover:border-[#FF9420] shadow-[0_0_25px_rgba(62,36,197,0.35)] hover:shadow-[0_0_35px_rgba(255,148,32,0.4)]">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#BC6200]/30 border border-[#FFBA70]/70 text-[#FFBA70] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-award"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#FFBA70] flex items-center justify-center font-mono">
@@ -221,8 +221,8 @@
             </div>
 
             <!-- Card 4: Team -->
-            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/90 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border border-[#3E24C5]/35 hover:border-[#FF9420] hover:shadow-[0_0_25px_rgba(255,148,32,0.2)]">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FF9420]/15 border border-[#FF9420]/40 text-[#FF9420] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/95 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border-2 border-[#3E24C5]/70 hover:border-[#FF9420] shadow-[0_0_25px_rgba(62,36,197,0.35)] hover:shadow-[0_0_35px_rgba(255,148,32,0.4)]">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FF9420]/25 border border-[#FF9420] text-[#FF9420] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-user-group"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
@@ -239,15 +239,15 @@
      4. SUCCESS PARTNERS DUAL REVERSE MARQUEE (لوجوهات شركاء النجاح بحركة عكسية)
      (سكشن مدعوم لحظياً من لوحة التحكم CMS مع دوران وتلوين عند الوقوف)
      ========================================================================= -->
-<section class="py-20 bg-gradient-to-b from-[#F8FAFC] via-white to-[#F1F5F9] text-slate-800 relative z-10 overflow-hidden border-y border-slate-200">
+<section class="py-20 bg-gradient-to-b from-[#080210] via-[#1B082B] to-[#0A0214] text-white relative z-10 overflow-hidden border-y-2 border-[#3E24C5]/50 shadow-[0_0_50px_rgba(62,36,197,0.25)]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center space-y-3">
-        <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-orange-100 border border-orange-200">
+        <span class="text-xs font-black text-[#FF9420] uppercase tracking-widest px-4 py-1.5 rounded-full bg-[#FF9420]/15 border border-[#FF9420]/50 shadow-[0_0_15px_rgba(255,148,32,0.3)]">
             شركاء النجاح المعتمدون
         </span>
-        <h2 class="text-3xl sm:text-5xl font-black text-slate-900">
+        <h2 class="text-3xl sm:text-5xl font-black text-white">
             علامات تجارية كبرى وضعت ثقتها في بريق
         </h2>
-        <p class="text-xs sm:text-sm text-slate-600 max-w-2xl mx-auto">
+        <p class="text-xs sm:text-sm text-gray-300 max-w-2xl mx-auto">
             نتشرف بالعمل مع رواد الأعمال وكبرى الشركات والمؤسسات الطبية والتعليمية في مصر والسعودية والوطن العربي
         </p>
     </div>
@@ -307,17 +307,17 @@
         <div class="marquee-reverse-track flex items-center gap-6 whitespace-nowrap select-none">
             @for($i = 0; $i < 2; $i++)
                 @foreach($partnersRow1 as $p)
-                <div class="partner-card inline-flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-white border border-slate-200/80 shadow-md hover:shadow-2xl hover:border-brand-orange transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:rotate-2">
-                    <div class="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center p-1.5 overflow-hidden">
+                <div class="partner-card inline-flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-[#1B082B]/95 border-2 border-[#3E24C5]/50 shadow-[0_8px_30px_rgba(0,0,0,0.7)] hover:shadow-[0_0_35px_rgba(255,148,32,0.45)] hover:border-[#FF9420] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:rotate-2">
+                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-[#3E24C5]/60 flex items-center justify-center p-1.5 overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform">
                         @else
-                            <i class="{{ $p['icon'] ?? 'fa-solid fa-building' }} text-brand-orange text-lg"></i>
+                            <i class="{{ $p['icon'] ?? 'fa-solid fa-building' }} text-[#FF9420] text-lg"></i>
                         @endif
                     </div>
                     <div class="text-right">
-                        <div class="text-sm font-black text-slate-800 partner-name transition-colors">{{ $p['name'] }}</div>
-                        <div class="text-[10px] text-slate-500 font-medium">{{ $p['type'] }}</div>
+                        <div class="text-sm font-black text-white partner-name transition-colors">{{ $p['name'] }}</div>
+                        <div class="text-[10px] text-[#FFBA70] font-medium">{{ $p['type'] }}</div>
                     </div>
                 </div>
                 @endforeach
@@ -328,17 +328,17 @@
         <div class="marquee-track flex items-center gap-6 whitespace-nowrap select-none">
             @for($i = 0; $i < 2; $i++)
                 @foreach($partnersRow2 as $p)
-                <div class="partner-card inline-flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-white border border-slate-200/80 shadow-md hover:shadow-2xl hover:border-brand-orange transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:-rotate-2">
-                    <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center p-1.5 overflow-hidden">
+                <div class="partner-card inline-flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-[#1B082B]/95 border-2 border-[#3E24C5]/50 shadow-[0_8px_30px_rgba(0,0,0,0.7)] hover:shadow-[0_0_35px_rgba(255,148,32,0.45)] hover:border-[#FF9420] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:-rotate-2">
+                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-[#3E24C5]/60 flex items-center justify-center p-1.5 overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform">
                         @else
-                            <i class="{{ $p['icon'] ?? 'fa-solid fa-building' }} text-brand-orange text-lg"></i>
+                            <i class="{{ $p['icon'] ?? 'fa-solid fa-building' }} text-[#FF9420] text-lg"></i>
                         @endif
                     </div>
                     <div class="text-right">
-                        <div class="text-sm font-black text-slate-800 partner-name transition-colors">{{ $p['name'] }}</div>
-                        <div class="text-[10px] text-slate-500 font-medium">{{ $p['type'] }}</div>
+                        <div class="text-sm font-black text-white partner-name transition-colors">{{ $p['name'] }}</div>
+                        <div class="text-[10px] text-[#FFBA70] font-medium">{{ $p['type'] }}</div>
                     </div>
                 </div>
                 @endforeach
@@ -447,8 +447,8 @@
                 <template x-for="(srv, idx) in services" :key="srv.id">
                     <div @click="activeIdx = idx"
                          :style="getCardStyle(idx)"
-                         :class="activeIdx === idx ? 'border-2 border-brand-orange shadow-[0_0_50px_rgba(255,148,32,0.35)]' : 'border border-purple-800/50 hover:border-brand-orange/60'"
-                         class="absolute w-[270px] sm:w-[320px] md:w-[360px] h-[390px] sm:h-[430px] rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ease-out shadow-2xl group flex flex-col justify-between select-none bg-[#110423]">
+                         :class="activeIdx === idx ? 'border-2 border-[#FF9420] shadow-[0_0_60px_rgba(255,148,32,0.6),0_0_90px_rgba(62,36,197,0.4)]' : 'border-2 border-[#3E24C5]/60 hover:border-[#FF9420] shadow-[0_0_25px_rgba(62,36,197,0.3)]'"
+                         class="absolute w-[270px] sm:w-[320px] md:w-[360px] h-[390px] sm:h-[430px] rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ease-out shadow-2xl group flex flex-col justify-between select-none bg-[#1B082B]">
                          
                          <!-- Full Background Card Image with Gradient Overlay -->
                          <img :src="srv.img" :alt="srv.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-108">
@@ -456,23 +456,23 @@
                          
                          <!-- Top Category & Number Pill -->
                          <div class="relative z-10 p-5 flex items-center justify-between">
-                             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-brand-orange/40 text-[11px] font-black text-brand-orange font-mono"
+                             <span class="px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-[#FF9420]/60 text-[11px] font-black text-[#FF9420] font-mono shadow-md"
                                    x-text="'0' + srv.id"></span>
-                             <div class="w-9 h-9 rounded-2xl bg-brand-orange text-brand-dark flex items-center justify-center text-xs shadow-lg">
+                             <div class="w-9 h-9 rounded-2xl bg-[#FF9420] text-black flex items-center justify-center text-xs shadow-[0_0_15px_rgba(255,148,32,0.5)]">
                                  <i :class="srv.icon"></i>
                              </div>
                          </div>
                          
                          <!-- Bottom Content: Category, Title, Description, and Link Button -->
                          <div class="relative z-10 p-5 sm:p-6 space-y-2 text-right">
-                             <div class="text-[10px] sm:text-[11px] font-bold text-brand-peach uppercase tracking-wider" x-text="srv.category"></div>
-                             <h3 class="text-base sm:text-xl font-black text-white group-hover:text-brand-orange transition-colors" x-text="srv.title"></h3>
-                             <p class="text-[11px] sm:text-xs text-gray-300 line-clamp-2 leading-relaxed" x-text="srv.desc"></p>
+                             <div class="text-[10px] sm:text-[11px] font-bold text-[#FFBA70] uppercase tracking-wider" x-text="srv.category"></div>
+                             <h3 class="text-base sm:text-xl font-black text-white group-hover:text-[#FF9420] transition-colors" x-text="srv.title"></h3>
+                             <p class="text-[11px] sm:text-xs text-gray-200 line-clamp-2 leading-relaxed" x-text="srv.desc"></p>
                              
                              <div class="pt-2">
                                  <a :href="'{{ route('public.services') }}#' + srv.slug" 
                                     @click.stop
-                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-brand-dark font-black text-[11px] transition shadow-lg active:scale-95">
+                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black text-[11px] transition shadow-[0_0_20px_rgba(255,148,32,0.4)] active:scale-95">
                                      <span>عرض تفاصيل هذه الخدمة</span>
                                      <i class="fa-solid fa-arrow-left text-[9px]"></i>
                                  </a>
@@ -488,23 +488,23 @@
                 <!-- Prev Button -->
                 <button type="button" @click="prev()" 
                         aria-label="الخدمة السابقة"
-                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#150626] border border-purple-800/60 hover:border-brand-orange hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow-lg active:scale-95">
+                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#1B082B] border-2 border-[#3E24C5]/70 hover:border-[#FF9420] hover:bg-[#FF9420] hover:text-black text-white flex items-center justify-center transition shadow-[0_0_20px_rgba(62,36,197,0.3)] active:scale-95">
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
                 <!-- Dual Visual Track: Current Service + Live 5s Countdown Bar -->
                 <div class="flex flex-col items-center gap-2 w-56 sm:w-80">
                     <div class="flex items-center justify-between w-full text-[11px] font-mono">
-                        <span class="font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
-                        <span class="text-[10px] text-brand-peach/80 flex items-center gap-1 font-sans">
+                        <span class="font-black text-[#FF9420]" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
+                        <span class="text-[10px] text-[#FFBA70] flex items-center gap-1 font-sans">
                             <i class="fa-solid fa-clock-rotate-left text-[9px] animate-spin-slow"></i>
                             <span>تبديل تلقائي كل 5ث</span>
                         </span>
-                        <span class="font-bold text-gray-400">10</span>
+                        <span class="font-bold text-gray-300">10</span>
                     </div>
                     <!-- Dynamic 5-Second Countdown Track -->
-                    <div class="w-full h-2 bg-purple-950/80 rounded-full overflow-hidden relative border border-purple-800/50 p-0.5">
-                        <div class="h-full bg-gradient-to-r from-brand-orange via-amber-400 to-brand-peach rounded-full transition-all duration-100 ease-linear shadow-[0_0_10px_#FF9420]"
+                    <div class="w-full h-2 bg-black rounded-full overflow-hidden relative border border-[#3E24C5]/60 p-0.5">
+                        <div class="h-full bg-gradient-to-r from-[#3E24C5] via-[#FF9420] to-[#FFBA70] rounded-full transition-all duration-100 ease-linear shadow-[0_0_10px_#FF9420]"
                              :style="'width: ' + progress + '%'"></div>
                     </div>
                 </div>
@@ -512,7 +512,7 @@
                 <!-- Next Button -->
                 <button type="button" @click="next()" 
                         aria-label="الخدمة التالية"
-                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#150626] border border-purple-800/60 hover:border-brand-orange hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center transition shadow-lg active:scale-95">
+                        class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#1B082B] border-2 border-[#3E24C5]/70 hover:border-[#FF9420] hover:bg-[#FF9420] hover:text-black text-white flex items-center justify-center transition shadow-[0_0_20px_rgba(62,36,197,0.3)] active:scale-95">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
             </div>
@@ -526,10 +526,10 @@
      6. COMPACT WORKS RIBBON / SLIDER (معرض الأعمال في شكل مبسط مش واخد حيز كبير)
      (بطاقات متحركة في شكل شريطي وعند الضغط تفتح عرض العمل نفسه - edigitaal)
      ========================================================================= -->
-<section id="portfolio-summary" class="py-20 bg-[#090212] relative z-10 border-y border-purple-900/40 overflow-hidden">
+<section id="portfolio-summary" class="py-20 bg-gradient-to-b from-[#080210] via-[#1B082B] to-[#0A0214] relative z-10 border-y-2 border-[#3E24C5]/40 shadow-[0_0_40px_rgba(62,36,197,0.2)] overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div class="space-y-2">
-            <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
+            <span class="text-xs font-black text-[#FF9420] uppercase tracking-widest px-4 py-1.5 rounded-full bg-[#FF9420]/15 border border-[#FF9420]/40 shadow-[0_0_15px_rgba(255,148,32,0.25)]">
                 نماذج من أعمالنا
             </span>
             <h2 class="text-2xl sm:text-4xl font-black text-white">أعمالنا وسجل إنجازاتنا الموثق</h2>
@@ -537,7 +537,7 @@
         </div>
 
         <a href="{{ route('public.portfolio') }}" 
-           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-900/50 hover:bg-brand-orange hover:text-brand-dark text-brand-peach font-black text-xs border border-purple-700/40 hover:border-transparent transition shadow">
+           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#1B082B] hover:bg-[#FF9420] hover:text-black text-[#FFBA70] font-black text-xs border-2 border-[#3E24C5]/70 hover:border-transparent transition shadow-[0_0_20px_rgba(62,36,197,0.3)]">
             <span>تصفح كامل المعرض الموثق</span>
             <i class="fa-solid fa-arrow-left text-[10px]"></i>
         </a>
@@ -554,17 +554,17 @@
         @endphp
         <!-- Single Featured Item Spotlight Showcase (عرض العمل المنفرد كما تم إضافته بالـ CMS بدون تكرار مصطنع) -->
         <div class="max-w-4xl mx-auto px-4 sm:px-6">
-            <div class="glass-card-purple rounded-3xl overflow-hidden border-2 border-brand-orange shadow-[0_0_50px_rgba(255,148,32,0.35)] group cursor-pointer transition-all duration-300 hover:scale-[1.01]"
+            <div class="glass-card-purple rounded-3xl overflow-hidden border-2 border-[#FF9420] shadow-[0_0_50px_rgba(255,148,32,0.45)] group cursor-pointer transition-all duration-300 hover:scale-[1.01]"
                  @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($singleItem->title) }}', '{{ addslashes($singleItem->description ?? '') }}', '{{ $aspectType }}')">
                 <div class="relative aspect-video bg-black/70 overflow-hidden">
                     <img src="{{ $finalThumb }}" alt="{{ $singleItem->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#150626] via-black/30 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1B082B] via-black/30 to-transparent"></div>
                     
                     @if($singleItem->video_url)
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div class="relative flex items-center justify-center">
-                            <span class="absolute w-20 h-20 rounded-full bg-brand-orange/30 animate-radar"></span>
-                            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-brand-orange to-[#FF7A00] text-brand-dark flex items-center justify-center text-xl shadow-2xl group-hover:scale-115 transition-transform duration-300">
+                            <span class="absolute w-20 h-20 rounded-full bg-[#FF9420]/30 animate-radar"></span>
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-[#FF9420] to-[#FFBA70] text-black flex items-center justify-center text-xl shadow-[0_0_30px_rgba(255,148,32,0.6)] group-hover:scale-115 transition-transform duration-300">
                                 <i class="fa-solid fa-play mr-0.5"></i>
                             </div>
                         </div>
@@ -575,12 +575,12 @@
                     </div>
                     @endif
 
-                    <span class="absolute top-4 right-4 text-xs font-bold px-3.5 py-1.5 rounded-full bg-black/85 backdrop-blur text-brand-peach border border-purple-500/40">
+                    <span class="absolute top-4 right-4 text-xs font-bold px-3.5 py-1.5 rounded-full bg-black/85 backdrop-blur text-[#FFBA70] border border-[#3E24C5]/60">
                         {{ $singleItem->category_arabic }}
                     </span>
 
                     @if($singleItem->metrics)
-                    <span class="absolute top-4 left-4 text-xs font-bold px-3.5 py-1.5 rounded-full bg-brand-orange/90 text-brand-dark shadow-lg">
+                    <span class="absolute top-4 left-4 text-xs font-bold px-3.5 py-1.5 rounded-full bg-[#FF9420] text-black shadow-lg font-black">
                         {{ $singleItem->metrics }}
                     </span>
                     @endif
@@ -588,17 +588,17 @@
 
                 <div class="p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-right">
                     <div>
-                        <h3 class="text-lg sm:text-2xl font-black text-white group-hover:text-brand-orange transition-colors">
+                        <h3 class="text-lg sm:text-2xl font-black text-white group-hover:text-[#FF9420] transition-colors">
                             {{ $singleItem->title }}
                         </h3>
-                        <div class="text-xs sm:text-sm text-brand-peach font-bold mt-1">
+                        <div class="text-xs sm:text-sm text-[#FFBA70] font-bold mt-1">
                             {{ $singleItem->client_name }} @if($singleItem->client_country) • {{ $singleItem->client_country }} @endif
                         </div>
                         @if($singleItem->description)
                         <p class="text-xs text-gray-300 mt-2 line-clamp-2 max-w-2xl font-normal">{{ $singleItem->description }}</p>
                         @endif
                     </div>
-                    <button type="button" class="shrink-0 px-6 py-3 rounded-xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs shadow-lg group-hover:brightness-110 flex items-center justify-center gap-2">
+                    <button type="button" class="shrink-0 px-6 py-3 rounded-xl bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black text-xs shadow-lg group-hover:brightness-110 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-play text-xs"></i>
                         <span>تشغيل ومعاينة العمل</span>
                     </button>
@@ -679,16 +679,16 @@
                     $mediaType = $item->video_url ? 'video' : ($item->category === 'branding' ? 'branding' : 'image');
                     $aspectType = $item->category === 'reels' ? 'vertical' : 'landscape';
                 @endphp
-                <div class="w-72 sm:w-80 flex-shrink-0 glass-card-purple rounded-2xl overflow-hidden border border-purple-800/50 hover:border-brand-orange transition-all duration-300 group cursor-pointer shadow-xl hover:-translate-y-2 select-none"
+                <div class="w-72 sm:w-80 flex-shrink-0 glass-card-purple rounded-2xl overflow-hidden border-2 border-[#3E24C5]/60 hover:border-[#FF9420] transition-all duration-300 group cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,148,32,0.4)] hover:-translate-y-2 select-none"
                      @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')">
                     
                     <div class="relative aspect-video bg-black/60 overflow-hidden">
                         <img src="{{ $finalThumb }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 pointer-events-none">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#150626] via-transparent to-transparent opacity-80 pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#1B082B] via-transparent to-transparent opacity-80 pointer-events-none"></div>
                         
                         @if($item->video_url)
                         <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <div class="w-12 h-12 rounded-full bg-brand-orange text-brand-dark flex items-center justify-center text-sm shadow-xl group-hover:scale-115 transition-transform">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#FF9420] to-[#FFBA70] text-black flex items-center justify-center text-sm shadow-[0_0_20px_rgba(255,148,32,0.6)] group-hover:scale-115 transition-transform">
                                 <i class="fa-solid fa-play mr-0.5"></i>
                             </div>
                         </div>
@@ -698,13 +698,13 @@
                         </div>
                         @endif
 
-                        <span class="absolute top-2.5 right-2.5 text-[9px] font-bold px-2.5 py-1 rounded-full bg-black/80 backdrop-blur text-brand-peach border border-purple-500/30 pointer-events-none">
+                        <span class="absolute top-2.5 right-2.5 text-[9px] font-bold px-2.5 py-1 rounded-full bg-black/85 backdrop-blur text-[#FFBA70] border border-[#FF9420]/40 pointer-events-none">
                             {{ $item->category_arabic }}
                         </span>
                     </div>
 
                     <div class="p-4 space-y-1.5 text-right pointer-events-none">
-                        <h4 class="text-xs sm:text-sm font-black text-white group-hover:text-brand-orange transition-colors line-clamp-1">
+                        <h4 class="text-xs sm:text-sm font-black text-white group-hover:text-[#FF9420] transition-colors line-clamp-1">
                             {{ $item->title }}
                         </h4>
                         <div class="text-[10px] text-gray-400 font-medium">
@@ -727,7 +727,7 @@
      ========================================================================= -->
 <section id="process-summary" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-        <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
+        <span class="text-xs font-black text-[#FF9420] uppercase tracking-widest px-4 py-1.5 rounded-full bg-[#FF9420]/15 border border-[#FF9420]/40 shadow-[0_0_15px_rgba(255,148,32,0.25)]">
             خريطة الطريق المتعددة للإنتاج
         </span>
         <h2 class="text-3xl sm:text-5xl font-black text-white">مراحل عملنا نحو نجاح علامتك</h2>
@@ -738,7 +738,7 @@
     <div class="relative">
         
         <!-- Connecting Center Glowing Line (Desktop) -->
-        <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-brand-orange via-brand-peach to-purple-600 -translate-y-1/2 z-0 opacity-40"></div>
+        <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-1.5 bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#3E24C5] -translate-y-1/2 z-0 opacity-80 shadow-[0_0_20px_rgba(255,148,32,0.4)]"></div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
             @php
@@ -755,30 +755,30 @@
             @endphp
 
             @foreach($roadmapStages as $st)
-            <div class="glass-card-purple rounded-3xl p-6 relative group hover:-translate-y-2 transition-all duration-300 border border-purple-800/60 hover:border-brand-orange shadow-xl flex flex-col justify-between">
+            <div class="glass-card-purple rounded-3xl p-6 relative group hover:-translate-y-2 transition-all duration-300 border-2 border-[#3E24C5]/60 hover:border-[#FF9420] shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,148,32,0.4)] flex flex-col justify-between">
                 
                 <div>
                     <div class="flex items-center justify-between mb-4">
-                        <span class="text-3xl font-black text-brand-orange/40 group-hover:text-brand-orange transition-colors font-mono">
+                        <span class="text-3xl font-black text-[#FFBA70]/70 group-hover:text-[#FF9420] transition-colors font-mono">
                             {{ $st['num'] }}
                         </span>
-                        <div class="w-10 h-10 rounded-xl bg-orange-500/15 border border-brand-orange/30 text-brand-orange flex items-center justify-center text-sm group-hover:scale-110 group-hover:bg-brand-orange group-hover:text-brand-dark transition-all">
+                        <div class="w-10 h-10 rounded-xl bg-[#FF9420]/20 border border-[#FF9420]/50 text-[#FF9420] flex items-center justify-center text-sm group-hover:scale-110 group-hover:bg-[#FF9420] group-hover:text-black transition-all shadow-[0_0_15px_rgba(255,148,32,0.3)]">
                             <i class="{{ $st['icon'] }}"></i>
                         </div>
                     </div>
 
-                    <div class="text-[10px] text-brand-peach font-bold uppercase tracking-wider mb-1">{{ $st['step'] }}</div>
-                    <h3 class="text-base font-black text-white group-hover:text-brand-orange transition-colors mb-2">
+                    <div class="text-[10px] text-[#FFBA70] font-bold uppercase tracking-wider mb-1">{{ $st['step'] }}</div>
+                    <h3 class="text-base font-black text-white group-hover:text-[#FF9420] transition-colors mb-2">
                         {{ $st['title'] }}
                     </h3>
                     
-                    <p class="text-xs text-gray-300 leading-relaxed font-normal">
+                    <p class="text-xs text-gray-200 leading-relaxed font-normal">
                         {{ $st['desc'] }}
                     </p>
                 </div>
 
-                <div class="pt-4 mt-4 border-t border-purple-800/40 flex items-center gap-1.5 text-[10px] text-gray-400 group-hover:text-brand-peach transition-colors">
-                    <i class="fa-solid fa-circle-check text-brand-orange text-[9px]"></i>
+                <div class="pt-4 mt-4 border-t border-[#3E24C5]/40 flex items-center gap-1.5 text-[10px] text-gray-300 group-hover:text-[#FFBA70] transition-colors">
+                    <i class="fa-solid fa-circle-check text-[#FF9420] text-[9px]"></i>
                     <span>مخرجات معتمدة وموثقة</span>
                 </div>
 
@@ -793,19 +793,19 @@
      8. GOO MEDIA 3D CIRCULAR ORBIT FEEDBACK & TESTIMONIALS (فيدباك دائري متحرك ثلاثي الأبعاد)
      (فيدباك منوع بين فيديو مقاس طولي وصور في شكل دائري متحرك شبة جو ميديا واللوجو في النص)
      ========================================================================= -->
-<section id="testimonials-summary" class="py-24 bg-gradient-to-b from-[#0A0216] via-[#140528] to-[#08020F] relative z-10 overflow-hidden">
+<section id="testimonials-summary" class="py-24 bg-gradient-to-b from-[#080210] via-[#1B082B] to-[#0A0214] relative z-10 overflow-hidden border-t-2 border-[#3E24C5]/30">
     
     <!-- Ambient Orbital Background Lighting -->
     <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-gradient-to-tr from-brand-orange/10 via-purple-600/15 to-transparent blur-[120px] rounded-full"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-gradient-to-tr from-[#FF9420]/20 via-[#3E24C5]/30 to-[#3F147E]/40 blur-[100px] rounded-full"></div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         <!-- Section Header -->
         <div class="text-center max-w-3xl mx-auto mb-14 space-y-3">
-            <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30 inline-flex items-center gap-2 shadow-sm">
-                <i class="fa-solid fa-sparkles text-brand-orange"></i>
+            <span class="text-xs font-black text-[#FF9420] uppercase tracking-widest px-4 py-1.5 rounded-full bg-[#FF9420]/15 border border-[#FF9420]/40 inline-flex items-center gap-2 shadow-[0_0_15px_rgba(255,148,32,0.25)]">
+                <i class="fa-solid fa-sparkles text-[#FF9420]"></i>
                 <span>قصص نجاح موثقة من شركائنا</span>
             </span>
             <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
@@ -962,25 +962,25 @@
                 <!-- Concentric Orbital Ring Tracks (SVG Radar/Solar Rings) -->
                 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <!-- Outer Orbit Ring -->
-                    <div class="w-[820px] h-[420px] rounded-[50%] border-2 border-purple-800/30 border-dashed animate-spin-slow opacity-60"></div>
+                    <div class="w-[820px] h-[420px] rounded-[50%] border-2 border-[#3E24C5]/60 border-dashed animate-spin-slow shadow-[0_0_40px_rgba(62,36,197,0.3)] opacity-80"></div>
                     <!-- Mid Orbit Ring with Glowing Points -->
-                    <div class="absolute w-[660px] h-[340px] rounded-[50%] border border-amber-500/25 shadow-[0_0_40px_rgba(255,148,32,0.15)]"></div>
+                    <div class="absolute w-[660px] h-[340px] rounded-[50%] border-2 border-[#FF9420]/50 shadow-[0_0_40px_rgba(255,148,32,0.25)]"></div>
                     <!-- Inner Orbit Ring -->
-                    <div class="absolute w-[480px] h-[250px] rounded-[50%] border border-purple-600/30 opacity-40"></div>
+                    <div class="absolute w-[480px] h-[250px] rounded-[50%] border-2 border-[#3E24C5]/40 opacity-60"></div>
                 </div>
 
                 <!-- Center Glowing Pariq Logo Badge (نواة بريق المركزية المتوهجة) -->
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center pointer-events-none">
-                    <div class="relative w-32 h-32 rounded-full bg-gradient-to-tr from-brand-orange via-amber-400 to-[#BC6200] p-1 shadow-[0_0_70px_rgba(255,148,32,0.65)] animate-pulse-glow flex items-center justify-center">
-                        <div class="w-full h-full rounded-full bg-[#0D031A] flex flex-col items-center justify-center p-3 relative overflow-hidden">
+                    <div class="relative w-32 h-32 rounded-full bg-gradient-to-tr from-[#FF9420] via-[#3E24C5] to-[#FFBA70] p-1.5 shadow-[0_0_80px_rgba(62,36,197,0.7),0_0_40px_rgba(255,148,32,0.5)] animate-pulse-glow flex items-center justify-center">
+                        <div class="w-full h-full rounded-full bg-[#1B082B] flex flex-col items-center justify-center p-3 relative overflow-hidden">
                             <!-- Rotating Radar Sweep Line -->
-                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-brand-orange/20 to-transparent animate-spin-slow pointer-events-none"></div>
+                            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-[#FF9420]/25 to-transparent animate-spin-slow pointer-events-none"></div>
                             
                             <img src="{{ asset('images/logo.png') }}" alt="بريق للأعلام" class="w-14 h-14 object-contain filter drop-shadow-[0_4px_15px_rgba(255,148,32,0.6)]">
-                            <span class="text-[10px] font-black text-brand-orange mt-1 tracking-wider uppercase font-mono">PARIQ</span>
+                            <span class="text-[10px] font-black text-[#FF9420] mt-1 tracking-wider uppercase font-mono">PARIQ</span>
                         </div>
                     </div>
-                    <span class="text-xs font-black text-white mt-2 px-3 py-1 rounded-full bg-black/75 border border-brand-orange/40 shadow-lg tracking-wide">
+                    <span class="text-xs font-black text-white mt-2 px-4 py-1.5 rounded-full bg-[#1B082B]/95 border-2 border-[#3E24C5]/60 shadow-[0_0_20px_rgba(62,36,197,0.35)] tracking-wide">
                         بريق للإعلام والتسويق
                     </span>
                 </div>
@@ -996,20 +996,20 @@
                             
                             <!-- Video Reel Card (Vertical 9:14 Aspect) -->
                             <template x-if="item.type === 'video_reel'">
-                                <div class="w-56 glass-card-purple rounded-2xl overflow-hidden border-2 border-purple-700/60 group-hover/orbitCard:border-brand-orange shadow-2xl transition-all duration-300 bg-[#120524]/95 p-2.5 space-y-2 group-hover/orbitCard:shadow-[0_0_40px_rgba(255,148,32,0.5)]">
+                                <div class="w-56 glass-card-purple rounded-2xl overflow-hidden border-2 border-[#3E24C5]/70 group-hover/orbitCard:border-[#FF9420] shadow-2xl transition-all duration-300 bg-[#1B082B]/95 p-2.5 space-y-2 group-hover/orbitCard:shadow-[0_0_45px_rgba(255,148,32,0.6)]">
                                     <div class="relative aspect-[9/11] rounded-xl overflow-hidden bg-black/80 flex items-center justify-center">
                                         <img :src="item.thumb" :alt="item.name" class="w-full h-full object-cover group-hover/orbitCard:scale-108 transition-transform duration-500">
                                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
                                         
                                         <!-- Play Button -->
                                         <div class="absolute inset-0 flex items-center justify-center">
-                                            <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-brand-orange to-[#FF7A00] text-brand-dark flex items-center justify-center text-sm shadow-xl group-hover/orbitCard:scale-115 transition-transform duration-300">
+                                            <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-[#FF9420] to-[#FFBA70] text-black flex items-center justify-center text-sm shadow-[0_0_20px_rgba(255,148,32,0.6)] group-hover/orbitCard:scale-115 transition-transform duration-300">
                                                 <i class="fa-solid fa-play mr-0.5"></i>
                                             </div>
                                         </div>
 
                                         <!-- Top Badge -->
-                                        <span class="absolute top-2 right-2 px-2.5 py-0.5 rounded-full bg-black/80 backdrop-blur text-[9px] font-black text-brand-orange flex items-center gap-1 border border-brand-orange/40">
+                                        <span class="absolute top-2 right-2 px-2.5 py-0.5 rounded-full bg-black/85 backdrop-blur text-[9px] font-black text-[#FF9420] flex items-center gap-1 border border-[#FF9420]/50">
                                             <i class="fa-solid fa-mobile-screen"></i>
                                             <span>ريلز طولي</span>
                                         </span>
@@ -1017,38 +1017,38 @@
 
                                     <div class="space-y-1 text-right px-1">
                                         <div class="flex items-center justify-between">
-                                            <h4 class="text-xs font-black text-white group-hover/orbitCard:text-brand-orange transition-colors truncate" x-text="item.name"></h4>
-                                            <div class="text-brand-orange text-[9px] flex gap-0.5">
+                                            <h4 class="text-xs font-black text-white group-hover/orbitCard:text-[#FF9420] transition-colors truncate" x-text="item.name"></h4>
+                                            <div class="text-[#FF9420] text-[9px] flex gap-0.5">
                                                 <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                                             </div>
                                         </div>
-                                        <div class="text-[10px] text-brand-peach font-bold truncate" x-text="item.title + (item.country ? ' • ' + item.country : '')"></div>
-                                        <p class="text-[10px] text-gray-300 line-clamp-1 italic" x-text="'«' + item.content + '»'"></p>
+                                        <div class="text-[10px] text-[#FFBA70] font-bold truncate" x-text="item.title + (item.country ? ' • ' + item.country : '')"></div>
+                                        <p class="text-[10px] text-gray-200 line-clamp-1 italic" x-text="'«' + item.content + '»'"></p>
                                     </div>
                                 </div>
                             </template>
 
                             <!-- Text / Image Review Card -->
                             <template x-if="item.type !== 'video_reel'">
-                                <div class="w-60 glass-card-purple rounded-2xl border-2 border-purple-700/60 group-hover/orbitCard:border-brand-orange shadow-2xl transition-all duration-300 bg-[#120524]/95 p-4 space-y-2.5 group-hover/orbitCard:shadow-[0_0_40px_rgba(255,148,32,0.5)]">
+                                <div class="w-60 glass-card-purple rounded-2xl border-2 border-[#3E24C5]/70 group-hover/orbitCard:border-[#FF9420] shadow-2xl transition-all duration-300 bg-[#1B082B]/95 p-4 space-y-2.5 group-hover/orbitCard:shadow-[0_0_45px_rgba(255,148,32,0.6)]">
                                     <div class="flex items-center justify-between">
-                                        <span class="px-2.5 py-0.5 rounded-full bg-purple-900/60 text-[9px] font-bold text-purple-200 border border-purple-500/40 flex items-center gap-1">
+                                        <span class="px-2.5 py-0.5 rounded-full bg-[#3E24C5]/30 text-[9px] font-bold text-[#FFBA70] border border-[#3E24C5]/60 flex items-center gap-1">
                                             <i class="fa-solid fa-comment-dots"></i>
                                             <span>تقييم موثق</span>
                                         </span>
-                                        <div class="text-brand-orange text-[9px] flex gap-0.5">
+                                        <div class="text-[#FF9420] text-[9px] flex gap-0.5">
                                             <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                                         </div>
                                     </div>
 
                                     <p class="text-[11px] text-gray-200 line-clamp-3 leading-relaxed italic text-right" x-text="'«' + item.content + '»'"></p>
 
-                                    <div class="pt-2 border-t border-purple-800/40 flex items-center gap-2.5 text-right">
-                                        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-orange to-brand-peach text-brand-dark font-black flex items-center justify-center text-xs shrink-0"
+                                    <div class="pt-2 border-t border-[#3E24C5]/40 flex items-center gap-2.5 text-right">
+                                        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#FF9420] to-[#FFBA70] text-black font-black flex items-center justify-center text-xs shrink-0"
                                              x-text="item.name.charAt(0)"></div>
                                         <div class="min-w-0">
-                                            <h4 class="text-xs font-black text-white truncate group-hover/orbitCard:text-brand-orange transition-colors" x-text="item.name"></h4>
-                                            <div class="text-[9px] text-gray-400 truncate" x-text="item.title + (item.country ? ' • ' + item.country : '')"></div>
+                                            <h4 class="text-xs font-black text-white truncate group-hover/orbitCard:text-[#FF9420] transition-colors" x-text="item.name"></h4>
+                                            <div class="text-[9px] text-gray-300 truncate" x-text="item.title + (item.country ? ' • ' + item.country : '')"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1059,20 +1059,20 @@
                 </div>
 
                 <!-- Orbital Interactive Controls -->
-                <div class="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-4 px-4 py-2 rounded-2xl bg-[#0F041F]/80 backdrop-blur-md border border-purple-700/50 shadow-xl">
+                <div class="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-4 px-4 py-2 rounded-2xl bg-[#1B082B]/90 backdrop-blur-md border-2 border-[#3E24C5]/60 shadow-[0_0_25px_rgba(62,36,197,0.35)]">
                     <button type="button" @click="rotateLeft()" 
-                            class="w-8 h-8 rounded-xl bg-purple-950/80 hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center text-xs transition" title="تدوير لليسار">
+                            class="w-8 h-8 rounded-xl bg-[#000000] border border-[#3E24C5]/60 hover:bg-[#FF9420] hover:text-black text-white flex items-center justify-center text-xs transition" title="تدوير لليسار">
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                     
                     <button type="button" @click="isPaused = !isPaused" 
-                            class="px-3 py-1.5 rounded-xl bg-brand-orange/15 border border-brand-orange/40 hover:bg-brand-orange hover:text-brand-dark text-brand-peach text-[11px] font-bold flex items-center gap-1.5 transition">
+                            class="px-3 py-1.5 rounded-xl bg-[#FF9420]/15 border border-[#FF9420]/50 hover:bg-[#FF9420] hover:text-black text-[#FFBA70] text-[11px] font-bold flex items-center gap-1.5 transition">
                         <i class="fa-solid" :class="isPaused ? 'fa-play text-emerald-400' : 'fa-pause text-amber-400'"></i>
                         <span x-text="isPaused ? 'استئناف الدوران' : 'إيقاف مؤقت'"></span>
                     </button>
                     
                     <button type="button" @click="rotateRight()" 
-                            class="w-8 h-8 rounded-xl bg-purple-950/80 hover:bg-brand-orange hover:text-brand-dark text-white flex items-center justify-center text-xs transition" title="تدوير لليمين">
+                            class="w-8 h-8 rounded-xl bg-[#000000] border border-[#3E24C5]/60 hover:bg-[#FF9420] hover:text-black text-white flex items-center justify-center text-xs transition" title="تدوير لليمين">
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
                 </div>
@@ -1383,13 +1383,13 @@
 <!-- =========================================================================
      10. DIRECT CONSULTATION FORM ON HOMEPAGE
      ========================================================================= -->
-<section id="contact-summary" class="py-14 sm:py-20 bg-gradient-to-b from-[#16062C] via-[#1B0736] to-[#08020F] relative z-10">
+<section id="contact-summary" class="py-14 sm:py-20 bg-gradient-to-b from-[#080210] via-[#1B082B] to-[#000000] border-t-2 border-[#3E24C5]/40 shadow-[0_-10px_40px_rgba(62,36,197,0.25)] relative z-10">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div class="glass-card-purple rounded-2xl sm:rounded-[2rem] p-5 sm:p-10 lg:p-14 shadow-2xl relative overflow-hidden border border-brand-orange/40">
+        <div class="glass-card-purple rounded-2xl sm:rounded-[2rem] p-5 sm:p-10 lg:p-14 shadow-2xl relative overflow-hidden border-2 border-[#3E24C5]/60 hover:border-[#FF9420] transition-colors">
             
             <div class="text-center max-w-xl mx-auto mb-10 space-y-3 relative z-10">
-                <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
+                <span class="text-xs font-black text-[#FF9420] uppercase tracking-widest px-4 py-1.5 rounded-full bg-[#FF9420]/15 border border-[#FF9420]/50 shadow-[0_0_15px_rgba(255,148,32,0.3)]">
                     ابدأ قصة نجاح علامتك اليوم
                 </span>
                 <h2 class="text-3xl sm:text-4xl font-black text-white">احصل على استشارة تسويقية وعرض سعر فوري</h2>
@@ -1401,37 +1401,37 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block font-bold text-gray-300 mb-2">اسمك الكريم <span class="text-brand-orange">*</span></label>
+                        <label class="block font-bold text-gray-200 mb-2">اسمك الكريم <span class="text-[#FF9420]">*</span></label>
                         <input type="text" name="name" required placeholder="محمد أحمد" 
-                               class="w-full px-4 py-3.5 bg-[#120422] border border-purple-800/60 focus:border-brand-orange rounded-2xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-orange transition">
+                               class="w-full px-4 py-3.5 bg-[#1B082B]/90 border-2 border-[#3E24C5]/50 focus:border-[#FF9420] rounded-2xl text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#FF9420]/40 transition">
                     </div>
 
                     <div>
-                        <label class="block font-bold text-gray-300 mb-2">اسم البراند أو النشاط التجاري</label>
+                        <label class="block font-bold text-gray-200 mb-2">اسم البراند أو النشاط التجاري</label>
                         <input type="text" name="brand_name" placeholder="اسم علامتك التجارية" 
-                               class="w-full px-4 py-3.5 bg-[#120422] border border-purple-800/60 focus:border-brand-orange rounded-2xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-orange transition">
+                               class="w-full px-4 py-3.5 bg-[#1B082B]/90 border-2 border-[#3E24C5]/50 focus:border-[#FF9420] rounded-2xl text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#FF9420]/40 transition">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block font-bold text-gray-300 mb-2">رقم الهاتف أو الواتساب <span class="text-brand-orange">*</span></label>
+                        <label class="block font-bold text-gray-200 mb-2">رقم الهاتف أو الواتساب <span class="text-[#FF9420]">*</span></label>
                         <input type="text" name="phone" required placeholder="+2010... أو +966..." 
-                               class="w-full px-4 py-3.5 bg-[#120422] border border-purple-800/60 focus:border-brand-orange rounded-2xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-orange transition">
+                               class="w-full px-4 py-3.5 bg-[#1B082B]/90 border-2 border-[#3E24C5]/50 focus:border-[#FF9420] rounded-2xl text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#FF9420]/40 transition">
                     </div>
 
                     <div>
-                        <label class="block font-bold text-gray-300 mb-2">البريد الإلكتروني</label>
+                        <label class="block font-bold text-gray-200 mb-2">البريد الإلكتروني</label>
                         <input type="email" name="email" placeholder="example@brand.com" 
-                               class="w-full px-4 py-3.5 bg-[#120422] border border-purple-800/60 focus:border-brand-orange rounded-2xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-orange transition">
+                               class="w-full px-4 py-3.5 bg-[#1B082B]/90 border-2 border-[#3E24C5]/50 focus:border-[#FF9420] rounded-2xl text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#FF9420]/40 transition">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block font-bold text-gray-300 mb-2">الخدمة التي تهمك أكثر</label>
+                        <label class="block font-bold text-gray-200 mb-2">الخدمة التي تهمك أكثر</label>
                         <select name="service_interested" 
-                                class="w-full px-4 py-3.5 bg-[#120422] border border-purple-800/60 focus:border-brand-orange rounded-2xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-orange transition">
+                                class="w-full px-4 py-3.5 bg-[#1B082B] border-2 border-[#3E24C5]/50 focus:border-[#FF9420] rounded-2xl text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#FF9420]/40 transition">
                             <option value="تصوير ومونتاج فيديو ريلز 4K">تصوير ومونتاج فيديو ريلز وسينما 4K</option>
                             <option value="إعلانات ممولة وميديا باينج">إعلانات ممولة وميديا باينج (Meta, TikTok)</option>
                             <option value="تصميمات جرافيك وبناء هوية بصرية">تصميمات جرافيك وبناء هوية بصرية</option>
@@ -1441,9 +1441,9 @@
                     </div>
 
                     <div>
-                        <label class="block font-bold text-gray-300 mb-2">الميزانية المتوقعة للمشروع</label>
+                        <label class="block font-bold text-gray-200 mb-2">الميزانية المتوقعة للمشروع</label>
                         <select name="budget_range" 
-                                class="w-full px-4 py-3.5 bg-[#120422] border border-purple-800/60 focus:border-brand-orange rounded-2xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-orange transition">
+                                class="w-full px-4 py-3.5 bg-[#1B082B] border-2 border-[#3E24C5]/50 focus:border-[#FF9420] rounded-2xl text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#FF9420]/40 transition">
                             <option value="أقل من 10,000 ج.م">أقل من 10,000 ج.م</option>
                             <option value="10,000 - 25,000 ج.م">10,000 - 25,000 ج.م</option>
                             <option value="25,000 - 50,000 ج.م">25,000 - 50,000 ج.م</option>
@@ -1453,13 +1453,13 @@
                 </div>
 
                 <div>
-                    <label class="block font-bold text-gray-300 mb-2">أخبرنا بنبذة عن أهدافك ورؤيتك</label>
+                    <label class="block font-bold text-gray-200 mb-2">أخبرنا بنبذة عن أهدافك ورؤيتك</label>
                     <textarea name="message" rows="3" placeholder="اكتب لنا ملخصاً سريعاً عما تود تحقيقه لعلامتك التجارية..." 
-                              class="w-full px-4 py-3.5 bg-[#120422] border border-purple-800/60 focus:border-brand-orange rounded-2xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-orange transition"></textarea>
+                              class="w-full px-4 py-3.5 bg-[#1B082B]/90 border-2 border-[#3E24C5]/50 focus:border-[#FF9420] rounded-2xl text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#FF9420]/40 transition"></textarea>
                 </div>
 
                 <button type="submit" 
-                        class="w-full py-4 rounded-2xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-sm hover:brightness-110 shadow-2xl shadow-orange-500/30 transition flex items-center justify-center gap-2.5 active:scale-95">
+                        class="w-full py-4 rounded-2xl bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black text-sm hover:brightness-110 shadow-[0_0_35px_rgba(255,148,32,0.55)] transition flex items-center justify-center gap-2.5 active:scale-95">
                     <i class="fa-solid fa-paper-plane text-xs"></i>
                     <span>إرسال طلب الاستشارة التسويقية الفورية</span>
                 </button>
@@ -1521,7 +1521,7 @@
 
 @push('scripts')
 <script>
-    // Particle Canvas Animation for Hero Background
+    // Particle Canvas Animation for Hero Background with Vibrant Pariq Palette
     (function initHeroCanvas() {
         const canvas = document.getElementById('hero-particle-canvas');
         if (!canvas) return;
@@ -1536,18 +1536,18 @@
         });
 
         const particles = [];
-        const count = 45;
-        const colors = ['#FF9420', '#FFBA70', '#3F147E', '#1B082B'];
+        const count = 55;
+        const colors = ['#FF9420', '#FFBA70', '#3E24C5', '#3F147E', '#BC6200'];
 
         for (let i = 0; i < count; i++) {
             particles.push({
                 x: Math.random() * width,
                 y: Math.random() * height,
-                radius: Math.random() * 2.5 + 1,
+                radius: Math.random() * 2.8 + 1.2,
                 color: colors[Math.floor(Math.random() * colors.length)],
-                vx: (Math.random() - 0.5) * 0.6,
-                vy: (Math.random() - 0.5) * 0.6,
-                alpha: Math.random() * 0.6 + 0.2
+                vx: (Math.random() - 0.5) * 0.65,
+                vy: (Math.random() - 0.5) * 0.65,
+                alpha: Math.random() * 0.7 + 0.3
             });
         }
 
@@ -1572,15 +1572,15 @@
                 ctx.fill();
                 ctx.restore();
 
-                // Connect nearby particles
+                // Connect nearby particles with luminous gradient stroke
                 for (let j = i + 1; j < particles.length; j++) {
                     const p2 = particles[j];
                     const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if (dist < 110) {
+                    if (dist < 120) {
                         ctx.save();
-                        ctx.globalAlpha = (1 - dist / 110) * 0.18;
-                        ctx.strokeStyle = '#FFBA70';
-                        ctx.lineWidth = 0.6;
+                        ctx.globalAlpha = (1 - dist / 120) * 0.32;
+                        ctx.strokeStyle = (i % 2 === 0) ? '#FF9420' : '#3E24C5';
+                        ctx.lineWidth = 0.8;
                         ctx.beginPath();
                         ctx.moveTo(p.x, p.y);
                         ctx.lineTo(p2.x, p2.y);
@@ -1593,6 +1593,7 @@
             requestAnimationFrame(animate);
         }
         animate();
+    })();
     })();
 
     // Stats Counter

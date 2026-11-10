@@ -61,33 +61,33 @@
     <!-- Category Filter Tabs -->
     <div class="flex flex-wrap items-center justify-center gap-2.5 mb-14">
         <button type="button" @click="activeCategory = 'all'" 
-                :class="activeCategory === 'all' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeCategory === 'all' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
             <i class="fa-solid fa-layer-group"></i>
             <span>كافة الخدمات (10)</span>
         </button>
         <button type="button" @click="activeCategory = 'video'" 
-                :class="activeCategory === 'video' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeCategory === 'video' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-video text-brand-orange"></i>
+            <i class="fa-solid fa-video text-[#FF9420]"></i>
             <span>الإنتاج المرئي والمونتاج</span>
         </button>
         <button type="button" @click="activeCategory = 'design'" 
-                :class="activeCategory === 'design' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeCategory === 'design' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-bezier-curve text-purple-300"></i>
+            <i class="fa-solid fa-bezier-curve text-[#FFBA70]"></i>
             <span>التصميم والبراندينج</span>
         </button>
         <button type="button" @click="activeCategory = 'marketing'" 
-                :class="activeCategory === 'marketing' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeCategory === 'marketing' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
             <i class="fa-solid fa-chart-line text-emerald-400"></i>
             <span>التسويق والإعلانات الممولة</span>
         </button>
         <button type="button" @click="activeCategory = 'strategy'" 
-                :class="activeCategory === 'strategy' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeCategory === 'strategy' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-lightbulb text-brand-peach"></i>
+            <i class="fa-solid fa-lightbulb text-[#FFBA70]"></i>
             <span>الخطط وتحليل البيانات والمحتوى</span>
         </button>
     </div>

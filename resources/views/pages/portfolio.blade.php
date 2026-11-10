@@ -233,38 +233,38 @@
     <div class="flex flex-wrap items-center justify-center gap-2.5 mb-14">
         <!-- 1. جميع الأعمال -->
         <button type="button" @click="activeFilter = 'all'" 
-                :class="activeFilter === 'all' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeFilter === 'all' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200">
             جميع الأعمال
         </button>
 
         <!-- 2. برومو -->
         <button type="button" @click="activeFilter = 'promo'" 
-                :class="activeFilter === 'promo' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeFilter === 'promo' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-clapperboard text-brand-orange"></i>
+            <i class="fa-solid fa-clapperboard text-[#FF9420]"></i>
             <span>برومو</span>
         </button>
 
         <!-- 3. ريلز (مقاس طولي) -->
         <button type="button" @click="activeFilter = 'reels'" 
-                :class="activeFilter === 'reels' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeFilter === 'reels' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-mobile-screen text-amber-400"></i>
+            <i class="fa-solid fa-mobile-screen text-[#FFBA70]"></i>
             <span>ريلز</span>
         </button>
 
         <!-- 4. تصميم (مربع أو مستطيل) -->
         <button type="button" @click="activeFilter = 'design'" 
-                :class="activeFilter === 'design' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeFilter === 'design' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-bezier-curve text-purple-300"></i>
+            <i class="fa-solid fa-bezier-curve text-[#FFBA70]"></i>
             <span>تصميم</span>
         </button>
 
         <!-- 5. حملات إعلانية (عرضي) -->
         <button type="button" @click="activeFilter = 'campaigns'" 
-                :class="activeFilter === 'campaigns' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeFilter === 'campaigns' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
             <i class="fa-solid fa-chart-line text-emerald-400"></i>
             <span>حملات إعلانية</span>
@@ -272,14 +272,14 @@
 
         <!-- 6. هوية بصرية (ملخص وبنود متعددة) -->
         <button type="button" @click="activeFilter = 'branding'" 
-                :class="activeFilter === 'branding' ? 'bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black shadow-lg shadow-orange-500/30 scale-105' : 'bg-[#150626] text-gray-300 hover:text-white border border-purple-800/60'"
+                :class="activeFilter === 'branding' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
                 class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
-            <i class="fa-solid fa-palette text-cyan-400"></i>
+            <i class="fa-solid fa-palette text-[#FFBA70]"></i>
             <span>هوية بصرية</span>
         </button>
     </div>
 
-    <!-- Portfolio Cards Grid (Styled per format: Reels=Vertical, Design=Square/Ratio, Promo=Horizontal with perfectly centered play button, Branding=Summary & Multiple items) -->
+    <!-- Portfolio Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
         @forelse($portfolioItems as $item)
         @php
@@ -309,7 +309,7 @@
              x-transition:enter="transition ease-out duration-300 transform"
              x-transition:enter-start="opacity-0 scale-95 translate-y-4"
              x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-             class="glass-card-purple rounded-[2rem] overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-2xl flex flex-col justify-between border border-purple-800/60 hover:border-brand-orange">
+             class="glass-card-purple rounded-[2rem] overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-2xl flex flex-col justify-between border-2 border-[#3E24C5]/60 hover:border-[#FF9420] hover:shadow-[0_0_35px_rgba(255,148,32,0.4)]">
             
             <div>
                 <!-- Thumbnail Box with Adjusted Aspect Ratio per Client Request -->
@@ -319,21 +319,21 @@
                     <img src="{{ $finalThumb }}" alt="{{ $item->title }}" 
                          class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
 
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#140626] via-black/20 to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1B082B] via-black/20 to-transparent z-10"></div>
                     
                     <!-- Centered Video Play Button for Promo & Reels (Properly Centered and Aligned) -->
                     @if($item->video_url)
                     <div class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
                         <div class="relative flex items-center justify-center">
-                            <span class="absolute w-16 h-16 rounded-full bg-brand-orange/30 animate-radar"></span>
-                            <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-brand-orange to-[#FF7A00] text-brand-dark flex items-center justify-center text-lg shadow-2xl group-hover:scale-115 transition-transform duration-300">
+                            <span class="absolute w-16 h-16 rounded-full bg-[#FF9420]/30 animate-radar"></span>
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-[#FF9420] to-[#FFBA70] text-black flex items-center justify-center text-lg shadow-[0_0_25px_rgba(255,148,32,0.6)] group-hover:scale-115 transition-transform duration-300">
                                 <i class="fa-solid fa-play mr-0.5"></i>
                             </div>
                         </div>
                     </div>
                     @elseif($isBranding)
                     <div class="absolute inset-0 z-20 flex items-center justify-center">
-                        <span class="px-4 py-2 rounded-xl bg-brand-orange/90 text-brand-dark font-black text-xs shadow-xl backdrop-blur flex items-center gap-2 group-hover:scale-105 transition-transform">
+                        <span class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF9420] to-[#FFBA70] text-black font-black text-xs shadow-xl backdrop-blur flex items-center gap-2 group-hover:scale-105 transition-transform">
                             <i class="fa-solid fa-layer-group"></i>
                             <span>تصفح بنود الهوية (8 بنود)</span>
                         </span>
@@ -345,12 +345,12 @@
                     @endif
 
                     <!-- Category Badge -->
-                    <span class="absolute top-3 right-3 z-20 text-[10px] font-bold px-3 py-1 rounded-full bg-black/80 backdrop-blur-md text-brand-peach border border-purple-500/30">
+                    <span class="absolute top-3 right-3 z-20 text-[10px] font-bold px-3 py-1 rounded-full bg-black/85 backdrop-blur-md text-[#FFBA70] border border-[#FF9420]/40">
                         {{ $item->category_arabic }}
                     </span>
 
                     @if($isReel)
-                    <span class="absolute top-3 left-3 z-20 text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-amber-500/80 text-black">
+                    <span class="absolute top-3 left-3 z-20 text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-[#FF9420] text-black font-mono">
                         9:16 Reel
                     </span>
                     @endif
@@ -358,11 +358,11 @@
 
                 <!-- Card Body -->
                 <div class="p-6 space-y-3">
-                    <h3 class="text-base font-black text-white group-hover:text-brand-orange transition-colors leading-snug">
+                    <h3 class="text-base font-black text-white group-hover:text-[#FF9420] transition-colors leading-snug">
                         {{ $item->title }}
                     </h3>
 
-                    <div class="text-xs text-brand-peach font-bold flex items-center gap-1.5">
+                    <div class="text-xs text-[#FFBA70] font-bold flex items-center gap-1.5">
                         <i class="fa-solid fa-building text-[10px]"></i>
                         <span>{{ $item->client_name }}</span>
                         @if($item->client_country)
@@ -371,13 +371,13 @@
                     </div>
 
                     @if($item->metrics)
-                    <div class="p-2.5 rounded-xl bg-orange-500/10 border border-brand-orange/20 text-xs text-brand-orange font-bold flex items-center gap-2">
+                    <div class="p-2.5 rounded-xl bg-[#FF9420]/15 border border-[#FF9420]/40 text-xs text-[#FF9420] font-bold flex items-center gap-2">
                         <i class="fa-solid fa-chart-line"></i>
                         <span>{{ $item->metrics }}</span>
                     </div>
                     @endif
 
-                    <p class="text-xs text-gray-300 leading-relaxed pt-1 font-normal line-clamp-3">
+                    <p class="text-xs text-gray-200 leading-relaxed pt-1 font-normal line-clamp-3">
                         {{ $item->description }}
                     </p>
                 </div>
@@ -387,7 +387,7 @@
             <div class="p-6 pt-0">
                 <button type="button"
                         @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')"
-                        class="w-full py-2.5 rounded-xl bg-purple-900/40 hover:bg-gradient-to-l hover:from-brand-orange hover:to-[#FF7A00] hover:text-brand-dark text-brand-peach font-bold text-xs border border-purple-600/40 hover:border-transparent transition flex items-center justify-center gap-2 shadow">
+                        class="w-full py-2.5 rounded-xl bg-[#1B082B] hover:bg-gradient-to-r hover:from-[#FF9420] hover:to-[#FFBA70] hover:text-black text-white font-bold text-xs border-2 border-[#3E24C5]/60 hover:border-transparent transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(62,36,197,0.3)]">
                     @if($item->video_url)
                     <i class="fa-solid fa-play"></i>
                     <span>تشغيل ومعاينة الفيديو</span>
