@@ -93,17 +93,124 @@
 
             </div>
 
-            <!-- Left Column: Official Pariq Logo without circular container and without background -->
-            <div class="lg:col-span-5 flex justify-center items-center relative py-6 lg:py-0">
-                <div class="relative w-64 sm:w-80 lg:w-[420px] flex items-center justify-center group animate-float-slow">
-                    
-                    <!-- Ambient Soft Warm Glow Behind Logo -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-[#FF9420]/30 via-[#3E24C5]/25 to-[#3F147E]/20 blur-3xl pointer-events-none scale-90"></div>
+            <!-- Left Column: Official Pariq Animated Interactive Centerpiece (اللوجو الجانبي مع الأشكال والأنيميشن التفاعلي والمدارات الفضائية) -->
+            <div class="lg:col-span-5 flex justify-center items-center relative py-8 lg:py-0">
+                
+                <!-- Main Orbital Ecosystem Container with 3D Tilt Interaction -->
+                <div class="relative w-72 h-72 sm:w-96 sm:h-96 lg:w-[460px] lg:h-[460px] flex items-center justify-center select-none"
+                     x-data="{ x: 0, y: 0, isHovered: false }"
+                     @mousemove="
+                         const r = $el.getBoundingClientRect();
+                         x = (($event.clientX - r.left) / r.width - 0.5) * 16;
+                         y = (($event.clientY - r.top) / r.height - 0.5) * -16;
+                     "
+                     @mouseenter="isHovered = true"
+                     @mouseleave="isHovered = false; x = 0; y = 0"
+                     :style="isHovered 
+                         ? `transform: perspective(1000px) rotateY(${x}deg) rotateX(${y}deg); transition: transform 0.12s ease-out;` 
+                         : 'transform: perspective(1000px) rotateY(0deg) rotateX(0deg); transition: transform 0.6s ease-out;'">
 
-                    <!-- Clean Transparent Logo without background or circular container -->
-                    <img src="{{ asset('images/logo.png') }}" 
-                         alt="PARIQ AGENCY" 
-                         class="relative w-56 sm:w-72 lg:w-96 object-contain filter drop-shadow-[0_12px_35px_rgba(255,148,32,0.4)] group-hover:scale-105 transition-transform duration-500">
+                    <!-- 1. Deep Atmospheric Radial Glow Fields (إضاءة نيون ثلاثية الأبعاد) -->
+                    <div class="absolute inset-4 rounded-full bg-gradient-to-tr from-[#FF9420]/35 via-[#3E24C5]/30 to-[#3F147E]/30 blur-3xl animate-pulse-glow pointer-events-none"></div>
+                    <div class="absolute w-44 h-44 rounded-full bg-[#FF9420]/25 blur-2xl pointer-events-none"></div>
+
+                    <!-- 2. Outer Electric Indigo Orbit Ring with Smooth Clockwise Rotation -->
+                    <div class="absolute inset-0 rounded-full border-2 border-dashed border-[#3E24C5]/40 animate-[spin_45s_linear_infinite] pointer-events-none">
+                        <!-- Orbiting Satellites on Outer Ring -->
+                        <div class="absolute -top-1.5 right-1/4 w-3.5 h-3.5 rounded-full bg-[#3E24C5] shadow-[0_0_16px_#3E24C5] animate-ping"></div>
+                        <div class="absolute -bottom-1.5 left-1/4 w-2.5 h-2.5 rounded-full bg-[#3E24C5] shadow-[0_0_12px_#3E24C5]"></div>
+                    </div>
+
+                    <!-- 3. Middle Vivid Brand Orange Orbit Ring with Counter-Clockwise Rotation -->
+                    <div class="absolute inset-5 sm:inset-7 rounded-full border-2 border-dashed border-[#FF9420]/55 animate-[spin_28s_linear_infinite_reverse] pointer-events-none">
+                        <!-- Orbiting Satellites on Middle Ring -->
+                        <div class="absolute top-3 right-6 w-3 h-3 rounded-full bg-[#FF9420] shadow-[0_0_20px_#FF9420] animate-ping"></div>
+                        <div class="absolute bottom-5 left-8 w-2.5 h-2.5 rounded-full bg-[#FFBA70] shadow-[0_0_14px_#FFBA70] animate-pulse"></div>
+                    </div>
+
+                    <!-- 4. Inner Fine Aura Ring with Pulsing Glow -->
+                    <div class="absolute inset-12 sm:inset-16 rounded-full border border-[#FFBA70]/30 animate-pulse-glow pointer-events-none"></div>
+
+                    <!-- 5. Studio HUD Precision Corner Brackets (أقواس وزوايا تقنية سينمائية) -->
+                    <span class="absolute top-6 left-6 w-3.5 h-3.5 border-t-2 border-l-2 border-[#FF9420]/60 rounded-tl-sm pointer-events-none"></span>
+                    <span class="absolute top-6 right-6 w-3.5 h-3.5 border-t-2 border-r-2 border-[#3E24C5]/60 rounded-tr-sm pointer-events-none"></span>
+                    <span class="absolute bottom-6 left-6 w-3.5 h-3.5 border-b-2 border-l-2 border-[#3E24C5]/60 rounded-bl-sm pointer-events-none"></span>
+                    <span class="absolute bottom-6 right-6 w-3.5 h-3.5 border-b-2 border-r-2 border-[#FF9420]/60 rounded-br-sm pointer-events-none"></span>
+
+                    <!-- 6. Floating 3D Capability Badges around Logo (بطاقات مهارات بريق ثلاثية الأبعاد) -->
+                    <!-- Top-Right: 4K Cinema ProRes -->
+                    <div class="hidden sm:flex absolute -top-3 -right-2 lg:-right-6 animate-float-slow pointer-events-auto z-20">
+                        <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#1B082B]/90 backdrop-blur-xl border border-[#FF9420]/50 shadow-[0_10px_25px_rgba(255,148,32,0.25)] hover:scale-105 hover:border-[#FF9420] transition-all group/badge">
+                            <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#BC6200] to-[#FF9420] flex items-center justify-center text-black font-black shadow-md shadow-orange-500/30">
+                                <i class="fa-solid fa-video text-xs"></i>
+                            </span>
+                            <div class="text-right">
+                                <div class="text-[11px] font-black text-white flex items-center gap-1.5">
+                                    <span>4K Cinema ProRes</span>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#FF9420] animate-ping"></span>
+                                </div>
+                                <div class="text-[9px] text-gray-300 font-medium">تصوير سينمائي 60FPS</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top-Left: Vector & Brand Identity -->
+                    <div class="hidden sm:flex absolute -top-2 -left-2 lg:-left-6 animate-float-reverse pointer-events-auto z-20">
+                        <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#1B082B]/90 backdrop-blur-xl border border-[#3E24C5]/60 shadow-[0_10px_25px_rgba(62,36,197,0.30)] hover:scale-105 hover:border-[#3E24C5] transition-all group/badge">
+                            <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#3F147E] to-[#3E24C5] flex items-center justify-center text-white font-black shadow-md shadow-indigo-500/30">
+                                <i class="fa-solid fa-bezier-curve text-xs"></i>
+                            </span>
+                            <div class="text-right">
+                                <div class="text-[11px] font-black text-white">Brand Identity</div>
+                                <div class="text-[9px] text-[#FFBA70] font-medium">هويات بصرية متكاملة</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom-Right: High Growth ROAS -->
+                    <div class="hidden sm:flex absolute -bottom-3 -right-2 lg:-right-4 animate-float-reverse pointer-events-auto z-20">
+                        <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#1B082B]/90 backdrop-blur-xl border border-emerald-500/50 shadow-[0_10px_25px_rgba(16,185,129,0.25)] hover:scale-105 hover:border-emerald-400 transition-all group/badge">
+                            <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white font-black shadow-md shadow-emerald-500/30">
+                                <i class="fa-solid fa-chart-line text-xs"></i>
+                            </span>
+                            <div class="text-right">
+                                <div class="text-[11px] font-black text-white flex items-center gap-1.5">
+                                    <span>+380% ROAS</span>
+                                    <i class="fa-solid fa-arrow-trend-up text-[10px] text-emerald-400"></i>
+                                </div>
+                                <div class="text-[9px] text-gray-300 font-medium">إعلانات ونمو مبيعات</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom-Left: Fast-Paced Reels -->
+                    <div class="hidden sm:flex absolute -bottom-2 -left-2 lg:-left-4 animate-float-slow pointer-events-auto z-20">
+                        <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-[#1B082B]/90 backdrop-blur-xl border border-[#FFBA70]/50 shadow-[0_10px_25px_rgba(255,186,112,0.25)] hover:scale-105 hover:border-[#FFBA70] transition-all group/badge">
+                            <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#BC6200] to-[#FFBA70] flex items-center justify-center text-black font-black shadow-md shadow-amber-500/30">
+                                <i class="fa-solid fa-bolt text-xs"></i>
+                            </span>
+                            <div class="text-right">
+                                <div class="text-[11px] font-black text-white">Fast-Paced Reels</div>
+                                <div class="text-[9px] text-gray-300 font-medium">مونتاج ريلز يخطف العين</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. Centerpiece: The Pure Transparent Pariq Logo (اللوجو الشفاف النقي مع البريق والكبسولة) -->
+                    <div class="relative z-10 flex flex-col items-center justify-center group animate-float-slow">
+                        
+                        <!-- Transparent Logo Image with Luxury Depth Shadows -->
+                        <img src="{{ asset('images/logo.png') }}" 
+                             alt="PARIQ AGENCY" 
+                             class="relative w-52 sm:w-64 lg:w-80 object-contain filter drop-shadow-[0_15px_40px_rgba(255,148,32,0.55)] group-hover:scale-108 transition-all duration-700 ease-out select-none">
+
+                        <!-- Brand Identity Capsule under Logo -->
+                        <div class="mt-2.5 px-4 py-1.5 rounded-full bg-[#1B082B]/95 border border-[#FF9420]/60 text-[10px] sm:text-[11px] font-black text-white shadow-2xl flex items-center gap-2 backdrop-blur-md group-hover:border-[#FF9420] transition-colors">
+                            <span class="w-2 h-2 rounded-full bg-[#FF9420] animate-ping"></span>
+                            <span class="tracking-widest bg-gradient-to-r from-white via-[#FFBA70] to-[#FF9420] bg-clip-text text-transparent">PARIQ CREATIVE AGENCY</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
