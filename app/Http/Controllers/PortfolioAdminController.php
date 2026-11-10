@@ -129,6 +129,13 @@ class PortfolioAdminController extends Controller
             $validated['video_url'] = '/uploads/videos/' . $filename;
         }
 
+        // Auto convert Google Drive thumbnail links to direct viewable image URLs
+        if (!empty($validated['thumbnail']) && str_contains($validated['thumbnail'], 'drive.google.com')) {
+            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['thumbnail'], $matches)) {
+                $validated['thumbnail'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
+            }
+        }
+
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['thumbnail'] = $validated['thumbnail'] ?? '/images/portfolio/social_1.webp';
         $validated['media_url'] = $validated['video_url'] ?? $validated['thumbnail'];
@@ -189,6 +196,14 @@ class PortfolioAdminController extends Controller
             $file->move($uploadPath, $filename);
             $validated['video_url'] = '/uploads/videos/' . $filename;
             $validated['media_url'] = $validated['video_url'];
+        }
+
+        // Auto convert Google Drive thumbnail links to direct viewable image URLs
+        if (!empty($validated['thumbnail']) && str_contains($validated['thumbnail'], 'drive.google.com')) {
+            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['thumbnail'], $matches)) {
+                $validated['thumbnail'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
+                $validated['thumbnail_url'] = $validated['thumbnail'];
+            }
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
