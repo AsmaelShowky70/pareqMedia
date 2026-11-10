@@ -17,8 +17,8 @@ class MediaHelper
 
         $url = trim($url);
 
-        // Standard link patterns: /file/d/{id}, id={id}, /d/{id}, /uc?id={id}
-        if (preg_match('/(?:file\/d\/|id=|open\?id=|\/d\/|uc\?export=view&id=|thumbnail\?id=)([a-zA-Z0-9_-]{25,})/i', $url, $matches)) {
+        // Standard link patterns: /file/d/{id}, /file/u/0/d/{id}, id={id}, /d/{id}, /uc?id={id}, /folders/{id}
+        if (preg_match('/(?:file(?:\/u\/\d+)?\/d\/|\/d\/|id=|open\?id=|\/folders\/|uc\?.*id=|thumbnail\?id=)([a-zA-Z0-9_-]{25,})/i', $url, $matches)) {
             return $matches[1];
         }
 
@@ -28,6 +28,24 @@ class MediaHelper
         }
 
         return null;
+    }
+
+    /**
+     * Convert any Google Drive link to a direct Google CDN URL.
+     * Consumes ZERO bytes of hosting storage, loads directly from Google's high-speed cloud CDN.
+     */
+    public static function convertToDirectCdnUrl(?string $url): ?string
+    {
+        if (empty($url)) {
+            return null;
+        }
+
+        $id = self::extractGoogleDriveId($url);
+        if ($id) {
+            return 'https://lh3.googleusercontent.com/d/' . $id;
+        }
+
+        return $url;
     }
 
     /**
@@ -184,16 +202,13 @@ class MediaHelper
         if (str_contains($url, 'drive.google.com') || str_contains($url, 'googleusercontent.com')) {
             $id = self::extractGoogleDriveId($url);
             if ($id) {
+                // If a local cached file exists (e.g. partner logo), use it:
                 $cacheDir = public_path('uploads/drive_cache');
                 $existing = glob($cacheDir . DIRECTORY_SEPARATOR . $id . '.*');
                 if (!empty($existing)) {
                     return asset('uploads/drive_cache/' . basename($existing[0]));
                 }
-                // Try caching right now
-                $cached = self::downloadAndCacheGoogleDrive($url);
-                if ($cached && !str_starts_with($cached, 'http')) {
-                    return asset(ltrim($cached, '/'));
-                }
+                // Otherwise serve directly from Google's high-speed CDN (Zero bytes of hosting storage!)
                 return 'https://lh3.googleusercontent.com/d/' . $id;
             }
         }

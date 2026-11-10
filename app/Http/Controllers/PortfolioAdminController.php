@@ -112,7 +112,19 @@ class PortfolioAdminController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // Handle uploaded image file
+        // 1. Smart cross-input detection: If user pasted a Google Drive link into video_url,
+        // treat it as the image/thumbnail and clear video_url so it doesn't fail as a video.
+        if (!empty($validated['video_url'])) {
+            $isDrive = str_contains($validated['video_url'], 'drive.google.com') || str_contains($validated['video_url'], 'googleusercontent.com');
+            if ($isDrive) {
+                if (empty($validated['thumbnail']) || $validated['thumbnail'] === '/images/portfolio/social_1.webp') {
+                    $validated['thumbnail'] = $validated['video_url'];
+                }
+                $validated['video_url'] = null;
+            }
+        }
+
+        // 2. Handle uploaded image file
         if ($request->hasFile('thumbnail_file')) {
             $file = $request->file('thumbnail_file');
             $uploadPath = public_path('uploads/portfolio');
@@ -123,11 +135,11 @@ class PortfolioAdminController extends Controller
             $file->move($uploadPath, $filename);
             $validated['thumbnail'] = '/uploads/portfolio/' . $filename;
         } elseif (!empty($validated['thumbnail'])) {
-            // Auto convert & cache Google Drive or other image links
-            $validated['thumbnail'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['thumbnail']);
+            // Convert Google Drive links to direct Cloud CDN URL (0 MB hosting storage consumed!)
+            $validated['thumbnail'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['thumbnail']);
         }
 
-        // Handle uploaded video file
+        // 3. Handle uploaded video file
         if ($request->hasFile('video_file')) {
             $file = $request->file('video_file');
             $uploadPath = public_path('uploads/videos');
@@ -139,7 +151,11 @@ class PortfolioAdminController extends Controller
             $validated['video_url'] = '/uploads/videos/' . $filename;
         }
 
-        // If thumbnail was not provided, auto-fetch high-res YouTube thumbnail
+        // 4. Identify if category is an image/design type
+        $imageCategories = ['social_design', 'branding', 'youtube_thumbnail', 'ad_results', 'design', 'campaigns'];
+        $isImageCategory = in_array($validated['category'] ?? '', $imageCategories, true);
+
+        // 5. If thumbnail was not provided and we have a YouTube video, auto-fetch high-res YouTube thumbnail
         if (empty($validated['thumbnail']) && !empty($validated['video_url'])) {
             $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($validated['video_url']);
             if ($ytThumb) {
@@ -149,9 +165,17 @@ class PortfolioAdminController extends Controller
 
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['thumbnail'] = $validated['thumbnail'] ?? '/images/portfolio/social_1.webp';
-        $validated['media_url'] = $validated['video_url'] ?? $validated['thumbnail'];
         $validated['thumbnail_url'] = $validated['thumbnail'];
-        $validated['media_type'] = !empty($validated['video_url']) ? 'video' : 'image';
+
+        if ($isImageCategory || empty($validated['video_url'])) {
+            $validated['media_type'] = 'image';
+            $validated['media_url'] = $validated['thumbnail'];
+            $validated['video_url'] = null;
+        } else {
+            $validated['media_type'] = 'video';
+            $validated['media_url'] = $validated['video_url'];
+        }
+
         $validated['sort_order'] = PortfolioItem::count() + 1;
 
         \App\Support\DatabaseSchemaAligner::alignPortfolioItems();
@@ -183,7 +207,19 @@ class PortfolioAdminController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // Handle uploaded image file
+        // 1. Smart cross-input detection: If user pasted a Google Drive link into video_url,
+        // treat it as the image/thumbnail and clear video_url.
+        if (!empty($validated['video_url'])) {
+            $isDrive = str_contains($validated['video_url'], 'drive.google.com') || str_contains($validated['video_url'], 'googleusercontent.com');
+            if ($isDrive) {
+                if (empty($validated['thumbnail']) || $validated['thumbnail'] === '/images/portfolio/social_1.webp') {
+                    $validated['thumbnail'] = $validated['video_url'];
+                }
+                $validated['video_url'] = null;
+            }
+        }
+
+        // 2. Handle uploaded image file
         if ($request->hasFile('thumbnail_file')) {
             $file = $request->file('thumbnail_file');
             $uploadPath = public_path('uploads/portfolio');
@@ -195,12 +231,12 @@ class PortfolioAdminController extends Controller
             $validated['thumbnail'] = '/uploads/portfolio/' . $filename;
             $validated['thumbnail_url'] = $validated['thumbnail'];
         } elseif (!empty($validated['thumbnail'])) {
-            // Auto convert & cache Google Drive or other image links
-            $validated['thumbnail'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['thumbnail']);
+            // Convert Google Drive links to direct Cloud CDN URL (0 MB hosting storage consumed!)
+            $validated['thumbnail'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['thumbnail']);
             $validated['thumbnail_url'] = $validated['thumbnail'];
         }
 
-        // Handle uploaded video file
+        // 3. Handle uploaded video file
         if ($request->hasFile('video_file')) {
             $file = $request->file('video_file');
             $uploadPath = public_path('uploads/videos');
@@ -213,7 +249,11 @@ class PortfolioAdminController extends Controller
             $validated['media_url'] = $validated['video_url'];
         }
 
-        // If thumbnail wasn't given, or is still the mock image, and video_url is a YouTube video:
+        // 4. Identify if category is an image/design type
+        $imageCategories = ['social_design', 'branding', 'youtube_thumbnail', 'ad_results', 'design', 'campaigns'];
+        $isImageCategory = in_array($validated['category'] ?? '', $imageCategories, true);
+
+        // 5. If thumbnail wasn't given, or is still the mock image, and video_url is a YouTube video:
         if (!empty($validated['video_url']) && (empty($validated['thumbnail']) || $validated['thumbnail'] === '/images/portfolio/social_1.webp')) {
             $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($validated['video_url']);
             if ($ytThumb) {
@@ -223,9 +263,14 @@ class PortfolioAdminController extends Controller
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
-        if (isset($validated['video_url'])) {
-            $validated['media_type'] = !empty($validated['video_url']) ? 'video' : 'image';
-            $validated['media_url'] = $validated['video_url'] ?? ($validated['thumbnail'] ?? $portfolioItem->thumbnail);
+
+        if ($isImageCategory || empty($validated['video_url'])) {
+            $validated['media_type'] = 'image';
+            $validated['video_url'] = null;
+            $validated['media_url'] = $validated['thumbnail'] ?? ($portfolioItem->thumbnail ?: asset('images/portfolio/social_1.webp'));
+        } else {
+            $validated['media_type'] = 'video';
+            $validated['media_url'] = $validated['video_url'];
         }
 
         try {
@@ -278,7 +323,7 @@ class PortfolioAdminController extends Controller
             $file->move($uploadPath, $filename);
             $validated['logo_url'] = '/uploads/partners/' . $filename;
         } elseif (!empty($validated['logo_url'])) {
-            $validated['logo_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['logo_url']);
+            $validated['logo_url'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['logo_url']);
         }
 
         \App\Support\DatabaseSchemaAligner::alignPartners();
@@ -315,7 +360,7 @@ class PortfolioAdminController extends Controller
             $file->move($uploadPath, $filename);
             $validated['logo_url'] = '/uploads/partners/' . $filename;
         } elseif (!empty($validated['logo_url'])) {
-            $validated['logo_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['logo_url']);
+            $validated['logo_url'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['logo_url']);
         }
 
         $validated['is_active'] = $request->boolean('is_active');
@@ -360,7 +405,7 @@ class PortfolioAdminController extends Controller
             $file->move($uploadPath, $filename);
             $validated['thumbnail'] = '/uploads/testimonials/' . $filename;
         } elseif (!empty($validated['thumbnail'])) {
-            $validated['thumbnail'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['thumbnail']);
+            $validated['thumbnail'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['thumbnail']);
         }
 
         if ($request->hasFile('video_file')) {
@@ -417,7 +462,7 @@ class PortfolioAdminController extends Controller
             $file->move($uploadPath, $filename);
             $validated['thumbnail'] = '/uploads/testimonials/' . $filename;
         } elseif (!empty($validated['thumbnail'])) {
-            $validated['thumbnail'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['thumbnail']);
+            $validated['thumbnail'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['thumbnail']);
         }
 
         if ($request->hasFile('video_file')) {
@@ -494,7 +539,7 @@ class PortfolioAdminController extends Controller
             $file->move($uploadPath, $filename);
             $validated['image_url'] = '/uploads/team/' . $filename;
         } elseif (!empty($validated['image_url'])) {
-            $validated['image_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['image_url']);
+            $validated['image_url'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['image_url']);
         }
 
         $validated['is_active'] = $request->boolean('is_active', true);
@@ -533,7 +578,7 @@ class PortfolioAdminController extends Controller
             $file->move($uploadPath, $filename);
             $validated['image_url'] = '/uploads/team/' . $filename;
         } elseif (!empty($validated['image_url'])) {
-            $validated['image_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['image_url']);
+            $validated['image_url'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['image_url']);
         }
 
         $validated['is_active'] = $request->boolean('is_active', true);

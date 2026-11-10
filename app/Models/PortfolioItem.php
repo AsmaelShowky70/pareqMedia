@@ -45,6 +45,13 @@ class PortfolioItem extends Model
             return \App\Support\MediaHelper::formatDisplayUrl($thumb);
         }
 
+        // If thumbnail was default/empty, check if media_url or video_url has a Google Drive link
+        foreach ([$this->media_url, $this->video_url] as $candidate) {
+            if (!empty($candidate) && (str_contains($candidate, 'drive.google.com') || str_contains($candidate, 'googleusercontent.com'))) {
+                return \App\Support\MediaHelper::formatDisplayUrl($candidate);
+            }
+        }
+
         // If thumbnail is empty or was legacy mock, check if video is YouTube
         if (!empty($this->video_url)) {
             $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($this->video_url);
@@ -54,6 +61,22 @@ class PortfolioItem extends Model
         }
 
         return !empty($thumb) ? \App\Support\MediaHelper::formatDisplayUrl($thumb) : asset('images/portfolio/social_1.webp');
+    }
+
+    /**
+     * Ensure Google Drive links mistakenly saved in video_url are not treated as video streams.
+     */
+    public function getVideoUrlAttribute($value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        if (str_contains($value, 'drive.google.com') || str_contains($value, 'googleusercontent.com')) {
+            return null;
+        }
+
+        return $value;
     }
 
     public function getCategoryArabicAttribute(): string

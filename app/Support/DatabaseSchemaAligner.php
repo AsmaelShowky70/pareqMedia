@@ -212,21 +212,48 @@ class DatabaseSchemaAligner
                 DB::statement("ALTER TABLE `portfolio_items` " . implode(', ', $columnsToAdd));
             }
 
-            // Self-heal and cache any Google Drive links stored in portfolio_items
+            // Self-repair any portfolio items with Google Drive links:
+            // 1) Converts them to direct Google Cloud CDN (0 MB hosting storage!)
+            // 2) If a Drive link was saved in video_url, sets it as thumbnail/media_url, clears video_url, sets media_type = image
             $driveItems = DB::table('portfolio_items')
                 ->where('thumbnail', 'like', '%drive.google.com%')
                 ->orWhere('thumbnail', 'like', '%googleusercontent.com%')
                 ->orWhere('thumbnail_url', 'like', '%drive.google.com%')
                 ->orWhere('thumbnail_url', 'like', '%googleusercontent.com%')
+                ->orWhere('media_url', 'like', '%drive.google.com%')
+                ->orWhere('media_url', 'like', '%googleusercontent.com%')
+                ->orWhere('video_url', 'like', '%drive.google.com%')
+                ->orWhere('video_url', 'like', '%googleusercontent.com%')
                 ->get();
+
             foreach ($driveItems as $di) {
-                $raw = $di->thumbnail ?: $di->thumbnail_url;
-                $localPath = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($raw);
-                if ($localPath) {
-                    DB::table('portfolio_items')->where('id', $di->id)->update([
-                        'thumbnail' => $localPath,
-                        'thumbnail_url' => $localPath,
-                    ]);
+                $rawDrive = null;
+                foreach ([$di->thumbnail, $di->thumbnail_url, $di->media_url, $di->video_url] as $candidate) {
+                    if (!empty($candidate) && (str_contains($candidate, 'drive.google.com') || str_contains($candidate, 'googleusercontent.com'))) {
+                        $rawDrive = $candidate;
+                        break;
+                    }
+                }
+
+                if ($rawDrive) {
+                    $cdnUrl = \App\Support\MediaHelper::convertToDirectCdnUrl($rawDrive);
+                    if ($cdnUrl) {
+                        $updates = [
+                            'thumbnail' => $cdnUrl,
+                            'thumbnail_url' => $cdnUrl,
+                        ];
+
+                        $imageCats = ['social_design', 'branding', 'youtube_thumbnail', 'ad_results', 'design', 'campaigns'];
+                        $isImage = in_array($di->category, $imageCats, true) || (str_contains($di->video_url ?? '', 'drive.google.com') || str_contains($di->video_url ?? '', 'googleusercontent.com'));
+
+                        if ($isImage) {
+                            $updates['media_type'] = 'image';
+                            $updates['media_url'] = $cdnUrl;
+                            $updates['video_url'] = null;
+                        }
+
+                        DB::table('portfolio_items')->where('id', $di->id)->update($updates);
+                    }
                 }
             }
 
