@@ -286,8 +286,76 @@
 </section>
 
 <!-- =========================================================================
-     2. LIVE ANIMATED STATS COUNTER BAR (احصائيات زي مهي موجودة)
+     3. LIVE ANIMATED STATS COUNTER BAR (احصائيات وكالة بريق المعتمدة)
      ========================================================================= -->
+<script>
+    function pariqStatsCounter() {
+        const pTarget = {{ (int) ($stats['projects_count'] ?? 480) }};
+        const cTarget = {{ (int) ($stats['clients_count'] ?? 125) }};
+        const yTarget = {{ (int) ($stats['years_count'] ?? 6) }};
+        const tTarget = {{ (int) ($stats['team_count'] ?? 18) }};
+
+        return {
+            started: false,
+            projects: pTarget,
+            clients: cTarget,
+            years: yTarget,
+            team: tTarget,
+            targets: {
+                projects: pTarget,
+                clients: cTarget,
+                years: yTarget,
+                team: tTarget
+            },
+            initObserver(el) {
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries) => {
+                        if (entries[0] && entries[0].isIntersecting) {
+                            this.startCount();
+                            observer.disconnect();
+                        }
+                    }, { threshold: 0.15 });
+                    observer.observe(el);
+                } else {
+                    this.startCount();
+                }
+            },
+            startCount() {
+                if (this.started) return;
+                this.started = true;
+                this.projects = 0;
+                this.clients = 0;
+                this.years = 0;
+                this.team = 0;
+                const duration = 2000;
+                const steps = 50;
+                const stepTime = duration / steps;
+                let step = 0;
+
+                const timer = setInterval(() => {
+                    step++;
+                    const progress = step / steps;
+                    const ease = 1 - Math.pow(1 - progress, 3);
+
+                    this.projects = Math.floor(ease * this.targets.projects);
+                    this.clients = Math.floor(ease * this.targets.clients);
+                    this.years = Math.floor(ease * this.targets.years);
+                    this.team = Math.floor(ease * this.targets.team);
+
+                    if (step >= steps) {
+                        this.projects = this.targets.projects;
+                        this.clients = this.targets.clients;
+                        this.years = this.targets.years;
+                        this.team = this.targets.team;
+                        clearInterval(timer);
+                    }
+                }, stepTime);
+            }
+        };
+    }
+    window.pariqStatsCounter = pariqStatsCounter;
+</script>
+
 <section id="stats-summary" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <div x-data="pariqStatsCounter()" 
          x-init="initObserver($el)"
@@ -300,7 +368,7 @@
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#FF9420] flex items-center justify-center font-mono">
-                    <span>+</span><span x-text="projects">{{ $stats['projects_count'] ?? 480 }}</span>
+                    <span>+</span><span x-text="projects !== undefined && projects !== null ? projects : '{{ $stats['projects_count'] ?? 480 }}'">{{ $stats['projects_count'] ?? 480 }}</span>
                 </div>
                 <div class="text-[11px] sm:text-xs text-white mt-1 font-bold">{{ $stats['projects_label'] ?? 'مشروع مكتمل بنجاح' }}</div>
             </div>
@@ -311,7 +379,7 @@
                     <i class="fa-solid fa-users"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
-                    <span>+</span><span x-text="clients">{{ $stats['clients_count'] ?? 125 }}</span>
+                    <span>+</span><span x-text="clients !== undefined && clients !== null ? clients : '{{ $stats['clients_count'] ?? 125 }}'">{{ $stats['clients_count'] ?? 125 }}</span>
                 </div>
                 <div class="text-[11px] sm:text-xs text-gray-200 mt-1 font-bold">{{ $stats['clients_label'] ?? 'عميل سعيد في 6 دول' }}</div>
             </div>
@@ -322,7 +390,7 @@
                     <i class="fa-solid fa-award"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#FFBA70] flex items-center justify-center font-mono">
-                    <span>+</span><span x-text="years">{{ $stats['years_count'] ?? 6 }}</span>
+                    <span>+</span><span x-text="years !== undefined && years !== null ? years : '{{ $stats['years_count'] ?? 6 }}'">{{ $stats['years_count'] ?? 6 }}</span>
                 </div>
                 <div class="text-[11px] sm:text-xs text-gray-200 mt-1 font-bold">{{ $stats['years_label'] ?? 'سنوات خبرة متواصلة' }}</div>
             </div>
@@ -333,7 +401,7 @@
                     <i class="fa-solid fa-user-group"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
-                    <span>+</span><span x-text="team">{{ $stats['team_count'] ?? 18 }}</span>
+                    <span>+</span><span x-text="team !== undefined && team !== null ? team : '{{ $stats['team_count'] ?? 18 }}'">{{ $stats['team_count'] ?? 18 }}</span>
                 </div>
                 <div class="text-[11px] sm:text-xs text-gray-200 mt-1 font-bold">{{ $stats['team_label'] ?? 'مبدع وخبير متخصص' }}</div>
             </div>
@@ -1701,63 +1769,5 @@
         }
         animate();
     })();
-    })();
-
-    // Stats Counter
-    function pariqStatsCounter() {
-        return {
-            started: false,
-            projects: 0,
-            clients: 0,
-            years: 0,
-            team: 0,
-            targets: {
-                projects: {{ (int) ($stats['projects_count'] ?? 480) }},
-                clients: {{ (int) ($stats['clients_count'] ?? 125) }},
-                years: {{ (int) ($stats['years_count'] ?? 6) }},
-                team: {{ (int) ($stats['team_count'] ?? 18) }}
-            },
-            initObserver(el) {
-                if ('IntersectionObserver' in window) {
-                    const observer = new IntersectionObserver((entries) => {
-                        if (entries[0].isIntersecting) {
-                            this.startCount();
-                            observer.disconnect();
-                        }
-                    }, { threshold: 0.15 });
-                    observer.observe(el);
-                } else {
-                    this.startCount();
-                }
-            },
-            startCount() {
-                if (this.started) return;
-                this.started = true;
-                const duration = 2000;
-                const steps = 50;
-                const stepTime = duration / steps;
-                let step = 0;
-
-                const timer = setInterval(() => {
-                    step++;
-                    const progress = step / steps;
-                    const ease = 1 - Math.pow(1 - progress, 3);
-
-                    this.projects = Math.floor(ease * this.targets.projects);
-                    this.clients = Math.floor(ease * this.targets.clients);
-                    this.years = Math.floor(ease * this.targets.years);
-                    this.team = Math.floor(ease * this.targets.team);
-
-                    if (step >= steps) {
-                        this.projects = this.targets.projects;
-                        this.clients = this.targets.clients;
-                        this.years = this.targets.years;
-                        this.team = this.targets.team;
-                        clearInterval(timer);
-                    }
-                }, stepTime);
-            }
-        }
-    }
 </script>
 @endpush
