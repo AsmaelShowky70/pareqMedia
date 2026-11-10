@@ -254,7 +254,7 @@
             <!-- Top Video Info Bar -->
             <div class="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-brand-orange/40 text-[9px] sm:text-[11px] text-white font-bold pointer-events-none">
                 <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-orange animate-ping"></span>
-                <span>PARIQ SHOWREEL • 1080×1920</span>
+                <span>PARIQ SHOWREEL • 4K</span>
             </div>
 
             <!-- Bottom Left Actions: Sound Toggle + Fullscreen Modal -->
