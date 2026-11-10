@@ -22,6 +22,7 @@ class DatabaseSchemaAligner
             self::alignPartners();
             self::alignTestimonials();
             self::alignSiteSettings();
+            self::alignTeamMembers();
         } catch (\Throwable $e) {
             // Fail safely without disrupting user requests
             \Illuminate\Support\Facades\Log::warning('DatabaseSchemaAligner warning: ' . $e->getMessage());
@@ -280,6 +281,154 @@ class DatabaseSchemaAligner
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('alignSiteSettings warning: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ensure `team_members` table exists and initial members are populated.
+     */
+    public static function alignTeamMembers(): void
+    {
+        try {
+            if (!Schema::hasTable('team_members')) {
+                Schema::create('team_members', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->id();
+                    $table->string('name');
+                    $table->string('role');
+                    $table->string('dept')->nullable();
+                    $table->text('quote')->nullable();
+                    $table->string('image_url')->nullable();
+                    $table->string('icon')->nullable()->default('fa-solid fa-user');
+                    $table->string('gradient')->nullable()->default('from-brand-orange to-[#FF7A00]');
+                    $table->string('letter')->nullable();
+                    $table->integer('sort_order')->default(0);
+                    $table->boolean('is_active')->default(true);
+                    $table->timestamps();
+                });
+            }
+
+            // Seed initial 8 team members if table is empty
+            if (DB::table('team_members')->count() === 0) {
+                $sampleImg = '/images/team/member_sample.jpg';
+                $initialMembers = [
+                    [
+                        'name' => 'سيف عادل',
+                        'role' => 'المؤسس والمدير الإبداعي التنفيذي',
+                        'dept' => 'الإدارة العامة والإبداع',
+                        'quote' => 'نصنع محتوى لا يُنسى يملأ العلامة بريقاً وهيبة ويحقق أرقام مبيعات حقيقية',
+                        'image_url' => $sampleImg,
+                        'icon' => 'fa-solid fa-crown',
+                        'gradient' => 'from-brand-orange to-[#FF7A00]',
+                        'letter' => 'س',
+                        'sort_order' => 1,
+                        'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'name' => 'م. كريم ممدوح',
+                        'role' => 'مدير التصوير والإنتاج السينمائي',
+                        'dept' => 'قسم التصوير والإخراج',
+                        'quote' => 'الصورة السينمائية والإضاءة الدقيقة هي لغة الفخامة التي تجذب عميلك المستهدف',
+                        'image_url' => $sampleImg,
+                        'icon' => 'fa-solid fa-video',
+                        'gradient' => 'from-purple-500 to-indigo-600',
+                        'letter' => 'ك',
+                        'sort_order' => 2,
+                        'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'name' => 'أ. ياسمين الشريف',
+                        'role' => 'مديرة تصميم الهويات البصرية',
+                        'dept' => 'قسم التصميم والبراندنج',
+                        'quote' => 'الهوية الناجحة هي شخصية كاملة تعكس قيم البراند وتترسخ في ذهن الجمهور',
+                        'image_url' => $sampleImg,
+                        'icon' => 'fa-solid fa-palette',
+                        'gradient' => 'from-amber-400 to-orange-500',
+                        'letter' => 'ي',
+                        'sort_order' => 3,
+                        'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'name' => 'أ. أحمد عبد المنعم',
+                        'role' => 'خبير الإعلانات الممولة وميديا باينج',
+                        'dept' => 'قسم الميديا باينج والنمو',
+                        'quote' => 'كل مليم يُصرف في الإعلانات يجب أن يعود بأقصى ربحية ممكنة ومبيعات مؤكدة',
+                        'image_url' => $sampleImg,
+                        'icon' => 'fa-solid fa-chart-line',
+                        'gradient' => 'from-emerald-500 to-teal-600',
+                        'letter' => 'أ',
+                        'sort_order' => 4,
+                        'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'name' => 'أ. نورهان فوزي',
+                        'role' => 'كبيرة كُتاب المحتوى والسكريبتات',
+                        'dept' => 'قسم كتابة المحتوى والـ Copy',
+                        'quote' => 'الكلمة المدروسة والـ Hook الخاطف في أول 3 ثوانٍ هما سر مضاعفة التحويل',
+                        'image_url' => $sampleImg,
+                        'icon' => 'fa-solid fa-pen-nib',
+                        'gradient' => 'from-pink-500 to-rose-600',
+                        'letter' => 'ن',
+                        'sort_order' => 5,
+                        'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'name' => 'أ. مروان خالد',
+                        'role' => 'مهندس المونتاج والتلوين DaVinci',
+                        'dept' => 'قسم المونتاج والبوست برودكشن',
+                        'quote' => 'الإيقاع السريع وتناسق الألوان والمؤثرات الصوتية تصنع سحراً لا يقاوم',
+                        'image_url' => $sampleImg,
+                        'icon' => 'fa-solid fa-film',
+                        'gradient' => 'from-blue-500 to-cyan-600',
+                        'letter' => 'م',
+                        'sort_order' => 6,
+                        'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'name' => 'أ. زياد طارق',
+                        'role' => 'مصمم الموشن جرافيك والمؤثرات',
+                        'dept' => 'قسم الموشن والـ VFX',
+                        'quote' => 'تحريك العناصر بدقة يضفي حيوية لا تضاهى على كل فكرة وفيديو',
+                        'image_url' => $sampleImg,
+                        'icon' => 'fa-solid fa-wand-magic-sparkles',
+                        'gradient' => 'from-yellow-400 to-amber-500',
+                        'letter' => 'ز',
+                        'sort_order' => 7,
+                        'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'name' => 'أ. رنا النجار',
+                        'role' => 'مديرة نجاح العملاء والإنتاج',
+                        'dept' => 'قسم إدارة المشاريع والجودة',
+                        'quote' => 'رضا العميل والتسليم في الموعد المحدد هما الأساس الراسخ لكل شراكة ناجحة',
+                        'image_url' => $sampleImg,
+                        'icon' => 'fa-solid fa-handshake',
+                        'gradient' => 'from-purple-600 to-brand-orange',
+                        'letter' => 'ر',
+                        'sort_order' => 8,
+                        'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                ];
+
+                DB::table('team_members')->insert($initialMembers);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('alignTeamMembers warning: ' . $e->getMessage());
         }
     }
 }

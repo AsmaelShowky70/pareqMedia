@@ -100,8 +100,7 @@
 </section>
 
 <!-- =========================================================================
-     2. TEAM MEMBERS SECTION (أعضاء الفريق بالمسمي الوظيفي مع جملة التعاون بعقلية واحدة)
-     (حسب طلب العميل مع حذف خريطة الطريق وعتادنا وأدواتنا)
+     2. TEAM MEMBERS SECTION (أعضاء الفريق بالصور الحقيقية والمسميات مع إمكانية الإدارة من CMS)
      ========================================================================= -->
 <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10 border-t border-purple-900/40">
     
@@ -125,12 +124,14 @@
     <!-- Team Members Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         @php
-            $teamMembers = [
+            $sampleImg = asset('images/team/member_sample.jpg');
+            $defaultMembers = [
                 [
                     'name' => 'سيف عادل',
                     'role' => 'المؤسس والمدير الإبداعي التنفيذي',
                     'dept' => 'الإدارة العامة والإبداع',
-                    'quote' => 'نصنع محتوى لا يُنسى يبني للعلامة بريقاً وهيبة ويحقق أرقام مبيعات حقيقية.',
+                    'quote' => 'نصنع محتوى لا يُنسى يملأ العلامة بريقاً وهيبة ويحقق أرقام مبيعات حقيقية',
+                    'image_url' => $sampleImg,
                     'icon' => 'fa-solid fa-crown',
                     'gradient' => 'from-brand-orange to-[#FF7A00]',
                     'letter' => 'س'
@@ -139,7 +140,8 @@
                     'name' => 'م. كريم ممدوح',
                     'role' => 'مدير التصوير والإنتاج السينمائي',
                     'dept' => 'قسم التصوير والإخراج',
-                    'quote' => 'الصورة السينمائية والإضاءة الدقيقة هي لغة الفخامة التي تجذب عميلك المستهدف.',
+                    'quote' => 'الصورة السينمائية والإضاءة الدقيقة هي لغة الفخامة التي تجذب عميلك المستهدف',
+                    'image_url' => $sampleImg,
                     'icon' => 'fa-solid fa-video',
                     'gradient' => 'from-purple-500 to-indigo-600',
                     'letter' => 'ك'
@@ -147,8 +149,9 @@
                 [
                     'name' => 'أ. ياسمين الشريف',
                     'role' => 'مديرة تصميم الهويات البصرية',
-                    'dept' => 'قسم التصميم والبراندينج',
-                    'quote' => 'الهوية الناجحة هي شخصية كاملة تعكس قيم البراند وتترسخ في ذهن الجمهور.',
+                    'dept' => 'قسم التصميم والبراندنج',
+                    'quote' => 'الهوية الناجحة هي شخصية كاملة تعكس قيم البراند وتترسخ في ذهن الجمهور',
+                    'image_url' => $sampleImg,
                     'icon' => 'fa-solid fa-palette',
                     'gradient' => 'from-amber-400 to-orange-500',
                     'letter' => 'ي'
@@ -157,16 +160,18 @@
                     'name' => 'أ. أحمد عبد المنعم',
                     'role' => 'خبير الإعلانات الممولة وميديا باينج',
                     'dept' => 'قسم الميديا باينج والنمو',
-                    'quote' => 'كل مليم يُصرف في الإعلانات يجب أن يعود بأقصى ربحية ممكنة ومبيعات مؤكدة.',
+                    'quote' => 'كل مليم يُصرف في الإعلانات يجب أن يعود بأقصى ربحية ممكنة ومبيعات مؤكدة',
+                    'image_url' => $sampleImg,
                     'icon' => 'fa-solid fa-chart-line',
                     'gradient' => 'from-emerald-500 to-teal-600',
                     'letter' => 'أ'
                 ],
                 [
                     'name' => 'أ. نورهان فوزي',
-                    'role' => 'كبيرة كُتّاب المحتوى والسكريبتات',
+                    'role' => 'كبيرة كُتاب المحتوى والسكريبتات',
                     'dept' => 'قسم كتابة المحتوى والـ Copy',
-                    'quote' => 'الكلمة المدروسة والـ Hook الخاطف في أول 3 ثوانٍ هما سر مضاعفة التحويل.',
+                    'quote' => 'الكلمة المدروسة والـ Hook الخاطف في أول 3 ثوانٍ هما سر مضاعفة التحويل',
+                    'image_url' => $sampleImg,
                     'icon' => 'fa-solid fa-pen-nib',
                     'gradient' => 'from-pink-500 to-rose-600',
                     'letter' => 'ن'
@@ -174,8 +179,9 @@
                 [
                     'name' => 'أ. مروان خالد',
                     'role' => 'مهندس المونتاج والتلوين DaVinci',
-                    'dept' => 'قسم المونتاج وبوست برودكشن',
-                    'quote' => 'الإيقاع السريع وتناسق الألوان والمؤثرات الصوتية تصنع سحراً لا يقاوم.',
+                    'dept' => 'قسم المونتاج والبوست برودكشن',
+                    'quote' => 'الإيقاع السريع وتناسق الألوان والمؤثرات الصوتية تصنع سحراً لا يقاوم',
+                    'image_url' => $sampleImg,
                     'icon' => 'fa-solid fa-film',
                     'gradient' => 'from-blue-500 to-cyan-600',
                     'letter' => 'م'
@@ -184,7 +190,8 @@
                     'name' => 'أ. زياد طارق',
                     'role' => 'مصمم الموشن جرافيك والمؤثرات',
                     'dept' => 'قسم الموشن والـ VFX',
-                    'quote' => 'تحريك العناصر بدقة يضفي حيوية لا تضاهى على كل فكرة وفيديو.',
+                    'quote' => 'تحريك العناصر بدقة يضفي حيوية لا تضاهى على كل فكرة وفيديو',
+                    'image_url' => $sampleImg,
                     'icon' => 'fa-solid fa-wand-magic-sparkles',
                     'gradient' => 'from-yellow-400 to-amber-500',
                     'letter' => 'ز'
@@ -193,41 +200,73 @@
                     'name' => 'أ. رنا النجار',
                     'role' => 'مديرة نجاح العملاء والإنتاج',
                     'dept' => 'قسم إدارة المشاريع والجودة',
-                    'quote' => 'رضا العميل والتسليم في الموعد المحدد هما الأساس الراسخ لكل شراكة ناجحة.',
+                    'quote' => 'رضا العميل والتسليم في الموعد المحدد هما الأساس الراسخ لكل شراكة ناجحة',
+                    'image_url' => $sampleImg,
                     'icon' => 'fa-solid fa-handshake',
                     'gradient' => 'from-purple-600 to-brand-orange',
                     'letter' => 'ر'
                 ]
             ];
+
+            $membersList = (isset($teamMembers) && $teamMembers instanceof \Illuminate\Support\Collection && $teamMembers->isNotEmpty()) 
+                ? $teamMembers 
+                : collect($defaultMembers);
         @endphp
 
-        @foreach($teamMembers as $tm)
+        @foreach($membersList as $tm)
+        @php
+            $isModel = $tm instanceof \App\Models\TeamMember;
+            $name = $isModel ? $tm->name : $tm['name'];
+            $role = $isModel ? $tm->role : $tm['role'];
+            $dept = $isModel ? $tm->dept : $tm['dept'];
+            $quote = $isModel ? $tm->quote : $tm['quote'];
+            $icon = $isModel ? ($tm->icon ?: 'fa-solid fa-user') : ($tm['icon'] ?? 'fa-solid fa-user');
+            $gradient = $isModel ? ($tm->gradient ?: 'from-brand-orange to-[#FF7A00]') : ($tm['gradient'] ?? 'from-brand-orange to-[#FF7A00]');
+            $letter = $isModel ? ($tm->letter ?: mb_substr($name, 0, 1, 'UTF-8')) : ($tm['letter'] ?? mb_substr($name, 0, 1, 'UTF-8'));
+            $imageUrl = $isModel ? $tm->display_image : ($tm['image_url'] ?? null);
+            if (!$imageUrl) {
+                $imageUrl = asset('images/team/member_sample.jpg');
+            }
+        @endphp
         <div class="glass-card-purple rounded-3xl p-6 border border-purple-800/60 hover:border-brand-orange transition-all duration-300 group hover:-translate-y-2 flex flex-col justify-between shadow-xl">
             
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr {{ $tm['gradient'] }} text-brand-dark font-black text-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                        {{ $tm['letter'] }}
+                    <!-- Real Profile Photo with Glowing Border -->
+                    <div class="relative group/avatar">
+                        @if($imageUrl)
+                        <div class="w-16 h-16 rounded-2xl overflow-hidden p-0.5 bg-gradient-to-tr from-[#FF9420] via-[#FFBA70] to-[#3E24C5] shadow-[0_0_20px_rgba(255,148,32,0.35)] group-hover:shadow-[0_0_25px_rgba(255,148,32,0.6)] group-hover:scale-108 transition-all duration-300">
+                            <img src="{{ $imageUrl }}" 
+                                 alt="{{ $name }}" 
+                                 class="w-full h-full object-cover object-top rounded-[14px]">
+                        </div>
+                        @else
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr {{ $gradient }} text-brand-dark font-black text-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                            {{ $letter }}
+                        </div>
+                        @endif
+                        <span class="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#1B082B] shadow" title="عضو نشط في بريق"></span>
                     </div>
-                    <div class="w-9 h-9 rounded-xl bg-purple-900/50 border border-purple-700/40 text-brand-orange flex items-center justify-center text-sm">
-                        <i class="{{ $tm['icon'] }}"></i>
+
+                    <div class="w-9 h-9 rounded-xl bg-purple-900/50 border border-purple-700/40 text-brand-orange flex items-center justify-center text-sm shadow">
+                        <i class="{{ $icon }}"></i>
                     </div>
                 </div>
 
                 <div>
                     <h3 class="text-base font-black text-white group-hover:text-brand-orange transition-colors">
-                        {{ $tm['name'] }}
+                        {{ $name }}
                     </h3>
                     <div class="text-xs font-bold text-brand-peach mt-0.5">
-                        {{ $tm['role'] }}
+                        {{ $role }}
                     </div>
                     <div class="text-[10px] text-gray-400 mt-0.5">
-                        {{ $tm['dept'] }}
+                        {{ $dept }}
                     </div>
                 </div>
 
                 <p class="text-xs text-gray-300 leading-relaxed italic border-t border-purple-800/40 pt-3">
-                    "{{ $tm['quote'] }}"
+                    "{{ $quote }}"
                 </p>
             </div>
 
@@ -238,7 +277,6 @@
                 </span>
                 <span class="font-mono">PARIQ TEAM</span>
             </div>
-
         </div>
         @endforeach
     </div>

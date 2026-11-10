@@ -18,7 +18,10 @@
     selectedPartner: null,
     addTestimonialModal: false,
     editTestimonialModal: false,
-    selectedTestimonial: null
+    selectedTestimonial: null,
+    addTeamModal: false,
+    editTeamModal: false,
+    selectedTeamMember: null
 }">
 
     <!-- Tab navigation -->
@@ -28,6 +31,13 @@
                 class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
             <i class="fa-solid fa-briefcase"></i>
             <span>خدمات الوكالة وتصنيفاتها ({{ $services->count() }})</span>
+        </button>
+
+        <button type="button" @click="tab = 'team'" 
+                :class="tab === 'team' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
+                class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
+            <i class="fa-solid fa-users-gear text-brand-gold"></i>
+            <span>فريق العمل (من نحن) ({{ isset($teamMembers) ? $teamMembers->count() : 0 }})</span>
         </button>
 
         <button type="button" @click="tab = 'portfolio'" 
@@ -1079,6 +1089,97 @@
         </form>
     </div>
 
+    <!-- 7. TEAM MEMBERS TAB (إدارة وتعديل أعضاء فريق العمل - من نحن) -->
+    <div x-show="tab === 'team'" class="space-y-4" style="display: none;">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-brand-card/60 border border-brand-border/60 p-4 rounded-2xl">
+            <div>
+                <h3 class="text-xs font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-users text-brand-orange"></i>
+                    <span>إدارة وتعديل أعضاء فريق العمل (صفحة من نحن)</span>
+                </h3>
+                <p class="text-[11px] text-gray-400">يمكنك هنا إضافة أو تعديل أو حذف أي عضو في الفريق، وتغيير المسمى الوظيفي، واقتباس العضو، وتعيين صورة حقيقية (عبر الرفع المباشر أو رابط Google Drive).</p>
+            </div>
+            <button @click="addTeamModal = true" type="button" 
+                    class="px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 shadow-lg flex items-center gap-2 self-start sm:self-auto whitespace-nowrap">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>إضافة عضو فريق جديد</span>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            @forelse($teamMembers as $tm)
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4 flex flex-col justify-between hover:border-brand-yellow/50 transition shadow group">
+                <div class="space-y-3">
+                    <div class="flex items-start justify-between gap-3">
+                        <!-- Profile Photo -->
+                        <div class="relative">
+                            @if($tm->display_image)
+                            <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-brand-orange shadow-md p-0.5 bg-[#1B082B]">
+                                <img src="{{ $tm->display_image }}" alt="{{ $tm->name }}" class="w-full h-full object-cover object-top rounded-[12px]">
+                            </div>
+                            @else
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-orange to-[#FF7A00] text-brand-dark font-black text-2xl flex items-center justify-center shadow-lg">
+                                {{ $tm->letter ?? mb_substr($tm->name, 0, 1, 'UTF-8') }}
+                            </div>
+                            @endif
+                            <span class="absolute -bottom-1 -left-1 w-3.5 h-3.5 rounded-full {{ $tm->is_active ? 'bg-emerald-500' : 'bg-gray-500' }} border-2 border-brand-card shadow"></span>
+                        </div>
+
+                        <div class="text-left flex flex-col items-end">
+                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold {{ $tm->is_active ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30' }}">
+                                {{ $tm->is_active ? 'ظاهر بالموقع' : 'معطل' }}
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-mono mt-1">#{{ $tm->sort_order }}</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-white text-base leading-snug">{{ $tm->name }}</h4>
+                        <div class="text-xs text-brand-gold font-bold mt-0.5">{{ $tm->role }}</div>
+                        @if($tm->dept)
+                        <div class="text-[11px] text-gray-400 mt-0.5">{{ $tm->dept }}</div>
+                        @endif
+                    </div>
+
+                    @if($tm->quote)
+                    <p class="text-xs text-gray-300 leading-relaxed italic border-t border-brand-border/40 pt-2 line-clamp-3">
+                        "{{ $tm->quote }}"
+                    </p>
+                    @endif
+                </div>
+
+                <div class="pt-3 border-t border-brand-border/60 flex items-center justify-between text-xs">
+                    <span class="text-[10px] text-gray-400 flex items-center gap-1">
+                        <i class="{{ $tm->icon ?? 'fa-solid fa-user' }} text-brand-orange"></i>
+                        <span>عضو بريق</span>
+                    </span>
+
+                    <div class="flex items-center gap-2">
+                        <button type="button" 
+                                @click="selectedTeamMember = {{ json_encode($tm) }}; editTeamModal = true" 
+                                class="px-3 py-1.5 rounded-lg bg-brand-purple hover:bg-brand-hover text-brand-gold hover:text-white border border-brand-border text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>تعديل</span>
+                        </button>
+
+                        <form method="POST" action="{{ route('cms.team-members.destroy', $tm->id) }}" onsubmit="return confirm('هل أنت متأكد من حذف عضو الفريق {{ $tm->name }} نهائياً من الموقع؟')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="p-1.5 text-gray-400 hover:text-rose-400 transition" title="حذف العضو">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-span-4 text-center py-12 text-gray-400">
+                لا يوجد أعضاء فريق مضافين حتى الآن. انقر على زر "إضافة عضو فريق جديد" للبدء.
+            </div>
+            @endforelse
+        </div>
+    </div>
+
     <!-- MODAL: ADD PARTNER -->
     <div x-show="addPartnerModal" 
          x-transition 
@@ -1397,6 +1498,160 @@
 
                 <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
                     <button @click="editTestimonialModal = false" type="button" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-brand-hover">إلغاء</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">حفظ التعديلات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD TEAM MEMBER -->
+    <div x-show="addTeamModal" 
+         x-transition 
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
+         style="display: none;">
+        <div @click.away="addTeamModal = false" class="w-full max-w-xl bg-brand-card border border-brand-border rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-brand-border pb-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-brand-gold"></i>
+                    <span>إضافة عضو جديد لفريق العمل (من نحن)</span>
+                </h3>
+                <button @click="addTeamModal = false" type="button" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form method="POST" action="{{ route('cms.team-members.store') }}" enctype="multipart/form-data" class="space-y-4">
+                @csrf
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">اسم العضو <span class="text-red-400">*</span></label>
+                        <input type="text" name="name" required placeholder="مثال: سيف عادل" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">المسمى الوظيفي <span class="text-red-400">*</span></label>
+                        <input type="text" name="role" required placeholder="مثال: المؤسس والمدير الإبداعي التنفيذي" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">القسم</label>
+                        <input type="text" name="dept" placeholder="مثال: الإدارة العامة والإبداع" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">الترتيب في الصفحة</label>
+                        <input type="number" name="sort_order" value="{{ (isset($teamMembers) ? $teamMembers->count() : 0) + 1 }}" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-300 mb-1">مقولة أو نبذة العضو</label>
+                    <textarea name="quote" rows="2" placeholder="نص المقولة التي تظهر على بطاقة العضو..." class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold"></textarea>
+                </div>
+
+                <!-- Photo Options (Direct file or Google Drive / URL) -->
+                <div class="p-3.5 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-amber-300 text-xs">
+                        <i class="fa-solid fa-camera ml-1"></i>
+                        صورة البروفايل الحقيقية للعضو
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] text-brand-gold font-bold mb-1">رفع صورة من جهازك (مباشر):</label>
+                            <input type="file" name="image_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط صورة / Google Drive:</label>
+                            <input type="text" name="image_url" placeholder="https://drive.google.com/file/d/... أو رابط صورة" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-400">💡 يدعم روابط Google Drive تلقائياً (تأكد أن إذن الملف في درايف: "أي شخص لديه الرابط").</p>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" name="is_active" value="1" id="team_active_add" checked class="rounded bg-brand-purple border-brand-border text-brand-gold">
+                    <label for="team_active_add" class="text-xs text-gray-300 cursor-pointer">تفعيل وظهور العضو في صفحة من نحن بالموقع</label>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
+                    <button @click="addTeamModal = false" type="button" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-brand-hover">إلغاء</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">إضافة العضو ونشره</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT TEAM MEMBER -->
+    <div x-show="editTeamModal" 
+         x-transition 
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
+         style="display: none;">
+        <div @click.away="editTeamModal = false" class="w-full max-w-xl bg-brand-card border border-brand-border rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-brand-border pb-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user-pen text-brand-gold"></i>
+                    <span>تعديل بيانات عضو الفريق</span>
+                </h3>
+                <button @click="editTeamModal = false" type="button" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form method="POST" 
+                  :action="'/cms/team-members/' + (selectedTeamMember ? selectedTeamMember.id : '')" 
+                  enctype="multipart/form-data" 
+                  class="space-y-4">
+                @csrf
+                @method('PUT')
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">اسم العضو <span class="text-red-400">*</span></label>
+                        <input type="text" name="name" required x-bind:value="selectedTeamMember ? selectedTeamMember.name : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">المسمى الوظيفي <span class="text-red-400">*</span></label>
+                        <input type="text" name="role" required x-bind:value="selectedTeamMember ? selectedTeamMember.role : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">القسم</label>
+                        <input type="text" name="dept" x-bind:value="selectedTeamMember ? selectedTeamMember.dept : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">الترتيب في الصفحة</label>
+                        <input type="number" name="sort_order" x-bind:value="selectedTeamMember ? selectedTeamMember.sort_order : 0" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-300 mb-1">مقولة أو نبذة العضو</label>
+                    <textarea name="quote" rows="2" x-bind:value="selectedTeamMember ? selectedTeamMember.quote : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold"></textarea>
+                </div>
+
+                <!-- Photo Options (Direct file or Google Drive / URL) -->
+                <div class="p-3.5 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-amber-300 text-xs">
+                        <i class="fa-solid fa-camera ml-1"></i>
+                        تغيير صورة البروفايل الحقيقية للعضو
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] text-brand-gold font-bold mb-1">تغيير الصورة من جهازك:</label>
+                            <input type="file" name="image_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط صورة / Google Drive:</label>
+                            <input type="text" name="image_url" x-bind:value="selectedTeamMember ? (selectedTeamMember.image_url || '') : ''" placeholder="https://drive.google.com/file/d/... أو رابط صورة" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-400">💡 يدعم روابط Google Drive تلقائياً (تأكد أن إذن الملف في درايف: "أي شخص لديه الرابط").</p>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" name="is_active" value="1" id="edit_team_active" :checked="selectedTeamMember && selectedTeamMember.is_active" class="rounded bg-brand-purple border-brand-border text-brand-gold">
+                    <label for="edit_team_active" class="text-xs text-gray-300 cursor-pointer">تفعيل وظهور العضو في صفحة من نحن بالموقع</label>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
+                    <button @click="editTeamModal = false" type="button" class="px-4 py-2 rounded-xl text-gray-300 hover:bg-brand-hover">إلغاء</button>
                     <button type="submit" class="px-5 py-2 rounded-xl bg-brand-yellow hover:bg-brand-gold text-brand-dark font-black shadow">حفظ التعديلات</button>
                 </div>
             </form>

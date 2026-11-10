@@ -70,7 +70,14 @@ class HomeController extends Controller
         $clients = Client::where('status', 'active')->take(12)->get();
         $stats = SiteSetting::getFrontendStats();
 
-        return view('pages.process', compact('clients', 'stats'));
+        try {
+            \App\Support\DatabaseSchemaAligner::alignTeamMembers();
+            $teamMembers = \App\Models\TeamMember::where('is_active', true)->orderBy('sort_order')->get();
+        } catch (\Throwable $e) {
+            $teamMembers = collect();
+        }
+
+        return view('pages.process', compact('clients', 'stats', 'teamMembers'));
     }
 
     public function contact()

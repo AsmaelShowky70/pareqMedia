@@ -140,6 +140,11 @@ Route::middleware('auth')->group(function () {
     // Platform Stats CMS Management
     Route::post('/cms/stats', [PortfolioAdminController::class, 'updateStats'])->name('cms.stats.update');
 
+    // Team Members (من نحن) CMS Management
+    Route::post('/cms/team-members', [PortfolioAdminController::class, 'storeTeamMember'])->name('cms.team-members.store');
+    Route::put('/cms/team-members/{teamMember}', [PortfolioAdminController::class, 'updateTeamMember'])->name('cms.team-members.update');
+    Route::delete('/cms/team-members/{teamMember}', [PortfolioAdminController::class, 'destroyTeamMember'])->name('cms.team-members.destroy');
+
     // Users & Roles Management
     Route::resource('users', UserController::class);
 });

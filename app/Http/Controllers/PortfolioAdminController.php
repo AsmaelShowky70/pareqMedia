@@ -7,6 +7,7 @@ use App\Models\Partner;
 use App\Models\PortfolioItem;
 use App\Models\Service;
 use App\Models\SiteSetting;
+use App\Models\TeamMember;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -34,9 +35,15 @@ class PortfolioAdminController extends Controller
             $testimonials = collect();
         }
 
+        try {
+            $teamMembers = TeamMember::orderBy('sort_order')->get();
+        } catch (\Throwable $e) {
+            $teamMembers = collect();
+        }
+
         $stats = SiteSetting::getFrontendStats();
 
-        return view('cms.index', compact('services', 'portfolioItems', 'inquiries', 'serviceCategories', 'partners', 'testimonials', 'stats'));
+        return view('cms.index', compact('services', 'portfolioItems', 'inquiries', 'serviceCategories', 'partners', 'testimonials', 'teamMembers', 'stats'));
     }
 
     public function storeService(Request $request)
@@ -439,5 +446,99 @@ class PortfolioAdminController extends Controller
         }
 
         return back()->with('success', 'تم حفظ وتحديث إحصائيات المنصة ومؤشرات النجاح المعروضة في الموقع بنجاح.');
+    }
+
+    public function storeTeamMember(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
+            'dept' => 'nullable|string|max:255',
+            'quote' => 'nullable|string',
+            'image_url' => 'nullable|string',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:10240',
+            'icon' => 'nullable|string|max:100',
+            'gradient' => 'nullable|string|max:255',
+            'sort_order' => 'nullable|integer',
+            'is_active' => 'nullable',
+        ]);
+
+        if ($request->hasFile('image_file')) {
+            $file = $request->file('image_file');
+            $uploadPath = public_path('uploads/team');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['image_url'] = '/uploads/team/' . $filename;
+        }
+
+        // Auto convert Google Drive image link to direct CDN image URL
+        if (!empty($validated['image_url']) && str_contains($validated['image_url'], 'drive.google.com')) {
+            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['image_url'], $matches)) {
+                $validated['image_url'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
+            }
+        }
+
+        $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['sort_order'] = $validated['sort_order'] ?? (TeamMember::count() + 1);
+        $validated['letter'] = mb_substr($validated['name'], 0, 1, 'UTF-8');
+        $validated['icon'] = $validated['icon'] ?? 'fa-solid fa-user';
+        $validated['gradient'] = $validated['gradient'] ?? 'from-brand-orange to-[#FF7A00]';
+
+        TeamMember::create($validated);
+
+        return back()->with('success', 'تمت إضافة عضو الفريق بنجاح ويظهر في صفحة من نحن فوراً.');
+    }
+
+    public function updateTeamMember(Request $request, TeamMember $teamMember)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
+            'dept' => 'nullable|string|max:255',
+            'quote' => 'nullable|string',
+            'image_url' => 'nullable|string',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:10240',
+            'icon' => 'nullable|string|max:100',
+            'gradient' => 'nullable|string|max:255',
+            'sort_order' => 'nullable|integer',
+            'is_active' => 'nullable',
+        ]);
+
+        if ($request->hasFile('image_file')) {
+            $file = $request->file('image_file');
+            $uploadPath = public_path('uploads/team');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['image_url'] = '/uploads/team/' . $filename;
+        }
+
+        // Auto convert Google Drive image link to direct CDN image URL
+        if (!empty($validated['image_url']) && str_contains($validated['image_url'], 'drive.google.com')) {
+            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['image_url'], $matches)) {
+                $validated['image_url'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
+            }
+        }
+
+        $validated['is_active'] = $request->boolean('is_active', true);
+        if (isset($validated['name'])) {
+            $validated['letter'] = mb_substr($validated['name'], 0, 1, 'UTF-8');
+        }
+
+        $teamMember->update($validated);
+
+        return back()->with('success', 'تم تحديث بيانات عضو الفريق بنجاح.');
+    }
+
+    public function destroyTeamMember(TeamMember $teamMember)
+    {
+        $teamMember->delete();
+
+        return back()->with('success', 'تم حذف عضو الفريق بنجاح.');
     }
 }
