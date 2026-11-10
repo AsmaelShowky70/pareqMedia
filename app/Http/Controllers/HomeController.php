@@ -7,6 +7,7 @@ use App\Models\Inquiry;
 use App\Models\Partner;
 use App\Models\PortfolioItem;
 use App\Models\Service;
+use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 
@@ -34,15 +35,18 @@ class HomeController extends Controller
             $testimonials = collect();
         }
 
-        return view('home', compact('services', 'portfolioItems', 'featuredItems', 'clients', 'partners', 'testimonials'));
+        $stats = SiteSetting::getFrontendStats();
+
+        return view('home', compact('services', 'portfolioItems', 'featuredItems', 'clients', 'partners', 'testimonials', 'stats'));
     }
 
     public function services()
     {
         $services = Service::where('is_active', true)->orderBy('sort_order')->get();
         $clients = Client::where('status', 'active')->take(12)->get();
+        $stats = SiteSetting::getFrontendStats();
 
-        return view('pages.services', compact('services', 'clients'));
+        return view('pages.services', compact('services', 'clients', 'stats'));
     }
 
     public function portfolio(Request $request)
@@ -56,15 +60,17 @@ class HomeController extends Controller
         $portfolioItems = $query->get();
         $featuredItems = PortfolioItem::where('is_featured', true)->get();
         $clients = Client::where('status', 'active')->take(12)->get();
+        $stats = SiteSetting::getFrontendStats();
 
-        return view('pages.portfolio', compact('portfolioItems', 'featuredItems', 'clients'));
+        return view('pages.portfolio', compact('portfolioItems', 'featuredItems', 'clients', 'stats'));
     }
 
     public function process()
     {
         $clients = Client::where('status', 'active')->take(12)->get();
+        $stats = SiteSetting::getFrontendStats();
 
-        return view('pages.process', compact('clients'));
+        return view('pages.process', compact('clients', 'stats'));
     }
 
     public function contact()

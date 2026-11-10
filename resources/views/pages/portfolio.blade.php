@@ -27,7 +27,7 @@
     <div class="flex flex-wrap items-center justify-center gap-4 pt-8 text-xs font-bold">
         <div class="px-4 py-2 rounded-xl bg-orange-500/15 border border-brand-orange/30 text-brand-orange flex items-center gap-2">
             <i class="fa-solid fa-circle-check"></i>
-            <span>+480 مشروع منجز بنجاح</span>
+            <span>+{{ $stats['projects_count'] ?? 480 }} {{ $stats['projects_label'] ?? 'مشروع منجز بنجاح' }}</span>
         </div>
         <div class="px-4 py-2 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-300 flex items-center gap-2">
             <i class="fa-solid fa-globe"></i>
@@ -94,10 +94,10 @@
                          if (this.progress < 100) {
                              this.progress += 1;
                          }
-                     }, 100);
+                     }, 50);
                      this.autoplayTimer = setInterval(() => { 
                          this.next(); 
-                     }, 10000);
+                     }, 5000);
                  }
              },
              resetTimer() {
@@ -135,7 +135,7 @@
                 صالة عرض سينمائية عريضة 3D
             </span>
             <h2 class="text-2xl sm:text-4xl font-black text-white">استعراض تفاعلي لأبرز أعمال بريق</h2>
-            <p class="text-xs sm:text-sm text-gray-300">تصميم عريض سينمائي يتحرك تلقائياً كل 10 ثوانٍ • انقر على أي عمل لفتحه بجودة فائقة</p>
+            <p class="text-xs sm:text-sm text-gray-300">تصميم عريض سينمائي يتحرك تلقائياً كل 5 ثوانٍ • انقر على أي عمل لفتحه بجودة فائقة</p>
         </div>
 
         <!-- 3D Widescreen Track -->
@@ -190,7 +190,7 @@
                 </template>
             </div>
 
-            <!-- Controls (show with smooth 10s progress indicator) -->
+            <!-- Controls (show with smooth 5s progress indicator) -->
             <div class="flex items-center justify-center gap-5 sm:gap-7 mt-8" x-show="works.length > 1">
                 <button type="button" @click="prev()" 
                         aria-label="السابق"
@@ -198,17 +198,17 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
-                <!-- Dual Visual Track: Current Item Number + Live 10s Countdown Bar -->
+                <!-- Dual Visual Track: Current Item Number + Live 5s Countdown Bar -->
                 <div class="flex flex-col items-center gap-2 w-56 sm:w-80">
                     <div class="flex items-center justify-between w-full text-[11px] font-mono">
                         <span class="font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
                         <span class="text-[10px] text-brand-peach/80 flex items-center gap-1 font-sans">
                             <i class="fa-solid fa-clock-rotate-left text-[9px] animate-spin-slow"></i>
-                            <span>تبديل تلقائي كل 10ث</span>
+                            <span>تبديل تلقائي كل 5ث</span>
                         </span>
                         <span class="font-bold text-gray-400" x-text="works.length < 10 ? '0' + works.length : works.length">05</span>
                     </div>
-                    <!-- Dynamic 10-Second Countdown Track -->
+                    <!-- Dynamic 5-Second Countdown Track -->
                     <div class="w-full h-2 bg-purple-950/80 rounded-full overflow-hidden relative border border-purple-800/50 p-0.5">
                         <div class="h-full bg-gradient-to-r from-brand-orange via-amber-400 to-brand-peach rounded-full transition-all duration-100 ease-linear shadow-[0_0_10px_#FF9420]"
                              :style="'width: ' + progress + '%'"></div>

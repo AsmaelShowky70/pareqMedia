@@ -268,7 +268,36 @@ try {
             echo "<li style='color:green;'>✔️ تم إنشاء جدول آراء العملاء `testimonials` وإضافة الفيدباك الافتراضي بنجاح.</li>";
         }
 
-        // Clear compiled views
+        // 3.8 Create and Sync Site Settings Table
+        $pdo->exec("CREATE TABLE IF NOT EXISTS `site_settings` (
+            `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `key` varchar(255) NOT NULL UNIQUE,
+            `value` longtext DEFAULT NULL,
+            `created_at` timestamp NULL DEFAULT NULL,
+            `updated_at` timestamp NULL DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+        // Seed default stats if not already set
+        $defaultStats = [
+            'stat_sync_mode' => 'custom',
+            'stat_projects_count' => '480',
+            'stat_projects_label' => 'مشروع مكتمل بنجاح',
+            'stat_clients_count' => '125',
+            'stat_clients_label' => 'عميل سعيد في 6 دول',
+            'stat_years_count' => '6',
+            'stat_years_label' => 'سنوات خبرة متواصلة',
+            'stat_team_count' => '18',
+            'stat_team_label' => 'مبدع وخبير متخصص',
+        ];
+        $inSetting = $pdo->prepare("INSERT IGNORE INTO `site_settings` (`key`, `value`, `created_at`, `updated_at`) VALUES (?, ?, NOW(), NOW())");
+        foreach ($defaultStats as $k => $v) {
+            $inSetting->execute([$k, $v]);
+        }
+        echo "<li style='color:green;'>✔️ تم إنشاء جدول إعدادات وإحصائيات المنصة `site_settings` وتجهيز القيم الافتراضية.</li>";
+
+        // Clear compiled views & lock files
+        @unlink(__DIR__ . '/storage/framework/schema_aligned_v2.lock');
+        @unlink(__DIR__ . '/storage/framework/schema_aligned_v3.lock');
         $cachedViews = glob(__DIR__ . '/storage/framework/views/*.php');
         if ($cachedViews) {
             foreach ($cachedViews as $cv) { @unlink($cv); }

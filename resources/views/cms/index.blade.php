@@ -51,6 +51,13 @@
             <span>آراء العملاء وفيديوهات الفيدباك ({{ isset($testimonials) ? $testimonials->count() : 0 }})</span>
         </button>
 
+        <button type="button" @click="tab = 'stats'" 
+                :class="tab === 'stats' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
+                class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
+            <i class="fa-solid fa-chart-simple text-brand-gold"></i>
+            <span>إحصائيات ومؤشرات المنصة (Stats Counter)</span>
+        </button>
+
         <button type="button" @click="tab = 'inquiries'" 
                 :class="tab === 'inquiries' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
                 class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
@@ -818,6 +825,258 @@
             </div>
             @endforelse
         </div>
+    </div>
+
+    <!-- 6. PLATFORM STATS TAB (إدارة إحصائيات المنصة ومؤشرات النجاح) -->
+    <div x-show="tab === 'stats'" class="space-y-6" style="display: none;" 
+         x-data="{
+             syncMode: '{{ $stats['sync_mode'] ?? 'custom' }}',
+             projectsCount: '{{ $stats['projects_count'] ?? 480 }}',
+             projectsLabel: '{{ $stats['projects_label'] ?? 'مشروع مكتمل بنجاح' }}',
+             clientsCount: '{{ $stats['clients_count'] ?? 125 }}',
+             clientsLabel: '{{ $stats['clients_label'] ?? 'عميل سعيد في 6 دول' }}',
+             yearsCount: '{{ $stats['years_count'] ?? 6 }}',
+             yearsLabel: '{{ $stats['years_label'] ?? 'سنوات خبرة متواصلة' }}',
+             teamCount: '{{ $stats['team_count'] ?? 18 }}',
+             teamLabel: '{{ $stats['team_label'] ?? 'مبدع وخبير متخصص' }}',
+             copyRealMetrics() {
+                 this.projectsCount = '{{ $stats['real_projects'] ?? 20 }}';
+                 this.clientsCount = '{{ $stats['real_clients'] ?? 44 }}';
+                 this.teamCount = '{{ $stats['real_team'] ?? 8 }}';
+                 this.syncMode = 'custom';
+             }
+         }">
+        
+        <!-- Header Banner -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-brand-card/90 border border-brand-border p-5 rounded-2xl shadow-lg relative overflow-hidden">
+            <div class="space-y-1 relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/15 border border-brand-orange/40 text-brand-orange text-xs font-bold">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>إدارة شريط الإحصائيات الرئيسي (Live Platform Counters)</span>
+                </div>
+                <h3 class="text-base font-bold text-white">إحصائيات وأرقام نجاح وكالة بريق بالموقع</h3>
+                <p class="text-xs text-gray-400 max-w-2xl leading-relaxed">
+                    تحكم بالكامل في الأرقام التي تظهر لزوار موقع بريق. يمكنك تفعيل السحب اللحظي التلقائي من قاعدة البيانات، أو كتابة أرقام وعناوين تسويقية مخصصة تناسب استراتيجيتك.
+                </p>
+            </div>
+
+            <!-- Quick Copy Button -->
+            <button type="button" @click="copyRealMetrics()" 
+                    class="px-4 py-2.5 rounded-xl bg-purple-900/60 hover:bg-brand-orange hover:text-brand-dark text-white border border-purple-700/60 font-bold text-xs transition flex items-center gap-2 shadow-md self-start md:self-auto whitespace-nowrap active:scale-95">
+                <i class="fa-solid fa-copy text-brand-peach"></i>
+                <span>نسخ أرقام المنصة الحالية إلى الحقول</span>
+            </button>
+        </div>
+
+        <!-- LIVE PREVIEW CARDS (معاينة حية لشكل الكروت في الموقع الخارجي) -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-300 flex items-center gap-2">
+                    <i class="fa-solid fa-eye text-brand-orange"></i>
+                    <span>معاينة حية لشكل الكروت في واجهة الموقع (مطابقة لباليتة بريق الجديدة)</span>
+                </span>
+                <span class="text-[11px] text-gray-400">تتحدث المعاينة مباشرة مع كتابتك أدناه</span>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 p-5 rounded-2xl bg-[#0e031a] border border-purple-900/40">
+                <!-- Card 1: Projects -->
+                <div class="p-5 rounded-2xl bg-[#1B082B] border border-brand-orange/60 shadow-[0_0_25px_rgba(255,148,32,0.2)] text-center transition-all">
+                    <div class="w-11 h-11 rounded-2xl bg-[#FF9420]/15 border border-[#FF9420]/40 text-[#FF9420] flex items-center justify-center mx-auto mb-2 text-lg">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-black text-[#FF9420] font-mono">
+                        <span>+</span><span x-text="syncMode === 'live' ? '{{ $stats['real_projects'] > 0 ? $stats['real_projects'] : $stats['projects_count'] }}' : projectsCount">480</span>
+                    </div>
+                    <div class="text-xs text-gray-200 mt-1.5 font-bold" x-text="projectsLabel">مشروع مكتمل بنجاح</div>
+                </div>
+
+                <!-- Card 2: Clients -->
+                <div class="p-5 rounded-2xl bg-[#1B082B] border border-[#3E24C5]/40 text-center transition-all">
+                    <div class="w-11 h-11 rounded-2xl bg-[#3E24C5]/20 border border-[#3E24C5]/50 text-[#FFBA70] flex items-center justify-center mx-auto mb-2 text-lg">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-black text-white font-mono">
+                        <span>+</span><span x-text="syncMode === 'live' ? '{{ $stats['real_clients'] > 0 ? $stats['real_clients'] : $stats['clients_count'] }}' : clientsCount">125</span>
+                    </div>
+                    <div class="text-xs text-gray-200 mt-1.5 font-bold" x-text="clientsLabel">عميل سعيد في 6 دول</div>
+                </div>
+
+                <!-- Card 3: Years -->
+                <div class="p-5 rounded-2xl bg-[#1B082B] border border-[#3E24C5]/40 text-center transition-all">
+                    <div class="w-11 h-11 rounded-2xl bg-[#BC6200]/20 border border-[#FFBA70]/40 text-[#FFBA70] flex items-center justify-center mx-auto mb-2 text-lg">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-black text-[#FFBA70] font-mono">
+                        <span>+</span><span x-text="yearsCount">6</span>
+                    </div>
+                    <div class="text-xs text-gray-200 mt-1.5 font-bold" x-text="yearsLabel">سنوات خبرة متواصلة</div>
+                </div>
+
+                <!-- Card 4: Team -->
+                <div class="p-5 rounded-2xl bg-[#1B082B] border border-[#3E24C5]/40 text-center transition-all">
+                    <div class="w-11 h-11 rounded-2xl bg-[#FF9420]/15 border border-[#FF9420]/40 text-[#FF9420] flex items-center justify-center mx-auto mb-2 text-lg">
+                        <i class="fa-solid fa-user-group"></i>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-black text-white font-mono">
+                        <span>+</span><span x-text="syncMode === 'live' ? '{{ $stats['real_team'] > 0 ? $stats['real_team'] : $stats['team_count'] }}' : teamCount">18</span>
+                    </div>
+                    <div class="text-xs text-gray-200 mt-1.5 font-bold" x-text="teamLabel">مبدع وخبير متخصص</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM: EDIT SETTINGS -->
+        <form method="POST" action="{{ route('cms.stats.update') }}" class="space-y-6">
+            @csrf
+
+            <!-- Sync Mode Selector -->
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-5 shadow-sm space-y-4">
+                <h4 class="text-xs font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-brand-orange"></i>
+                    <span>وضع تشغيل الإحصائيات في الموقع</span>
+                </h4>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Option 1: Custom Override -->
+                    <label class="relative flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition"
+                           :class="syncMode === 'custom' ? 'bg-brand-purple/80 border-brand-orange shadow-[0_0_20px_rgba(255,148,32,0.15)]' : 'bg-brand-dark/50 border-brand-border/60 hover:border-brand-border'">
+                        <input type="radio" name="stat_sync_mode" value="custom" x-model="syncMode" class="mt-1 text-brand-orange focus:ring-brand-orange">
+                        <div class="space-y-1 text-right">
+                            <span class="block text-xs font-bold text-white">أرقام وعناوين مخصصة (Custom Override)</span>
+                            <span class="block text-[11px] text-gray-400">إدخال الأرقام التسويقية والعناوين يدوياً كما تحددها في الحقول بالأسفل (المفضل لأغراض الدعاية).</span>
+                        </div>
+                    </label>
+
+                    <!-- Option 2: Live Platform Sync -->
+                    <label class="relative flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition"
+                           :class="syncMode === 'live' ? 'bg-brand-purple/80 border-brand-orange shadow-[0_0_20px_rgba(255,148,32,0.15)]' : 'bg-brand-dark/50 border-brand-border/60 hover:border-brand-border'">
+                        <input type="radio" name="stat_sync_mode" value="live" x-model="syncMode" class="mt-1 text-brand-orange focus:ring-brand-orange">
+                        <div class="space-y-1 text-right">
+                            <span class="block text-xs font-bold text-white">سحب تلقائي لحظي من قاعدة بيانات المنصة (Live Sync)</span>
+                            <span class="block text-[11px] text-gray-400">حساب عدد المشاريع المنجزة، العملاء المسجلين، وأعضاء الفريق تلقائياً من المنصة مع إمكانية تعديل العناوين.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Detailed Stat Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- Stat 1: Projects -->
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-orange-500/20 text-brand-orange flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </span>
+                            <span class="text-xs font-bold text-white">إحصائية المشاريع المكتملة</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400 font-mono">في المنصة: {{ $stats['real_projects'] }} مشروع</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div>
+                            <label class="block font-bold text-gray-300 mb-1">الرقم المستهدف</label>
+                            <input type="number" name="stat_projects_count" x-model="projectsCount" required min="0" 
+                                   class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white font-mono text-sm focus:outline-none focus:border-brand-orange">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-300 mb-1">النص التوضيحي للبطاقة</label>
+                            <input type="text" name="stat_projects_label" x-model="projectsLabel" required 
+                                   class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-orange">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat 2: Clients -->
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-users"></i>
+                            </span>
+                            <span class="text-xs font-bold text-white">إحصائية العملاء وسعادتهم</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400 font-mono">في المنصة: {{ $stats['real_clients'] }} عميل</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div>
+                            <label class="block font-bold text-gray-300 mb-1">الرقم المستهدف</label>
+                            <input type="number" name="stat_clients_count" x-model="clientsCount" required min="0" 
+                                   class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white font-mono text-sm focus:outline-none focus:border-brand-orange">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-300 mb-1">النص التوضيحي للبطاقة</label>
+                            <input type="text" name="stat_clients_label" x-model="clientsLabel" required 
+                                   class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-orange">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat 3: Years of Experience -->
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-brand-peach flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-award"></i>
+                            </span>
+                            <span class="text-xs font-bold text-white">إحصائية سنوات الخبرة</span>
+                        </div>
+                        <span class="text-[10px] text-brand-peach font-bold">تراكم الخبرات</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div>
+                            <label class="block font-bold text-gray-300 mb-1">عدد السنوات</label>
+                            <input type="number" name="stat_years_count" x-model="yearsCount" required min="0" 
+                                   class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white font-mono text-sm focus:outline-none focus:border-brand-orange">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-300 mb-1">النص التوضيحي للبطاقة</label>
+                            <input type="text" name="stat_years_label" x-model="yearsLabel" required 
+                                   class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-orange">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat 4: Team -->
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-user-group"></i>
+                            </span>
+                            <span class="text-xs font-bold text-white">إحصائية المبدعين والخبراء</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400 font-mono">في المنصة: {{ $stats['real_team'] }} عضو</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div>
+                            <label class="block font-bold text-gray-300 mb-1">عدد الخبراء والمبدعين</label>
+                            <input type="number" name="stat_team_count" x-model="teamCount" required min="0" 
+                                   class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white font-mono text-sm focus:outline-none focus:border-brand-orange">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-300 mb-1">النص التوضيحي للبطاقة</label>
+                            <input type="text" name="stat_team_label" x-model="teamLabel" required 
+                                   class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-orange">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <button type="submit" 
+                        class="px-8 py-3 rounded-xl bg-gradient-to-r from-brand-orange via-brand-peach to-brand-bronze text-brand-dark font-black text-xs hover:brightness-110 shadow-lg shadow-orange-500/20 flex items-center gap-2 transition active:scale-95">
+                    <i class="fa-solid fa-check-circle"></i>
+                    <span>حفظ وتحديث إحصائيات الموقع فوراً</span>
+                </button>
+            </div>
+        </form>
     </div>
 
     <!-- MODAL: ADD PARTNER -->

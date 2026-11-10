@@ -51,17 +51,17 @@
                 </p>
                 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-purple-800/40 text-center">
-                    <div class="p-4 rounded-2xl bg-[#120324] border border-purple-800/40">
-                        <div class="text-2xl font-black text-brand-orange font-mono">+6</div>
-                        <div class="text-[11px] text-gray-400 mt-1 font-bold">سنوات خبرة متواصلة</div>
+                    <div class="p-4 rounded-2xl bg-[#1B082B] border border-[#3E24C5]/40 hover:border-[#FF9420] transition-colors">
+                        <div class="text-2xl font-black text-brand-orange font-mono">+{{ $stats['years_count'] ?? 6 }}</div>
+                        <div class="text-[11px] text-gray-300 mt-1 font-bold">{{ $stats['years_label'] ?? 'سنوات خبرة متواصلة' }}</div>
                     </div>
-                    <div class="p-4 rounded-2xl bg-[#120324] border border-purple-800/40">
-                        <div class="text-2xl font-black text-white font-mono">+480</div>
-                        <div class="text-[11px] text-gray-400 mt-1 font-bold">مشروع منجز بنجاح</div>
+                    <div class="p-4 rounded-2xl bg-[#1B082B] border border-[#FF9420] shadow-[0_0_20px_rgba(255,148,32,0.18)]">
+                        <div class="text-2xl font-black text-white font-mono">+{{ $stats['projects_count'] ?? 480 }}</div>
+                        <div class="text-[11px] text-gray-300 mt-1 font-bold">{{ $stats['projects_label'] ?? 'مشروع منجز بنجاح' }}</div>
                     </div>
-                    <div class="p-4 rounded-2xl bg-[#120324] border border-purple-800/40 col-span-2 sm:col-span-1">
-                        <div class="text-2xl font-black text-brand-peach font-mono">10+ دول</div>
-                        <div class="text-[11px] text-gray-400 mt-1 font-bold">تغطية إقليمية كاملة</div>
+                    <div class="p-4 rounded-2xl bg-[#1B082B] border border-[#3E24C5]/40 hover:border-[#FF9420] transition-colors col-span-2 sm:col-span-1">
+                        <div class="text-2xl font-black text-brand-peach font-mono">+{{ $stats['clients_count'] ?? 125 }}</div>
+                        <div class="text-[11px] text-gray-300 mt-1 font-bold">{{ $stats['clients_label'] ?? 'عميل سعيد في 6 دول' }}</div>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ use App\Models\Inquiry;
 use App\Models\Partner;
 use App\Models\PortfolioItem;
 use App\Models\Service;
+use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -14,6 +15,8 @@ class PortfolioAdminController extends Controller
 {
     public function index()
     {
+        \App\Support\DatabaseSchemaAligner::align();
+
         $services = Service::orderBy('sort_order')->latest()->get();
         $portfolioItems = PortfolioItem::with('service')->orderBy('sort_order')->latest()->get();
         $inquiries = Inquiry::latest()->paginate(15);
@@ -31,7 +34,9 @@ class PortfolioAdminController extends Controller
             $testimonials = collect();
         }
 
-        return view('cms.index', compact('services', 'portfolioItems', 'inquiries', 'serviceCategories', 'partners', 'testimonials'));
+        $stats = SiteSetting::getFrontendStats();
+
+        return view('cms.index', compact('services', 'portfolioItems', 'inquiries', 'serviceCategories', 'partners', 'testimonials', 'stats'));
     }
 
     public function storeService(Request $request)
@@ -243,8 +248,15 @@ class PortfolioAdminController extends Controller
             $validated['logo_url'] = '/uploads/partners/' . $filename;
         }
 
+        \App\Support\DatabaseSchemaAligner::alignPartners();
+
         $validated['is_active'] = $request->boolean('is_active', true);
-        $validated['sort_order'] = Partner::count() + 1;
+        try {
+            $validated['sort_order'] = Partner::count() + 1;
+        } catch (\Throwable $e) {
+            \App\Support\DatabaseSchemaAligner::alignPartners();
+            $validated['sort_order'] = 1;
+        }
 
         Partner::create($validated);
 
@@ -325,9 +337,16 @@ class PortfolioAdminController extends Controller
             $validated['media_url'] = '/uploads/testimonials/videos/' . $filename;
         }
 
+        \App\Support\DatabaseSchemaAligner::alignTestimonials();
+
         $validated['rating'] = $validated['rating'] ?? 5;
         $validated['is_active'] = $request->boolean('is_active', true);
-        $validated['sort_order'] = Testimonial::count() + 1;
+        try {
+            $validated['sort_order'] = Testimonial::count() + 1;
+        } catch (\Throwable $e) {
+            \App\Support\DatabaseSchemaAligner::alignTestimonials();
+            $validated['sort_order'] = 1;
+        }
 
         Testimonial::create($validated);
 
@@ -382,5 +401,28 @@ class PortfolioAdminController extends Controller
         $testimonial->delete();
 
         return back()->with('success', 'تم حذف الفيدباك بنجاح.');
+    }
+
+    public function updateStats(Request $request)
+    {
+        $validated = $request->validate([
+            'stat_sync_mode' => 'required|in:custom,live',
+            'stat_projects_count' => 'required|numeric|min:0',
+            'stat_projects_label' => 'required|string|max:255',
+            'stat_clients_count' => 'required|numeric|min:0',
+            'stat_clients_label' => 'required|string|max:255',
+            'stat_years_count' => 'required|numeric|min:0',
+            'stat_years_label' => 'required|string|max:255',
+            'stat_team_count' => 'required|numeric|min:0',
+            'stat_team_label' => 'required|string|max:255',
+        ]);
+
+        \App\Support\DatabaseSchemaAligner::alignSiteSettings();
+
+        foreach ($validated as $key => $val) {
+            SiteSetting::set($key, $val);
+        }
+
+        return back()->with('success', 'تم حفظ وتحديث إحصائيات المنصة ومؤشرات النجاح المعروضة في الموقع بنجاح.');
     }
 }

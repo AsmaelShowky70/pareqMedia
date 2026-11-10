@@ -30,17 +30,24 @@
                     },
                     colors: {
                         brand: {
-                            void: '#06010D',
-                            dark: '#08020F',
-                            darker: '#0C0317',
-                            deep: '#120522',
+                            black: '#000000',
+                            void: '#07010e',
                             night: '#1B082B',
-                            purple: '#1B0733',
-                            purpleLight: '#260B46',
-                            card: '#1F0B38',
-                            hover: '#2D1050',
-                            border: '#3F166F',
-                            borderGlow: 'rgba(255, 148, 32, 0.35)',
+                            dark: '#0e031a',
+                            darker: '#0a0213',
+                            deep: '#140626',
+                            card: '#1B082B',
+                            cardHover: '#230b38',
+                            plum: '#1B082B',
+                            violet: '#3F147E',
+                            electric: '#3E24C5',
+                            indigo: '#3E24C5',
+                            purple: '#3F147E',
+                            purpleLight: '#3E24C5',
+                            hover: '#3F147E',
+                            border: '#3E24C5',
+                            borderLight: '#3F147E',
+                            borderGlow: 'rgba(255, 148, 32, 0.45)',
                             orange: '#FF9420',
                             orangeHover: '#FF7A00',
                             peach: '#FFBA70',
@@ -49,6 +56,7 @@
                             yellow: '#FFBA70',
                             gold: '#FFBA70',
                             goldLight: '#FFE3B8',
+                            white: '#FFFFFF',
                         }
                     },
                     animation: {
@@ -71,17 +79,20 @@
             --primary-orange: #FF9420;
             --primary-peach: #FFBA70;
             --primary-bronze: #BC6200;
-            --primary-dark: #08020F;
-            --primary-night: #1B082B;
+            --primary-white: #FFFFFF;
+            --primary-electric: #3E24C5;
             --primary-purple: #3F147E;
-            --orange-glow: rgba(255, 148, 32, 0.45);
-            --purple-glow: rgba(63, 20, 126, 0.4);
+            --primary-night: #1B082B;
+            --primary-black: #000000;
+            --orange-glow: rgba(255, 148, 32, 0.55);
+            --electric-glow: rgba(62, 36, 197, 0.5);
+            --purple-glow: rgba(63, 20, 126, 0.5);
         }
 
         body { 
             font-family: 'Cairo', sans-serif; 
-            background-color: #06010D; 
-            color: #F3F4F6;
+            background-color: #07010e; 
+            color: #F8FAFC;
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
@@ -97,7 +108,7 @@
             pointer-events: none;
             z-index: 1;
             transform: translate(-50%, -50%);
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(147, 51, 234, 0.1) 40%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 148, 32, 0.16) 0%, rgba(62, 36, 197, 0.18) 40%, transparent 70%);
             filter: blur(40px);
             opacity: 0;
             transition: opacity 0.6s ease;
@@ -113,15 +124,15 @@
             left: 0;
             height: 3px;
             width: 0%;
-            background: linear-gradient(90deg, #FF5E00 0%, #FF9500 50%, #FBBF24 100%);
-            box-shadow: 0 0 14px rgba(245, 158, 11, 0.9), 0 0 24px rgba(255, 94, 0, 0.6);
+            background: linear-gradient(90deg, #3E24C5 0%, #FF9420 50%, #FFBA70 100%);
+            box-shadow: 0 0 16px rgba(255, 148, 32, 0.85), 0 0 24px rgba(62, 36, 197, 0.7);
             z-index: 9999;
             transition: width 0.1s ease-out;
         }
 
         /* Liquid Shimmer Text */
         .gold-gradient-text {
-            background: linear-gradient(135deg, #FFF1C5 0%, #FBBF24 25%, #F59E0B 55%, #FF6A00 85%, #FBBF24 100%);
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFBA70 25%, #FF9420 60%, #BC6200 100%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -129,7 +140,8 @@
         }
 
         .purple-gradient-text {
-            background: linear-gradient(135deg, #E9D5FF 0%, #C084FC 50%, #A855F7 100%);
+            background: linear-gradient(135deg, #FFFFFF 0%, #B8A8FF 35%, #3E24C5 75%, #3F147E 100%);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -204,15 +216,17 @@
 
         /* Glassmorphism Classes */
         .glass-card-purple {
-            background: linear-gradient(135deg, rgba(31, 11, 56, 0.65) 0%, rgba(18, 5, 34, 0.85) 100%);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(147, 51, 234, 0.25);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(145deg, rgba(27, 8, 43, 0.90) 0%, rgba(14, 3, 24, 0.96) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(62, 36, 197, 0.38);
+            box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.85), 0 0 25px rgba(62, 36, 197, 0.12);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .glass-card-purple:hover {
-            border-color: rgba(245, 158, 11, 0.5);
-            box-shadow: 0 25px 50px -12px rgba(245, 158, 11, 0.18), 0 0 30px rgba(147, 51, 234, 0.2);
+            border-color: rgba(255, 148, 32, 0.75);
+            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 148, 32, 0.25), 0 0 45px rgba(62, 36, 197, 0.25);
+            transform: translateY(-4px);
         }
 
         /* Rotating Conic Border for Special Cards */
@@ -221,12 +235,12 @@
             z-index: 1;
             border-radius: 1.5rem;
             padding: 2px;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.6), rgba(168, 85, 247, 0.7), rgba(255, 94, 0, 0.6));
-            box-shadow: 0 0 35px rgba(245, 158, 11, 0.2), 0 0 60px rgba(147, 51, 234, 0.15);
+            background: linear-gradient(135deg, rgba(255, 148, 32, 0.75), rgba(62, 36, 197, 0.85), rgba(255, 186, 112, 0.75));
+            box-shadow: 0 0 35px rgba(255, 148, 32, 0.25), 0 0 60px rgba(62, 36, 197, 0.3);
             transition: all 0.4s ease;
         }
         .conic-glow-border:hover {
-            box-shadow: 0 0 45px rgba(245, 158, 11, 0.4), 0 0 85px rgba(147, 51, 234, 0.3);
+            box-shadow: 0 0 45px rgba(255, 148, 32, 0.45), 0 0 85px rgba(62, 36, 197, 0.45);
             transform: translateY(-4px);
         }
 
@@ -310,12 +324,12 @@
     <!-- Top Laser Scroll Progress Indicator -->
     <div id="scroll-progress-bar"></div>
 
-    <!-- Ambient Background Lighting Layer (Fixed viewport layer away from top navbar logo to avoid glare) -->
+    <!-- Ambient Background Lighting Layer (Fixed viewport layer with vibrant Bariq electric purple & warm amber glow) -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="glow-orb w-[600px] h-[600px] bg-purple-900/20 top-40 right-1/3 animate-float-slow"></div>
-        <div class="glow-orb w-[550px] h-[550px] bg-amber-500/10 top-1/4 -left-40 animate-float-reverse"></div>
-        <div class="glow-orb w-[700px] h-[700px] bg-purple-950/30 top-1/2 -right-32 animate-float-slow"></div>
-        <div class="glow-orb w-[550px] h-[550px] bg-orange-600/10 -bottom-20 left-1/4 animate-pulse-glow"></div>
+        <div class="glow-orb w-[650px] h-[650px] bg-[#3E24C5]/20 top-28 right-1/4 animate-float-slow"></div>
+        <div class="glow-orb w-[550px] h-[550px] bg-[#FF9420]/15 top-1/3 -left-36 animate-float-reverse"></div>
+        <div class="glow-orb w-[700px] h-[700px] bg-[#3F147E]/30 top-2/3 -right-32 animate-float-slow"></div>
+        <div class="glow-orb w-[550px] h-[550px] bg-[#BC6200]/15 -bottom-20 left-1/3 animate-pulse-glow"></div>
     </div>
 
     <!-- UNIVERSAL HEADER & GLASSMORPHIC NAVBAR (شريط تنقل احترافي مع دعم الصفحات المنفصلة) -->

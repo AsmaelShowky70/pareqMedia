@@ -186,45 +186,49 @@
          x-init="initObserver($el)"
          class="space-y-6">
         
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6">
-            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-orange-500/15 border border-brand-orange/30 text-brand-orange flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <!-- Card 1: Projects (Featured active orange border/glow as in Image 2) -->
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/90 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border border-[#FF9420] shadow-[0_0_25px_rgba(255,148,32,0.22)]">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FF9420]/15 border border-[#FF9420]/40 text-[#FF9420] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
-                <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-brand-orange flex items-center justify-center font-mono">
-                    <span>+</span><span x-text="projects">0</span>
+                <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#FF9420] flex items-center justify-center font-mono">
+                    <span>+</span><span x-text="projects">{{ $stats['projects_count'] ?? 480 }}</span>
                 </div>
-                <div class="text-[11px] sm:text-xs text-gray-300 mt-1 font-bold">مشروع مكتمل بنجاح</div>
+                <div class="text-[11px] sm:text-xs text-gray-200 mt-1 font-bold">{{ $stats['projects_label'] ?? 'مشروع مكتمل بنجاح' }}</div>
             </div>
 
-            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-500/20 border border-purple-500/40 text-purple-300 flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+            <!-- Card 2: Clients -->
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/90 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border border-[#3E24C5]/35 hover:border-[#FF9420] hover:shadow-[0_0_25px_rgba(255,148,32,0.2)]">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#3E24C5]/20 border border-[#3E24C5]/50 text-[#FFBA70] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-users"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
-                    <span>+</span><span x-text="clients">0</span>
+                    <span>+</span><span x-text="clients">{{ $stats['clients_count'] ?? 125 }}</span>
                 </div>
-                <div class="text-[11px] sm:text-xs text-gray-300 mt-1 font-bold">عميل سعيد في 6 دول</div>
+                <div class="text-[11px] sm:text-xs text-gray-200 mt-1 font-bold">{{ $stats['clients_label'] ?? 'عميل سعيد في 6 دول' }}</div>
             </div>
 
-            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-amber-500/15 border border-brand-peach/30 text-brand-peach flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+            <!-- Card 3: Years -->
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/90 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border border-[#3E24C5]/35 hover:border-[#FF9420] hover:shadow-[0_0_25px_rgba(255,148,32,0.2)]">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#BC6200]/20 border border-[#FFBA70]/40 text-[#FFBA70] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-award"></i>
                 </div>
-                <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-brand-peach flex items-center justify-center font-mono">
-                    <span>+</span><span x-text="years">0</span>
+                <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#FFBA70] flex items-center justify-center font-mono">
+                    <span>+</span><span x-text="years">{{ $stats['years_count'] ?? 6 }}</span>
                 </div>
-                <div class="text-[11px] sm:text-xs text-gray-300 mt-1 font-bold">سنوات خبرة متواصلة</div>
+                <div class="text-[11px] sm:text-xs text-gray-200 mt-1 font-bold">{{ $stats['years_label'] ?? 'سنوات خبرة متواصلة' }}</div>
             </div>
 
-            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-card-purple transition-all duration-300 group hover:-translate-y-1 text-center border border-purple-800/40">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-orange-500/15 border border-orange-500/30 text-orange-400 flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+            <!-- Card 4: Team -->
+            <div class="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#1B082B]/90 backdrop-blur-md transition-all duration-300 group hover:-translate-y-1 text-center border border-[#3E24C5]/35 hover:border-[#FF9420] hover:shadow-[0_0_25px_rgba(255,148,32,0.2)]">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#FF9420]/15 border border-[#FF9420]/40 text-[#FF9420] flex items-center justify-center mx-auto mb-2.5 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                     <i class="fa-solid fa-user-group"></i>
                 </div>
                 <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-white flex items-center justify-center font-mono">
-                    <span>+</span><span x-text="team">0</span>
+                    <span>+</span><span x-text="team">{{ $stats['team_count'] ?? 18 }}</span>
                 </div>
-                <div class="text-[11px] sm:text-xs text-gray-300 mt-1 font-bold">مبدع وخبير متخصص</div>
+                <div class="text-[11px] sm:text-xs text-gray-200 mt-1 font-bold">{{ $stats['team_label'] ?? 'مبدع وخبير متخصص' }}</div>
             </div>
         </div>
 
@@ -378,10 +382,10 @@
                      if (this.progress < 100) {
                          this.progress += 1;
                      }
-                 }, 100);
+                 }, 50);
                  this.autoplayTimer = setInterval(() => { 
                      this.next(); 
-                 }, 10000);
+                 }, 5000);
              },
              resetTimer() {
                  this.startAutoplay();
@@ -479,7 +483,7 @@
                 </template>
             </div>
 
-            <!-- Bottom Navigation Controls: Arrows + Live 10s Countdown Bar -->
+            <!-- Bottom Navigation Controls: Arrows + Live 5s Countdown Bar -->
             <div class="flex items-center justify-center gap-5 sm:gap-7 mt-8">
                 <!-- Prev Button -->
                 <button type="button" @click="prev()" 
@@ -488,17 +492,17 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
-                <!-- Dual Visual Track: Current Service + Live 10s Countdown Bar -->
+                <!-- Dual Visual Track: Current Service + Live 5s Countdown Bar -->
                 <div class="flex flex-col items-center gap-2 w-56 sm:w-80">
                     <div class="flex items-center justify-between w-full text-[11px] font-mono">
                         <span class="font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
                         <span class="text-[10px] text-brand-peach/80 flex items-center gap-1 font-sans">
                             <i class="fa-solid fa-clock-rotate-left text-[9px] animate-spin-slow"></i>
-                            <span>تبديل تلقائي كل 10ث</span>
+                            <span>تبديل تلقائي كل 5ث</span>
                         </span>
                         <span class="font-bold text-gray-400">10</span>
                     </div>
-                    <!-- Dynamic 10-Second Countdown Track -->
+                    <!-- Dynamic 5-Second Countdown Track -->
                     <div class="w-full h-2 bg-purple-950/80 rounded-full overflow-hidden relative border border-purple-800/50 p-0.5">
                         <div class="h-full bg-gradient-to-r from-brand-orange via-amber-400 to-brand-peach rounded-full transition-all duration-100 ease-linear shadow-[0_0_10px_#FF9420]"
                              :style="'width: ' + progress + '%'"></div>
@@ -1600,10 +1604,10 @@
             years: 0,
             team: 0,
             targets: {
-                projects: 480,
-                clients: 125,
-                years: 6,
-                team: 18
+                projects: {{ (int) ($stats['projects_count'] ?? 480) }},
+                clients: {{ (int) ($stats['clients_count'] ?? 125) }},
+                years: {{ (int) ($stats['years_count'] ?? 6) }},
+                team: {{ (int) ($stats['team_count'] ?? 18) }}
             },
             initObserver(el) {
                 if ('IntersectionObserver' in window) {

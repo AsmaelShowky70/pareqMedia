@@ -29,15 +29,24 @@
                     },
                     colors: {
                         brand: {
-                            dark: '#0B0314',
-                            purple: '#18082B',
-                            card: '#220D3D',
-                            hover: '#2E1253',
-                            border: '#3C176D',
-                            yellow: '#F59E0B',
-                            amber: '#FF9F0A',
-                            gold: '#FBBF24',
-                            glow: 'rgba(245, 158, 11, 0.25)',
+                            black: '#000000',
+                            void: '#07010e',
+                            dark: '#0e031a',
+                            night: '#1B082B',
+                            purple: '#1B082B',
+                            card: '#1F0B36',
+                            hover: '#3F147E',
+                            border: '#3E24C5',
+                            borderLight: '#3F147E',
+                            electric: '#3E24C5',
+                            violet: '#3F147E',
+                            orange: '#FF9420',
+                            peach: '#FFBA70',
+                            bronze: '#BC6200',
+                            yellow: '#FF9420',
+                            amber: '#FF9420',
+                            gold: '#FFBA70',
+                            glow: 'rgba(255, 148, 32, 0.35)',
                         }
                     }
                 }
@@ -120,17 +129,17 @@
             <div class="p-4 mx-4 mt-4 rounded-xl bg-brand-card/70 border border-brand-border/60">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-amber to-brand-yellow text-brand-dark font-black flex items-center justify-center text-base shadow">
-                        {{ mb_substr(Auth::user()->name, 0, 1) }}
+                        {{ mb_substr(Auth::user()?->name ?? 'م', 0, 1) }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <div class="text-sm font-bold text-white truncate">{{ Auth::user()->name }}</div>
-                        <div class="text-xs text-brand-gold font-medium truncate">{{ Auth::user()->job_title ?? Auth::user()->department_name_arabic }}</div>
+                        <div class="text-sm font-bold text-white truncate">{{ Auth::user()?->name ?? 'مستخدم' }}</div>
+                        <div class="text-xs text-brand-gold font-medium truncate">{{ Auth::user()?->job_title ?? Auth::user()?->department_name_arabic ?? 'إدارة' }}</div>
                     </div>
                 </div>
                 <div class="mt-2.5 pt-2 border-t border-brand-border/40 flex items-center justify-between text-xs text-gray-400">
                     <span>الصلاحية:</span>
-                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ Auth::user()->isAdmin() ? 'bg-amber-500/20 text-amber-300' : (Auth::user()->isContentCreator() ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300') }}">
-                        {{ Auth::user()->role_name_arabic }}
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ (Auth::user()?->isAdmin() ?? true) ? 'bg-amber-500/20 text-amber-300' : (Auth::user()?->isContentCreator() ? 'bg-blue-500/20 text-blue-300' : 'bg-purple-500/20 text-purple-300') }}">
+                        {{ Auth::user()?->role_name_arabic ?? 'مدير النظام' }}
                     </span>
                 </div>
             </div>
@@ -424,7 +433,7 @@
                 </div>
                 @endif
 
-                @if($errors->any())
+                @if(isset($errors) && $errors->any())
                 <div class="p-3.5 sm:p-4 mb-3 sm:mb-4 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs sm:text-sm shadow">
                     <div class="flex items-center gap-2.5 sm:gap-3 font-bold mb-1">
                         <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>

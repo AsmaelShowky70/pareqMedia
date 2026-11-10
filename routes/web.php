@@ -137,6 +137,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/cms/testimonials/{testimonial}', [PortfolioAdminController::class, 'updateTestimonial'])->name('cms.testimonials.update');
     Route::delete('/cms/testimonials/{testimonial}', [PortfolioAdminController::class, 'destroyTestimonial'])->name('cms.testimonials.destroy');
 
+    // Platform Stats CMS Management
+    Route::post('/cms/stats', [PortfolioAdminController::class, 'updateStats'])->name('cms.stats.update');
+
     // Users & Roles Management
     Route::resource('users', UserController::class);
 });

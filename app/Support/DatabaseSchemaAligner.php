@@ -19,6 +19,9 @@ class DatabaseSchemaAligner
             self::alignExpenses();
             self::alignInquiries();
             self::alignPortfolioItems();
+            self::alignPartners();
+            self::alignTestimonials();
+            self::alignSiteSettings();
         } catch (\Throwable $e) {
             // Fail safely without disrupting user requests
             \Illuminate\Support\Facades\Log::warning('DatabaseSchemaAligner warning: ' . $e->getMessage());
@@ -209,6 +212,74 @@ class DatabaseSchemaAligner
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('alignPortfolioItems warning: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ensure `partners` table exists.
+     */
+    public static function alignPartners(): void
+    {
+        try {
+            if (!Schema::hasTable('partners')) {
+                Schema::create('partners', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->id();
+                    $table->string('name');
+                    $table->string('category')->nullable();
+                    $table->string('logo_url')->nullable();
+                    $table->integer('sort_order')->default(0);
+                    $table->boolean('is_active')->default(true);
+                    $table->timestamps();
+                });
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('alignPartners warning: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ensure `testimonials` table exists.
+     */
+    public static function alignTestimonials(): void
+    {
+        try {
+            if (!Schema::hasTable('testimonials')) {
+                Schema::create('testimonials', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->id();
+                    $table->string('client_name');
+                    $table->string('client_title')->nullable();
+                    $table->string('client_country')->nullable();
+                    $table->string('type')->default('video_reel');
+                    $table->text('content')->nullable();
+                    $table->integer('rating')->default(5);
+                    $table->string('media_url')->nullable();
+                    $table->string('thumbnail')->nullable();
+                    $table->integer('sort_order')->default(0);
+                    $table->boolean('is_active')->default(true);
+                    $table->timestamps();
+                });
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('alignTestimonials warning: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ensure `site_settings` table exists.
+     */
+    public static function alignSiteSettings(): void
+    {
+        try {
+            if (!Schema::hasTable('site_settings')) {
+                Schema::create('site_settings', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->id();
+                    $table->string('key')->unique();
+                    $table->longText('value')->nullable();
+                    $table->timestamps();
+                });
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('alignSiteSettings warning: ' . $e->getMessage());
         }
     }
 }
