@@ -270,6 +270,13 @@ class PortfolioAdminController extends Controller
             $validated['logo_url'] = '/uploads/partners/' . $filename;
         }
 
+        // Auto convert Google Drive links to direct CDN image URLs
+        if (!empty($validated['logo_url']) && str_contains($validated['logo_url'], 'drive.google.com')) {
+            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['logo_url'], $matches)) {
+                $validated['logo_url'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
+            }
+        }
+
         \App\Support\DatabaseSchemaAligner::alignPartners();
 
         $validated['is_active'] = $request->boolean('is_active', true);
@@ -303,6 +310,13 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['logo_url'] = '/uploads/partners/' . $filename;
+        }
+
+        // Auto convert Google Drive links to direct CDN image URLs
+        if (!empty($validated['logo_url']) && str_contains($validated['logo_url'], 'drive.google.com')) {
+            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['logo_url'], $matches)) {
+                $validated['logo_url'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
+            }
         }
 
         $validated['is_active'] = $request->boolean('is_active');

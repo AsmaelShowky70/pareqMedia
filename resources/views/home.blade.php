@@ -456,12 +456,17 @@
             $partnersRow1 = [];
             $partnersRow2 = [];
             foreach ($partnersList as $pIdx => $pItem) {
-                $pLogo = $pItem->logo_url ? (str_starts_with($pItem->logo_url, 'http') ? $pItem->logo_url : asset(ltrim($pItem->logo_url, '/'))) : null;
+                $rawLogo = $pItem instanceof \App\Models\Partner ? $pItem->display_logo : ($pItem->logo_url ?? null);
+                if ($rawLogo && str_contains($rawLogo, 'drive.google.com')) {
+                    if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $rawLogo, $matches)) {
+                        $rawLogo = 'https://lh3.googleusercontent.com/d/' . $matches[1];
+                    }
+                }
                 $pData = [
                     'name' => $pItem->name,
                     'type' => $pItem->category ?: 'شريك نجاح',
-                    'img' => $pLogo,
-                    'icon' => $pLogo ? null : 'fa-solid fa-building',
+                    'img' => $rawLogo,
+                    'icon' => $rawLogo ? null : 'fa-solid fa-building',
                 ];
                 if ($pIdx % 2 === 0) {
                     $partnersRow1[] = $pData;
@@ -483,9 +488,16 @@
             @for($i = 0; $i < 2; $i++)
                 @foreach($partnersRow1 as $p)
                 <div class="partner-card inline-flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-[#1B082B]/95 border-2 border-[#3E24C5]/50 shadow-[0_8px_30px_rgba(0,0,0,0.7)] hover:shadow-[0_0_35px_rgba(255,148,32,0.45)] hover:border-[#FF9420] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:rotate-2">
-                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-[#3E24C5]/60 flex items-center justify-center p-1.5 overflow-hidden">
+                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-[#3E24C5]/60 flex items-center justify-center p-1.5 overflow-hidden relative">
                         @if(!empty($p['img']))
-                            <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform">
+                            <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
+                                 class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform"
+                                 referrerpolicy="no-referrer"
+                                 loading="lazy"
+                                 onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
+                            <span style="display: none;" class="w-full h-full items-center justify-center text-xs font-black text-white bg-gradient-to-tr from-[#FF9420] to-[#3E24C5] rounded-lg">
+                                {{ mb_substr($p['name'], 0, 1, 'UTF-8') }}
+                            </span>
                         @else
                             <i class="{{ $p['icon'] ?? 'fa-solid fa-building' }} text-[#FF9420] text-lg"></i>
                         @endif
@@ -504,9 +516,16 @@
             @for($i = 0; $i < 2; $i++)
                 @foreach($partnersRow2 as $p)
                 <div class="partner-card inline-flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-[#1B082B]/95 border-2 border-[#3E24C5]/50 shadow-[0_8px_30px_rgba(0,0,0,0.7)] hover:shadow-[0_0_35px_rgba(255,148,32,0.45)] hover:border-[#FF9420] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:-rotate-2">
-                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-[#3E24C5]/60 flex items-center justify-center p-1.5 overflow-hidden">
+                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-[#3E24C5]/60 flex items-center justify-center p-1.5 overflow-hidden relative">
                         @if(!empty($p['img']))
-                            <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform">
+                            <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
+                                 class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform"
+                                 referrerpolicy="no-referrer"
+                                 loading="lazy"
+                                 onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
+                            <span style="display: none;" class="w-full h-full items-center justify-center text-xs font-black text-white bg-gradient-to-tr from-[#FF9420] to-[#3E24C5] rounded-lg">
+                                {{ mb_substr($p['name'], 0, 1, 'UTF-8') }}
+                            </span>
                         @else
                             <i class="{{ $p['icon'] ?? 'fa-solid fa-building' }} text-[#FF9420] text-lg"></i>
                         @endif

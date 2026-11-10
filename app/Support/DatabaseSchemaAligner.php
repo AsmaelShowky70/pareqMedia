@@ -232,6 +232,16 @@ class DatabaseSchemaAligner
                     $table->boolean('is_active')->default(true);
                     $table->timestamps();
                 });
+            } else {
+                // Self-heal any Google Drive links already stored in `partners` table
+                $drivePartners = DB::table('partners')->where('logo_url', 'like', '%drive.google.com%')->get();
+                foreach ($drivePartners as $dp) {
+                    if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $dp->logo_url, $m)) {
+                        DB::table('partners')->where('id', $dp->id)->update([
+                            'logo_url' => 'https://lh3.googleusercontent.com/d/' . $m[1]
+                        ]);
+                    }
+                }
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('alignPartners warning: ' . $e->getMessage());

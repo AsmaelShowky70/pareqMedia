@@ -228,54 +228,80 @@
                 $imageUrl = asset('images/team/member_sample.jpg');
             }
         @endphp
-        <div class="glass-card-purple rounded-3xl p-6 border border-purple-800/60 hover:border-brand-orange transition-all duration-300 group hover:-translate-y-2 flex flex-col justify-between shadow-xl">
+        <div class="glass-card-purple rounded-3xl p-6 sm:p-7 border border-purple-800/60 hover:border-brand-orange transition-all duration-500 group hover:-translate-y-2.5 flex flex-col justify-between shadow-2xl relative overflow-hidden">
             
-            <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <!-- Real Profile Photo with Glowing Border -->
-                    <div class="relative group/avatar">
-                        @if($imageUrl)
-                        <div class="w-16 h-16 rounded-2xl overflow-hidden p-0.5 bg-gradient-to-tr from-[#FF9420] via-[#FFBA70] to-[#3E24C5] shadow-[0_0_20px_rgba(255,148,32,0.35)] group-hover:shadow-[0_0_25px_rgba(255,148,32,0.6)] group-hover:scale-108 transition-all duration-300">
+            <!-- Ambient Top Card Glow -->
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-[#FF9420]/15 rounded-full blur-2xl pointer-events-none group-hover:bg-[#FF9420]/30 transition-all"></div>
+
+            <div class="space-y-5 text-center flex flex-col items-center">
+                
+                <!-- Distinctive Luxury Circular Profile Photo Frame -->
+                <div class="relative group/avatar mt-2">
+                    
+                    <!-- Outer Glowing Concentric Gradient Halo -->
+                    <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-[#FF9420] via-[#FFBA70] to-[#3E24C5] shadow-[0_0_25px_rgba(255,148,32,0.35)] group-hover:shadow-[0_0_40px_rgba(255,148,32,0.7)] group-hover:scale-105 transition-all duration-500">
+                        <div class="w-full h-full p-1 bg-[#150624] rounded-full overflow-hidden">
+                            @if($imageUrl)
                             <img src="{{ $imageUrl }}" 
                                  alt="{{ $name }}" 
-                                 class="w-full h-full object-cover object-top rounded-[14px]">
+                                 referrerpolicy="no-referrer"
+                                 loading="lazy"
+                                 class="w-full h-full object-cover object-top rounded-full group-hover:scale-110 transition-transform duration-700 ease-out"
+                                 onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div style="display: none;" class="w-full h-full rounded-full bg-gradient-to-tr {{ $gradient }} text-brand-dark font-black text-3xl items-center justify-center shadow-lg">
+                                {{ $letter }}
+                            </div>
+                            @else
+                            <div class="w-full h-full rounded-full bg-gradient-to-tr {{ $gradient }} text-brand-dark font-black text-3xl flex items-center justify-center shadow-lg">
+                                {{ $letter }}
+                            </div>
+                            @endif
                         </div>
-                        @else
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr {{ $gradient }} text-brand-dark font-black text-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                            {{ $letter }}
-                        </div>
-                        @endif
-                        <span class="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#1B082B] shadow" title="عضو نشط في بريق"></span>
                     </div>
 
-                    <div class="w-9 h-9 rounded-xl bg-purple-900/50 border border-purple-700/40 text-brand-orange flex items-center justify-center text-sm shadow">
+                    <!-- Department Floating Icon Badge -->
+                    <div class="absolute -top-1 -left-1 w-8 h-8 rounded-full bg-[#1B082B] border border-[#FF9420]/70 text-[#FF9420] flex items-center justify-center text-xs shadow-lg backdrop-blur-md group-hover:scale-110 transition-transform" title="{{ $dept }}">
                         <i class="{{ $icon }}"></i>
                     </div>
+
+                    <!-- Live Active Status Pulse Node -->
+                    <div class="absolute bottom-1 right-2 w-5 h-5 rounded-full bg-emerald-500 border-2 border-[#1B082B] shadow-lg flex items-center justify-center" title="عضو نشط في فريق بريق">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                    </div>
                 </div>
 
-                <div>
-                    <h3 class="text-base font-black text-white group-hover:text-brand-orange transition-colors">
+                <!-- Name & Title -->
+                <div class="space-y-1 w-full">
+                    <h3 class="text-lg sm:text-xl font-black text-white group-hover:text-brand-orange transition-colors">
                         {{ $name }}
                     </h3>
-                    <div class="text-xs font-bold text-brand-peach mt-0.5">
+                    <div class="text-xs font-extrabold text-brand-peach">
                         {{ $role }}
                     </div>
-                    <div class="text-[10px] text-gray-400 mt-0.5">
-                        {{ $dept }}
+                    @if($dept)
+                    <div class="pt-0.5">
+                        <span class="inline-block px-3 py-0.5 rounded-full bg-purple-950/70 border border-purple-800/60 text-[10px] text-gray-300 font-medium">
+                            {{ $dept }}
+                        </span>
                     </div>
+                    @endif
                 </div>
 
-                <p class="text-xs text-gray-300 leading-relaxed italic border-t border-purple-800/40 pt-3">
-                    "{{ $quote }}"
+                <!-- Member Quote / Philosophy -->
+                @if($quote)
+                <p class="text-xs text-gray-200 leading-relaxed italic border-t border-purple-800/40 pt-3.5 px-2 relative font-normal">
+                    <span class="text-brand-orange font-black text-base mr-1">“</span>{{ $quote }}<span class="text-brand-orange font-black text-base ml-1">”</span>
                 </p>
+                @endif
             </div>
 
-            <div class="pt-4 mt-4 border-t border-purple-800/40 flex items-center justify-between text-[10px] text-gray-400">
+            <!-- Card Bottom Footer -->
+            <div class="pt-4 mt-4 border-t border-purple-800/40 flex items-center justify-between text-[10px] text-gray-400 w-full">
                 <span class="flex items-center gap-1.5 text-brand-orange">
-                    <i class="fa-solid fa-circle text-[6px]"></i>
+                    <i class="fa-solid fa-circle text-[6px] animate-pulse"></i>
                     <span class="font-bold">عقلية تعاون موحدة</span>
                 </span>
-                <span class="font-mono">PARIQ TEAM</span>
+                <span class="font-mono tracking-widest text-[#FFBA70] font-bold">PARIQ TEAM</span>
             </div>
         </div>
         @endforeach

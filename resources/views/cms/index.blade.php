@@ -700,8 +700,9 @@
             <div class="bg-brand-card border border-brand-border rounded-2xl p-4 flex flex-col justify-between hover:border-brand-yellow/50 transition shadow group">
                 <div class="space-y-3 text-center">
                     <div class="w-16 h-16 rounded-xl bg-white/5 border border-brand-border/60 p-2 mx-auto flex items-center justify-center overflow-hidden">
-                        @if($partner->logo_url)
-                        <img src="{{ str_starts_with($partner->logo_url, 'http') ? $partner->logo_url : asset(ltrim($partner->logo_url, '/')) }}" alt="{{ $partner->name }}" class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform">
+                        @if($partner->display_logo)
+                        <img src="{{ $partner->display_logo }}" alt="{{ $partner->name }}" referrerpolicy="no-referrer" class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform" onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='block';">
+                        <i style="display: none;" class="fa-solid fa-building text-2xl text-brand-gold"></i>
                         @else
                         <i class="fa-solid fa-building text-2xl text-brand-gold"></i>
                         @endif
@@ -1114,15 +1115,15 @@
                         <!-- Profile Photo -->
                         <div class="relative">
                             @if($tm->display_image)
-                            <div class="w-16 h-16 rounded-2xl overflow-hidden border-2 border-brand-orange shadow-md p-0.5 bg-[#1B082B]">
-                                <img src="{{ $tm->display_image }}" alt="{{ $tm->name }}" class="w-full h-full object-cover object-top rounded-[12px]">
+                            <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-brand-orange shadow-md p-0.5 bg-[#1B082B]">
+                                <img src="{{ $tm->display_image }}" alt="{{ $tm->name }}" referrerpolicy="no-referrer" class="w-full h-full object-cover object-top rounded-full">
                             </div>
                             @else
-                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-orange to-[#FF7A00] text-brand-dark font-black text-2xl flex items-center justify-center shadow-lg">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-brand-orange to-[#FF7A00] text-brand-dark font-black text-2xl flex items-center justify-center shadow-lg">
                                 {{ $tm->letter ?? mb_substr($tm->name, 0, 1, 'UTF-8') }}
                             </div>
                             @endif
-                            <span class="absolute -bottom-1 -left-1 w-3.5 h-3.5 rounded-full {{ $tm->is_active ? 'bg-emerald-500' : 'bg-gray-500' }} border-2 border-brand-card shadow"></span>
+                            <span class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full {{ $tm->is_active ? 'bg-emerald-500' : 'bg-gray-500' }} border-2 border-brand-card shadow"></span>
                         </div>
 
                         <div class="text-left flex flex-col items-end">
