@@ -56,3 +56,4 @@ class TeamMember extends Model
         return asset(ltrim($url, '/'));
     }
 }
+
