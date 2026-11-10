@@ -122,6 +122,9 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['thumbnail'] = '/uploads/portfolio/' . $filename;
+        } elseif (!empty($validated['thumbnail'])) {
+            // Auto convert & cache Google Drive or other image links
+            $validated['thumbnail'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['thumbnail']);
         }
 
         // Handle uploaded video file
@@ -136,10 +139,11 @@ class PortfolioAdminController extends Controller
             $validated['video_url'] = '/uploads/videos/' . $filename;
         }
 
-        // Auto convert Google Drive thumbnail links to direct viewable image URLs
-        if (!empty($validated['thumbnail']) && str_contains($validated['thumbnail'], 'drive.google.com')) {
-            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['thumbnail'], $matches)) {
-                $validated['thumbnail'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
+        // If thumbnail was not provided, auto-fetch high-res YouTube thumbnail
+        if (empty($validated['thumbnail']) && !empty($validated['video_url'])) {
+            $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($validated['video_url']);
+            if ($ytThumb) {
+                $validated['thumbnail'] = $ytThumb;
             }
         }
 
@@ -190,6 +194,10 @@ class PortfolioAdminController extends Controller
             $file->move($uploadPath, $filename);
             $validated['thumbnail'] = '/uploads/portfolio/' . $filename;
             $validated['thumbnail_url'] = $validated['thumbnail'];
+        } elseif (!empty($validated['thumbnail'])) {
+            // Auto convert & cache Google Drive or other image links
+            $validated['thumbnail'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['thumbnail']);
+            $validated['thumbnail_url'] = $validated['thumbnail'];
         }
 
         // Handle uploaded video file
@@ -205,11 +213,12 @@ class PortfolioAdminController extends Controller
             $validated['media_url'] = $validated['video_url'];
         }
 
-        // Auto convert Google Drive thumbnail links to direct viewable image URLs
-        if (!empty($validated['thumbnail']) && str_contains($validated['thumbnail'], 'drive.google.com')) {
-            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['thumbnail'], $matches)) {
-                $validated['thumbnail'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
-                $validated['thumbnail_url'] = $validated['thumbnail'];
+        // If thumbnail wasn't given, or is still the mock image, and video_url is a YouTube video:
+        if (!empty($validated['video_url']) && (empty($validated['thumbnail']) || $validated['thumbnail'] === '/images/portfolio/social_1.webp')) {
+            $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($validated['video_url']);
+            if ($ytThumb) {
+                $validated['thumbnail'] = $ytThumb;
+                $validated['thumbnail_url'] = $ytThumb;
             }
         }
 
@@ -268,13 +277,8 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['logo_url'] = '/uploads/partners/' . $filename;
-        }
-
-        // Auto convert Google Drive links to direct CDN image URLs
-        if (!empty($validated['logo_url']) && str_contains($validated['logo_url'], 'drive.google.com')) {
-            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['logo_url'], $matches)) {
-                $validated['logo_url'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
-            }
+        } elseif (!empty($validated['logo_url'])) {
+            $validated['logo_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['logo_url']);
         }
 
         \App\Support\DatabaseSchemaAligner::alignPartners();
@@ -310,13 +314,8 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['logo_url'] = '/uploads/partners/' . $filename;
-        }
-
-        // Auto convert Google Drive links to direct CDN image URLs
-        if (!empty($validated['logo_url']) && str_contains($validated['logo_url'], 'drive.google.com')) {
-            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['logo_url'], $matches)) {
-                $validated['logo_url'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
-            }
+        } elseif (!empty($validated['logo_url'])) {
+            $validated['logo_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['logo_url']);
         }
 
         $validated['is_active'] = $request->boolean('is_active');
@@ -360,6 +359,8 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['thumbnail'] = '/uploads/testimonials/' . $filename;
+        } elseif (!empty($validated['thumbnail'])) {
+            $validated['thumbnail'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['thumbnail']);
         }
 
         if ($request->hasFile('video_file')) {
@@ -371,6 +372,8 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['media_url'] = '/uploads/testimonials/videos/' . $filename;
+        } elseif (!empty($validated['media_url']) && str_contains($validated['media_url'], 'drive.google.com')) {
+            $validated['media_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['media_url']);
         }
 
         \App\Support\DatabaseSchemaAligner::alignTestimonials();
@@ -413,6 +416,8 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['thumbnail'] = '/uploads/testimonials/' . $filename;
+        } elseif (!empty($validated['thumbnail'])) {
+            $validated['thumbnail'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['thumbnail']);
         }
 
         if ($request->hasFile('video_file')) {
@@ -424,6 +429,8 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['media_url'] = '/uploads/testimonials/videos/' . $filename;
+        } elseif (!empty($validated['media_url']) && str_contains($validated['media_url'], 'drive.google.com')) {
+            $validated['media_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['media_url']);
         }
 
         $validated['is_active'] = $request->boolean('is_active');
@@ -486,13 +493,8 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['image_url'] = '/uploads/team/' . $filename;
-        }
-
-        // Auto convert Google Drive image link to direct CDN image URL
-        if (!empty($validated['image_url']) && str_contains($validated['image_url'], 'drive.google.com')) {
-            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['image_url'], $matches)) {
-                $validated['image_url'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
-            }
+        } elseif (!empty($validated['image_url'])) {
+            $validated['image_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['image_url']);
         }
 
         $validated['is_active'] = $request->boolean('is_active', true);
@@ -530,13 +532,8 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['image_url'] = '/uploads/team/' . $filename;
-        }
-
-        // Auto convert Google Drive image link to direct CDN image URL
-        if (!empty($validated['image_url']) && str_contains($validated['image_url'], 'drive.google.com')) {
-            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $validated['image_url'], $matches)) {
-                $validated['image_url'] = 'https://lh3.googleusercontent.com/d/' . $matches[1];
-            }
+        } elseif (!empty($validated['image_url'])) {
+            $validated['image_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['image_url']);
         }
 
         $validated['is_active'] = $request->boolean('is_active', true);
@@ -554,5 +551,23 @@ class PortfolioAdminController extends Controller
         $teamMember->delete();
 
         return back()->with('success', 'تم حذف عضو الفريق بنجاح.');
+    }
+
+    /**
+     * Stream or redirect Google Drive cached media via internal domain URL.
+     */
+    public function streamDriveMedia(string $id)
+    {
+        $cached = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($id);
+        if ($cached && !str_starts_with($cached, 'http')) {
+            $path = public_path(ltrim($cached, '/'));
+            if (file_exists($path)) {
+                return response()->file($path, [
+                    'Cache-Control' => 'public, max-age=31536000',
+                ]);
+            }
+        }
+
+        return redirect('https://lh3.googleusercontent.com/d/' . $id);
     }
 }

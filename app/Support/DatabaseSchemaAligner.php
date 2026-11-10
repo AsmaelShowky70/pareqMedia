@@ -211,6 +211,43 @@ class DatabaseSchemaAligner
             if (!empty($columnsToAdd)) {
                 DB::statement("ALTER TABLE `portfolio_items` " . implode(', ', $columnsToAdd));
             }
+
+            // Self-heal and cache any Google Drive links stored in portfolio_items
+            $driveItems = DB::table('portfolio_items')
+                ->where('thumbnail', 'like', '%drive.google.com%')
+                ->orWhere('thumbnail', 'like', '%googleusercontent.com%')
+                ->orWhere('thumbnail_url', 'like', '%drive.google.com%')
+                ->orWhere('thumbnail_url', 'like', '%googleusercontent.com%')
+                ->get();
+            foreach ($driveItems as $di) {
+                $raw = $di->thumbnail ?: $di->thumbnail_url;
+                $localPath = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($raw);
+                if ($localPath) {
+                    DB::table('portfolio_items')->where('id', $di->id)->update([
+                        'thumbnail' => $localPath,
+                        'thumbnail_url' => $localPath,
+                    ]);
+                }
+            }
+
+            // Auto-fix any YouTube portfolio item that had /images/portfolio/social_1.webp set by default:
+            $ytItems = DB::table('portfolio_items')
+                ->whereNotNull('video_url')
+                ->where(function($q) {
+                    $q->whereNull('thumbnail')
+                      ->orWhere('thumbnail', '')
+                      ->orWhere('thumbnail', '/images/portfolio/social_1.webp');
+                })
+                ->get();
+            foreach ($ytItems as $yi) {
+                $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($yi->video_url);
+                if ($ytThumb) {
+                    DB::table('portfolio_items')->where('id', $yi->id)->update([
+                        'thumbnail' => $ytThumb,
+                        'thumbnail_url' => $ytThumb,
+                    ]);
+                }
+            }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('alignPortfolioItems warning: ' . $e->getMessage());
         }
@@ -233,12 +270,16 @@ class DatabaseSchemaAligner
                     $table->timestamps();
                 });
             } else {
-                // Self-heal any Google Drive links already stored in `partners` table
-                $drivePartners = DB::table('partners')->where('logo_url', 'like', '%drive.google.com%')->get();
+                // Self-heal and cache any Google Drive links already stored in `partners` table
+                $drivePartners = DB::table('partners')
+                    ->where('logo_url', 'like', '%drive.google.com%')
+                    ->orWhere('logo_url', 'like', '%googleusercontent.com%')
+                    ->get();
                 foreach ($drivePartners as $dp) {
-                    if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $dp->logo_url, $m)) {
+                    $localPath = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($dp->logo_url);
+                    if ($localPath) {
                         DB::table('partners')->where('id', $dp->id)->update([
-                            'logo_url' => 'https://lh3.googleusercontent.com/d/' . $m[1]
+                            'logo_url' => $localPath
                         ]);
                     }
                 }
@@ -436,6 +477,21 @@ class DatabaseSchemaAligner
                 ];
 
                 DB::table('team_members')->insert($initialMembers);
+            }
+
+            if (Schema::hasTable('team_members')) {
+                $driveMembers = DB::table('team_members')
+                    ->where('image_url', 'like', '%drive.google.com%')
+                    ->orWhere('image_url', 'like', '%googleusercontent.com%')
+                    ->get();
+                foreach ($driveMembers as $dm) {
+                    $localPath = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($dm->image_url);
+                    if ($localPath) {
+                        DB::table('team_members')->where('id', $dm->id)->update([
+                            'image_url' => $localPath
+                        ]);
+                    }
+                }
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('alignTeamMembers warning: ' . $e->getMessage());

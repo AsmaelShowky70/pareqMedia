@@ -37,23 +37,7 @@ class TeamMember extends Model
      */
     public function getDisplayImageAttribute(): ?string
     {
-        $url = $this->image_url;
-        if (empty($url)) {
-            return null;
-        }
-
-        // Convert Google Drive links to direct CDN view URLs
-        if (str_contains($url, 'drive.google.com')) {
-            if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $url, $matches)) {
-                return 'https://lh3.googleusercontent.com/d/' . $matches[1];
-            }
-        }
-
-        if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://')) {
-            return $url;
-        }
-
-        return asset(ltrim($url, '/'));
+        return \App\Support\MediaHelper::formatDisplayUrl($this->image_url);
     }
 }
 

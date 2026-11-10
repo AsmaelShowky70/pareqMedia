@@ -457,10 +457,8 @@
             $partnersRow2 = [];
             foreach ($partnersList as $pIdx => $pItem) {
                 $rawLogo = $pItem instanceof \App\Models\Partner ? $pItem->display_logo : ($pItem->logo_url ?? null);
-                if ($rawLogo && str_contains($rawLogo, 'drive.google.com')) {
-                    if (preg_match('/(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/', $rawLogo, $matches)) {
-                        $rawLogo = 'https://lh3.googleusercontent.com/d/' . $matches[1];
-                    }
+                if ($rawLogo) {
+                    $rawLogo = \App\Support\MediaHelper::formatDisplayUrl($rawLogo);
                 }
                 $pData = [
                     'name' => $pItem->name,
@@ -740,8 +738,7 @@
     @if(isset($portfolioItems) && $portfolioItems->count() === 1)
         @php
             $singleItem = $portfolioItems->first();
-            $thumbUrl = $singleItem->thumbnail;
-            $finalThumb = $thumbUrl ? (str_starts_with($thumbUrl, 'http') ? $thumbUrl : asset(ltrim($thumbUrl, '/'))) : asset('images/portfolio/social_1.webp');
+            $finalThumb = $singleItem->display_thumbnail ?: ($singleItem->thumbnail ? \App\Support\MediaHelper::formatDisplayUrl($singleItem->thumbnail) : asset('images/portfolio/social_1.webp'));
             $finalMedia = $singleItem->video_url ?: $finalThumb;
             $mediaType = $singleItem->video_url ? 'video' : ($singleItem->category === 'branding' ? 'branding' : 'image');
             $aspectType = $singleItem->category === 'reels' ? 'vertical' : 'landscape';
@@ -751,7 +748,7 @@
             <div class="glass-card-purple rounded-3xl overflow-hidden border-2 border-[#FF9420] shadow-[0_0_50px_rgba(255,148,32,0.45)] group cursor-pointer transition-all duration-300 hover:scale-[1.01]"
                  @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($singleItem->title) }}', '{{ addslashes($singleItem->description ?? '') }}', '{{ $aspectType }}')">
                 <div class="relative aspect-video bg-black/70 overflow-hidden">
-                    <img src="{{ $finalThumb }}" alt="{{ $singleItem->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <img src="{{ $finalThumb }}" alt="{{ $singleItem->title }}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#1B082B] via-black/30 to-transparent"></div>
                     
                     @if($singleItem->video_url)
@@ -867,8 +864,7 @@
             <div class="flex items-center gap-5 w-max">
                 @foreach($portfolioItems as $item)
                 @php
-                    $thumbUrl = $item->thumbnail;
-                    $finalThumb = $thumbUrl ? (str_starts_with($thumbUrl, 'http') ? $thumbUrl : asset(ltrim($thumbUrl, '/'))) : asset('images/portfolio/social_1.webp');
+                    $finalThumb = $item->display_thumbnail ?: ($item->thumbnail ? \App\Support\MediaHelper::formatDisplayUrl($item->thumbnail) : asset('images/portfolio/social_1.webp'));
                     $finalMedia = $item->video_url ?: $finalThumb;
                     $mediaType = $item->video_url ? 'video' : ($item->category === 'branding' ? 'branding' : 'image');
                     $aspectType = $item->category === 'reels' ? 'vertical' : 'landscape';
@@ -877,7 +873,7 @@
                      @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')">
                     
                     <div class="relative aspect-video bg-black/60 overflow-hidden">
-                        <img src="{{ $finalThumb }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 pointer-events-none">
+                        <img src="{{ $finalThumb }}" alt="{{ $item->title }}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 pointer-events-none">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#1B082B] via-transparent to-transparent opacity-80 pointer-events-none"></div>
                         
                         @if($item->video_url)

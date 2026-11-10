@@ -181,8 +181,10 @@
                     </div>
 
                     <div class="relative aspect-video rounded-xl overflow-hidden bg-black/50 border border-brand-border/60">
-                        @if($item->thumbnail)
-                        <img src="{{ asset($item->thumbnail) }}" alt="{{ $item->title }}" class="w-full h-full object-cover">
+                        @if($item->display_thumbnail)
+                        <img src="{{ $item->display_thumbnail }}" alt="{{ $item->title }}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-full object-cover">
+                        @elseif($item->thumbnail)
+                        <img src="{{ asset($item->thumbnail) }}" alt="{{ $item->title }}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-full object-cover">
                         @endif
                         @if($item->video_url)
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
@@ -473,6 +475,51 @@
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
          style="display: none;">
         <div @click.away="addPortfolioModal = false" 
+             x-data="{
+                 videoInput: '',
+                 thumbInput: '',
+                 previewSrc: '',
+                 previewBadge: '',
+                 checkPreview() {
+                     if (this.thumbInput) {
+                         const val = this.thumbInput.trim();
+                         const driveMatch = val.match(/(?:file\/d\/|id=|open\?id=|\/d\/)([a-zA-Z0-9_-]{25,})/i);
+                         if (driveMatch) {
+                             this.previewSrc = 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                             this.previewBadge = 'Google Drive (سيتم تنزيله وحفظه محلياً بالسيرفر فوراً)';
+                             return;
+                         }
+                         if (val.startsWith('http://') || val.startsWith('https://')) {
+                             this.previewSrc = val;
+                             this.previewBadge = 'رابط صورة خارجي';
+                             return;
+                         }
+                         if (val) {
+                             this.previewSrc = '{{ asset('') }}' + val.replace(/^\/+/, '');
+                             this.previewBadge = 'مسار محلي';
+                             return;
+                         }
+                     }
+                     if (this.videoInput) {
+                         const val = this.videoInput.trim();
+                         const ytMatch = val.match(/(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+                         if (ytMatch) {
+                             this.previewSrc = 'https://img.youtube.com/vi/' + ytMatch[1] + '/hqdefault.jpg';
+                             this.previewBadge = 'غلاف YouTube التلقائي (دقة عالية)';
+                             return;
+                         }
+                     }
+                     this.previewSrc = '';
+                     this.previewBadge = '';
+                 },
+                 onFileChosen(e) {
+                     const file = e.target.files[0];
+                     if (file) {
+                         this.previewSrc = URL.createObjectURL(file);
+                         this.previewBadge = 'صورة مرفوعة من جهازك (' + file.name + ')';
+                     }
+                 }
+             }"
              class="w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             
             <div class="flex items-center justify-between pb-3 border-b border-brand-border">
@@ -528,7 +575,10 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div>
                             <label class="block text-[11px] text-gray-300 mb-1">رابط YouTube أو فيديو خارجي:</label>
-                            <input type="text" name="video_url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <input type="text" name="video_url" x-model="videoInput" @input="checkPreview()" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <p class="text-[10px] text-emerald-400 font-medium mt-1">
+                                <i class="fa-solid fa-circle-check ml-1"></i> يتم جلب غلاف الفيديو من YouTube تلقائياً وبأعلى جودة!
+                            </p>
                         </div>
                         <div>
                             <label class="block text-[11px] text-gray-300 mb-1">أو رفع ملف فيديو MP4 مباشر:</label>
@@ -539,18 +589,38 @@
 
                 <!-- Image / Thumbnail Options -->
                 <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
-                    <label class="block font-bold text-amber-300">
-                        <i class="fa-solid fa-image ml-1"></i>
-                        صورة الغلاف / التصميم <span class="text-red-400">*</span>
-                    </label>
+                    <div class="flex items-center justify-between">
+                        <label class="block font-bold text-amber-300">
+                            <i class="fa-solid fa-image ml-1"></i>
+                            صورة الغلاف / Thumbnail المصغر
+                        </label>
+                        <span class="text-[10px] text-gray-400">(اختياري في حال وجود فيديو يوتيوب)</span>
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div>
                             <label class="block text-[11px] text-brand-gold font-bold mb-1">رفع صورة من جهازك (مباشر):</label>
-                            <input type="file" name="thumbnail_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                            <input type="file" name="thumbnail_file" accept="image/*" @change="onFileChosen($event)" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
                         </div>
                         <div>
-                            <label class="block text-[11px] text-gray-400 mb-1">أو كتابة رابط/مسار صورة:</label>
-                            <input type="text" name="thumbnail" placeholder="/images/portfolio/social_1.webp" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <label class="block text-[11px] text-gray-400 mb-1">أو كتابة رابط صورة (يدعم Google Drive مباشرة):</label>
+                            <input type="text" name="thumbnail" x-model="thumbInput" @input="checkPreview()" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <p class="text-[10px] text-brand-gold font-medium mt-1">
+                                <i class="fa-solid fa-cloud-arrow-down ml-1"></i> روابط Google Drive يتم تنزيلها وتخزينها بالسيرفر فوراً.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Live Thumbnail Preview -->
+                    <div x-show="previewSrc" x-transition class="pt-2 border-t border-purple-800/40 space-y-1.5">
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="font-bold text-brand-gold flex items-center gap-1.5">
+                                <i class="fa-solid fa-eye text-emerald-400"></i>
+                                <span>معاينة الغلاف الذي سيظهر للزوار:</span>
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-brand-purple text-[10px] text-amber-300 font-medium" x-text="previewBadge"></span>
+                        </div>
+                        <div class="relative aspect-video rounded-lg overflow-hidden bg-black/70 border border-purple-800/60 flex items-center justify-center max-h-40 mx-auto">
+                            <img :src="previewSrc" referrerpolicy="no-referrer" class="w-full h-full object-cover">
                         </div>
                     </div>
                 </div>
@@ -579,6 +649,64 @@
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
          style="display: none;">
         <div @click.away="editPortfolioModal = false" 
+             x-data="{
+                 editVideo: '',
+                 editThumb: '',
+                 editPreview: '',
+                 editBadge: '',
+                 init() {
+                     this.$watch('editPortfolioModal', (val) => {
+                         if (val && this.selectedPortfolio) {
+                             this.editVideo = this.selectedPortfolio.video_url || '';
+                             this.editThumb = this.selectedPortfolio.thumbnail || '';
+                             this.updatePreview();
+                         }
+                     });
+                 },
+                 updatePreview() {
+                     if (this.editThumb) {
+                         const val = this.editThumb.trim();
+                         const driveMatch = val.match(/(?:file\/d\/|id=|open\?id=|\/d\/)([a-zA-Z0-9_-]{25,})/i);
+                         if (driveMatch) {
+                             this.editPreview = 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                             this.editBadge = 'Google Drive (سيتم حفظه محلياً بالسيرفر)';
+                             return;
+                         }
+                         if (val.startsWith('http://') || val.startsWith('https://')) {
+                             this.editPreview = val;
+                             this.editBadge = 'رابط خارجي';
+                             return;
+                         }
+                         if (val) {
+                             this.editPreview = '{{ asset('') }}' + val.replace(/^\/+/, '');
+                             this.editBadge = 'صورة حالية';
+                             return;
+                         }
+                     }
+                     if (this.editVideo) {
+                         const val = this.editVideo.trim();
+                         const ytMatch = val.match(/(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+                         if (ytMatch) {
+                             this.editPreview = 'https://img.youtube.com/vi/' + ytMatch[1] + '/hqdefault.jpg';
+                             this.editBadge = 'غلاف YouTube التلقائي';
+                             return;
+                         }
+                     }
+                     this.editPreview = '';
+                     this.editBadge = '';
+                 },
+                 useYoutubeThumb() {
+                     this.editThumb = '';
+                     this.updatePreview();
+                 },
+                 onFileChosen(e) {
+                     const file = e.target.files[0];
+                     if (file) {
+                         this.editPreview = URL.createObjectURL(file);
+                         this.editBadge = 'صورة جديدة مرفوعة (' + file.name + ')';
+                     }
+                 }
+             }"
              class="w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             
             <div class="flex items-center justify-between pb-3 border-b border-brand-border">
@@ -636,7 +764,10 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div>
                             <label class="block text-[11px] text-gray-300 mb-1">رابط YouTube أو فيديو خارجي:</label>
-                            <input type="text" name="video_url" x-bind:value="selectedPortfolio ? (selectedPortfolio.video_url || '') : ''" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <input type="text" name="video_url" x-model="editVideo" @input="updatePreview()" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <p class="text-[10px] text-emerald-400 font-medium mt-1">
+                                <i class="fa-solid fa-circle-check ml-1"></i> يدعم روابط فيديوهات YouTube ويتم جلب غلافها تلقائياً.
+                            </p>
                         </div>
                         <div>
                             <label class="block text-[11px] text-gray-300 mb-1">أو تغيير ملف الفيديو (MP4):</label>
@@ -647,18 +778,40 @@
 
                 <!-- Image / Thumbnail Options -->
                 <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
-                    <label class="block font-bold text-amber-300">
-                        <i class="fa-solid fa-image ml-1"></i>
-                        صورة الغلاف / التصميم
-                    </label>
+                    <div class="flex items-center justify-between">
+                        <label class="block font-bold text-amber-300">
+                            <i class="fa-solid fa-image ml-1"></i>
+                            صورة الغلاف / التصميم
+                        </label>
+                        <button type="button" @click="useYoutubeThumb()" x-show="editVideo && (editVideo.includes('youtu.be') || editVideo.includes('youtube.com'))" class="text-[10px] text-amber-300 hover:text-white underline font-bold">
+                            <i class="fa-brands fa-youtube ml-1"></i> جلب غلاف اليوتيوب تلقائياً
+                        </button>
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div>
                             <label class="block text-[11px] text-brand-gold font-bold mb-1">رفع صورة جديدة من جهازك:</label>
-                            <input type="file" name="thumbnail_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                            <input type="file" name="thumbnail_file" accept="image/*" @change="onFileChosen($event)" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
                         </div>
                         <div>
-                            <label class="block text-[11px] text-gray-400 mb-1">أو كتابة رابط/مسار صورة:</label>
-                            <input type="text" name="thumbnail" x-bind:value="selectedPortfolio ? selectedPortfolio.thumbnail : ''" placeholder="/images/portfolio/social_1.webp" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <label class="block text-[11px] text-gray-400 mb-1">أو كتابة رابط صورة (Google Drive أو مباشر):</label>
+                            <input type="text" name="thumbnail" x-model="editThumb" @input="updatePreview()" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <p class="text-[10px] text-brand-gold font-medium mt-1">
+                                <i class="fa-solid fa-cloud-arrow-down ml-1"></i> روابط Google Drive يتم حفظها محلياً بالسيرفر فوراً.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Live Thumbnail Preview in Edit Modal -->
+                    <div x-show="editPreview" x-transition class="pt-2 border-t border-purple-800/40 space-y-1.5">
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="font-bold text-brand-gold flex items-center gap-1.5">
+                                <i class="fa-solid fa-eye text-emerald-400"></i>
+                                <span>معاينة الغلاف الحالي / الجديد:</span>
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-brand-purple text-[10px] text-amber-300 font-medium" x-text="editBadge"></span>
+                        </div>
+                        <div class="relative aspect-video rounded-lg overflow-hidden bg-black/70 border border-purple-800/60 flex items-center justify-center max-h-40 mx-auto">
+                            <img :src="editPreview" referrerpolicy="no-referrer" class="w-full h-full object-cover">
                         </div>
                     </div>
                 </div>
@@ -1219,8 +1372,11 @@
                         <input type="file" name="logo_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
                     </div>
                     <div>
-                        <label class="block text-[11px] text-gray-400 mb-1">أو كتابة رابط/مسار لوجو مباشر:</label>
-                        <input type="text" name="logo_url" placeholder="/images/clients/client_78.webp" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        <label class="block text-[11px] text-gray-400 mb-1">أو رابط الشعار (يدعم روابط Google Drive المباشرة):</label>
+                        <input type="text" name="logo_url" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        <p class="text-[10px] text-brand-gold font-medium mt-1">
+                            <i class="fa-solid fa-cloud-arrow-down ml-1"></i> روابط Google Drive يتم تنزيلها وتخزينها محلياً بالسيرفر فوراً لضمان سرعة التحميل وعدم الحظر.
+                        </p>
                     </div>
                 </div>
 
@@ -1276,8 +1432,11 @@
                         <input type="file" name="logo_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
                     </div>
                     <div>
-                        <label class="block text-[11px] text-gray-400 mb-1">أو رابط الشعار الحالي:</label>
-                        <input type="text" name="logo_url" x-bind:value="selectedPartner ? selectedPartner.logo_url : ''" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        <label class="block text-[11px] text-gray-400 mb-1">أو رابط الشعار (يدعم Google Drive مباشرة):</label>
+                        <input type="text" name="logo_url" x-bind:value="selectedPartner ? selectedPartner.logo_url : ''" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        <p class="text-[10px] text-brand-gold font-medium mt-1">
+                            <i class="fa-solid fa-cloud-arrow-down ml-1"></i> روابط Google Drive يتم حفظها محلياً بالسيرفر تلقائياً.
+                        </p>
                     </div>
                 </div>
 

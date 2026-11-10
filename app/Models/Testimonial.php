@@ -50,5 +50,15 @@ class Testimonial extends Model
             default => 'fa-comment-dots',
         };
     }
+
+    public function getDisplayThumbnailAttribute(): ?string
+    {
+        return \App\Support\MediaHelper::formatDisplayUrl($this->thumbnail);
+    }
+
+    public function getDisplayMediaAttribute(): ?string
+    {
+        return \App\Support\MediaHelper::formatDisplayUrl($this->media_url);
+    }
 }
 

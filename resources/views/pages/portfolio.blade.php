@@ -47,8 +47,7 @@
     $showcasePortfolio = [];
     if (isset($portfolioItems) && $portfolioItems->isNotEmpty()) {
         foreach ($portfolioItems->take(12) as $pItem) {
-            $tUrl = $pItem->thumbnail ?: $pItem->thumbnail_url;
-            $fThumb = $tUrl ? (str_starts_with($tUrl, 'http') ? $tUrl : asset(ltrim($tUrl, '/'))) : asset('images/portfolio/social_1.webp');
+            $fThumb = $pItem->display_thumbnail ?: ($pItem->thumbnail ? \App\Support\MediaHelper::formatDisplayUrl($pItem->thumbnail) : asset('images/portfolio/social_1.webp'));
             $fMedia = $pItem->video_url ? (str_starts_with($pItem->video_url, 'http') ? $pItem->video_url : asset(ltrim($pItem->video_url, '/'))) : ($pItem->media_url ?: $fThumb);
             $mType = ($pItem->video_url || $pItem->media_type === 'video') ? 'video' : 'image';
             $asp = in_array($pItem->category, ['reels', 'video_reels']) ? 'vertical' : 'landscape';
@@ -283,8 +282,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
         @forelse($portfolioItems as $item)
         @php
-            $thumbUrl = $item->thumbnail;
-            $finalThumb = $thumbUrl ? (str_starts_with($thumbUrl, 'http') ? $thumbUrl : asset(ltrim($thumbUrl, '/'))) : asset('images/portfolio/social_1.webp');
+            $finalThumb = $item->display_thumbnail ?: ($item->thumbnail ? \App\Support\MediaHelper::formatDisplayUrl($item->thumbnail) : asset('images/portfolio/social_1.webp'));
             $finalMedia = $item->video_url ?: $finalThumb;
             
             // Determine type and aspect ratio based on category
@@ -316,7 +314,7 @@
                 <div class="relative {{ $aspectRatio }} bg-black/70 flex items-center justify-center overflow-hidden cursor-pointer"
                      @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')">
                     
-                    <img src="{{ $finalThumb }}" alt="{{ $item->title }}" 
+                    <img src="{{ $finalThumb }}" alt="{{ $item->title }}" referrerpolicy="no-referrer" loading="lazy"
                          class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
 
                     <div class="absolute inset-0 bg-gradient-to-t from-[#1B082B] via-black/20 to-transparent z-10"></div>

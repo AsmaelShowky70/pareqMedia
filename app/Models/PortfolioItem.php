@@ -35,6 +35,27 @@ class PortfolioItem extends Model
         return $this->belongsTo(Service::class);
     }
 
+    /**
+     * Get displayable thumbnail URL, supporting Google Drive, YouTube covers, and local files.
+     */
+    public function getDisplayThumbnailAttribute(): ?string
+    {
+        $thumb = $this->thumbnail ?: $this->thumbnail_url;
+        if (!empty($thumb) && $thumb !== '/images/portfolio/social_1.webp') {
+            return \App\Support\MediaHelper::formatDisplayUrl($thumb);
+        }
+
+        // If thumbnail is empty or was legacy mock, check if video is YouTube
+        if (!empty($this->video_url)) {
+            $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($this->video_url);
+            if ($ytThumb) {
+                return \App\Support\MediaHelper::formatDisplayUrl($ytThumb);
+            }
+        }
+
+        return !empty($thumb) ? \App\Support\MediaHelper::formatDisplayUrl($thumb) : asset('images/portfolio/social_1.webp');
+    }
+
     public function getCategoryArabicAttribute(): string
     {
         return match ($this->category) {
