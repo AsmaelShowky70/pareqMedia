@@ -205,3 +205,4 @@ class MediaHelper
         return asset(ltrim($url, '/'));
     }
 }
+

@@ -482,27 +482,26 @@
     <div class="space-y-6 overflow-hidden py-4">
         
         <!-- Row 1: Moves Left to Right -->
-        <div class="marquee-reverse-track flex items-center gap-6 whitespace-nowrap select-none">
+        <div class="marquee-reverse-track flex items-center gap-6 sm:gap-7 whitespace-nowrap select-none">
             @for($i = 0; $i < 2; $i++)
                 @foreach($partnersRow1 as $p)
-                <div class="partner-card inline-flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-[#1B082B]/95 border-2 border-[#3E24C5]/50 shadow-[0_8px_30px_rgba(0,0,0,0.7)] hover:shadow-[0_0_35px_rgba(255,148,32,0.45)] hover:border-[#FF9420] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:rotate-2">
-                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-[#3E24C5]/60 flex items-center justify-center p-1.5 overflow-hidden relative">
+                <div class="partner-card inline-flex items-center justify-center w-44 sm:w-52 h-24 sm:h-28 px-5 py-3 rounded-2xl sm:rounded-3xl bg-white shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-2 border-white/80 hover:border-[#FF9420] hover:shadow-[0_0_35px_rgba(255,148,32,0.65)] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:scale-105 group relative overflow-hidden"
+                     title="{{ $p['name'] }}">
+                    <div class="w-full h-full flex items-center justify-center overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
-                                 class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform"
+                                 class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform duration-300 pointer-events-none"
                                  referrerpolicy="no-referrer"
                                  loading="lazy"
                                  onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
-                            <span style="display: none;" class="w-full h-full items-center justify-center text-xs font-black text-white bg-gradient-to-tr from-[#FF9420] to-[#3E24C5] rounded-lg">
-                                {{ mb_substr($p['name'], 0, 1, 'UTF-8') }}
+                            <span style="display: none;" class="w-full h-full items-center justify-center text-sm font-black text-gray-900 font-sans tracking-wide">
+                                {{ $p['name'] }}
                             </span>
                         @else
-                            <i class="{{ $p['icon'] ?? 'fa-solid fa-building' }} text-[#FF9420] text-lg"></i>
+                            <span class="text-base sm:text-lg font-black text-gray-900 font-sans tracking-wide group-hover:text-[#FF9420] transition-colors">
+                                {{ $p['name'] }}
+                            </span>
                         @endif
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-black text-white partner-name transition-colors">{{ $p['name'] }}</div>
-                        <div class="text-[10px] text-[#FFBA70] font-medium">{{ $p['type'] }}</div>
                     </div>
                 </div>
                 @endforeach
@@ -510,27 +509,26 @@
         </div>
 
         <!-- Row 2: Moves Right to Left (Opposite Direction) -->
-        <div class="marquee-track flex items-center gap-6 whitespace-nowrap select-none">
+        <div class="marquee-track flex items-center gap-6 sm:gap-7 whitespace-nowrap select-none">
             @for($i = 0; $i < 2; $i++)
                 @foreach($partnersRow2 as $p)
-                <div class="partner-card inline-flex items-center gap-3.5 px-6 py-4 rounded-2xl bg-[#1B082B]/95 border-2 border-[#3E24C5]/50 shadow-[0_8px_30px_rgba(0,0,0,0.7)] hover:shadow-[0_0_35px_rgba(255,148,32,0.45)] hover:border-[#FF9420] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:-rotate-2">
-                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-[#3E24C5]/60 flex items-center justify-center p-1.5 overflow-hidden relative">
+                <div class="partner-card inline-flex items-center justify-center w-44 sm:w-52 h-24 sm:h-28 px-5 py-3 rounded-2xl sm:rounded-3xl bg-white shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-2 border-white/80 hover:border-[#FF9420] hover:shadow-[0_0_35px_rgba(255,148,32,0.65)] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:scale-105 group relative overflow-hidden"
+                     title="{{ $p['name'] }}">
+                    <div class="w-full h-full flex items-center justify-center overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
-                                 class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform"
+                                 class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform duration-300 pointer-events-none"
                                  referrerpolicy="no-referrer"
                                  loading="lazy"
                                  onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
-                            <span style="display: none;" class="w-full h-full items-center justify-center text-xs font-black text-white bg-gradient-to-tr from-[#FF9420] to-[#3E24C5] rounded-lg">
-                                {{ mb_substr($p['name'], 0, 1, 'UTF-8') }}
+                            <span style="display: none;" class="w-full h-full items-center justify-center text-sm font-black text-gray-900 font-sans tracking-wide">
+                                {{ $p['name'] }}
                             </span>
                         @else
-                            <i class="{{ $p['icon'] ?? 'fa-solid fa-building' }} text-[#FF9420] text-lg"></i>
+                            <span class="text-base sm:text-lg font-black text-gray-900 font-sans tracking-wide group-hover:text-[#FF9420] transition-colors">
+                                {{ $p['name'] }}
+                            </span>
                         @endif
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-black text-white partner-name transition-colors">{{ $p['name'] }}</div>
-                        <div class="text-[10px] text-[#FFBA70] font-medium">{{ $p['type'] }}</div>
                     </div>
                 </div>
                 @endforeach

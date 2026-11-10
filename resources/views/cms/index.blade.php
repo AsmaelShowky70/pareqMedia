@@ -848,25 +848,21 @@
             </button>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             @forelse($partners as $partner)
-            <div class="bg-brand-card border border-brand-border rounded-2xl p-4 flex flex-col justify-between hover:border-brand-yellow/50 transition shadow group">
-                <div class="space-y-3 text-center">
-                    <div class="w-16 h-16 rounded-xl bg-white/5 border border-brand-border/60 p-2 mx-auto flex items-center justify-center overflow-hidden">
-                        @if($partner->display_logo)
-                        <img src="{{ $partner->display_logo }}" alt="{{ $partner->name }}" referrerpolicy="no-referrer" class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform" onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='block';">
-                        <i style="display: none;" class="fa-solid fa-building text-2xl text-brand-gold"></i>
-                        @else
-                        <i class="fa-solid fa-building text-2xl text-brand-gold"></i>
-                        @endif
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-white text-xs truncate" title="{{ $partner->name }}">{{ $partner->name }}</h4>
-                        <span class="text-[10px] text-brand-gold/80 block mt-0.5">{{ $partner->category ?? 'شريك نجاح' }}</span>
-                    </div>
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-3 flex flex-col justify-between hover:border-brand-yellow/50 transition shadow group">
+                <!-- Large Logo Box with Clean White Background for Maximum Clarity (مثل لوجو جوكار والشركات الكبرى) -->
+                <div class="w-full h-24 sm:h-28 rounded-xl bg-white p-3 flex items-center justify-center overflow-hidden shadow-inner border border-gray-100 group-hover:scale-[1.02] transition-transform"
+                     title="{{ $partner->name }}">
+                    @if($partner->display_logo)
+                    <img src="{{ $partner->display_logo }}" alt="{{ $partner->name }}" referrerpolicy="no-referrer" class="max-w-full max-h-full object-contain filter group-hover:scale-105 transition-transform" onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='block';">
+                    <span style="display: none;" class="font-black text-gray-900 text-xs font-sans text-center">{{ $partner->name }}</span>
+                    @else
+                    <span class="font-black text-gray-900 text-xs font-sans text-center">{{ $partner->name }}</span>
+                    @endif
                 </div>
 
-                <div class="pt-3 mt-2 border-t border-brand-border/40 flex items-center justify-between text-xs">
+                <div class="pt-2.5 mt-2 border-t border-brand-border/40 flex items-center justify-between text-xs">
                     <span class="text-[10px] font-bold {{ $partner->is_active ? 'text-emerald-400' : 'text-rose-400' }}">
                         {{ $partner->is_active ? 'نشط' : 'معطل' }}
                     </span>
@@ -874,7 +870,7 @@
                     <div class="flex items-center gap-1.5">
                         <button type="button" 
                                 @click="selectedPartner = {{ json_encode($partner) }}; editPartnerModal = true" 
-                                class="p-1.5 text-brand-gold hover:text-white transition" title="تعديل الشريك">
+                                class="p-1.5 text-brand-gold hover:text-white transition" title="تعديل الشريك ({{ $partner->name }})">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                         <form method="POST" action="{{ route('cms.partners.destroy', $partner->id) }}" onsubmit="return confirm('هل أنت متأكد من حذف هذا الشريك؟')">
@@ -1340,6 +1336,35 @@
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
          style="display: none;">
         <div @click.away="addPartnerModal = false" 
+             x-data="{
+                 logoInput: '',
+                 logoPreview: '',
+                 checkPreview() {
+                     if (this.logoInput) {
+                         const val = this.logoInput.trim();
+                         const driveMatch = val.match(/(?:file\/d\/|id=|open\?id=|\/d\/)([a-zA-Z0-9_-]{25,})/i);
+                         if (driveMatch) {
+                             this.logoPreview = 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                             return;
+                         }
+                         if (val.startsWith('http://') || val.startsWith('https://')) {
+                             this.logoPreview = val;
+                             return;
+                         }
+                         if (val) {
+                             this.logoPreview = '{{ asset('') }}' + val.replace(/^\/+/, '');
+                             return;
+                         }
+                     }
+                     this.logoPreview = '';
+                 },
+                 onFile(e) {
+                     const file = e.target.files[0];
+                     if (file) {
+                         this.logoPreview = URL.createObjectURL(file);
+                     }
+                 }
+             }"
              class="w-full max-w-md bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             
             <div class="flex items-center justify-between pb-3 border-b border-brand-border">
@@ -1369,14 +1394,22 @@
                     </label>
                     <div>
                         <label class="block text-[11px] text-brand-gold font-bold mb-1">رفع لوجو من جهازك (PNG/WebP/SVG شفاف):</label>
-                        <input type="file" name="logo_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                        <input type="file" name="logo_file" accept="image/*" @change="onFile($event)" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
                     </div>
                     <div>
                         <label class="block text-[11px] text-gray-400 mb-1">أو رابط الشعار (يدعم روابط Google Drive المباشرة):</label>
-                        <input type="text" name="logo_url" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        <input type="text" name="logo_url" x-model="logoInput" @input="checkPreview()" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                         <p class="text-[10px] text-brand-gold font-medium mt-1">
                             <i class="fa-solid fa-cloud-arrow-down ml-1"></i> روابط Google Drive يتم تنزيلها وتخزينها محلياً بالسيرفر فوراً لضمان سرعة التحميل وعدم الحظر.
                         </p>
+                    </div>
+
+                    <!-- Live Logo Preview in White Box -->
+                    <div x-show="logoPreview" x-transition class="pt-2 border-t border-purple-800/40 text-center space-y-1.5">
+                        <span class="text-[10px] text-brand-gold font-bold block">معاينة ظهور اللوجو داخل كرت الشريك الأبيض:</span>
+                        <div class="w-44 h-24 rounded-2xl bg-white p-3 mx-auto flex items-center justify-center shadow-lg border border-gray-200">
+                            <img :src="logoPreview" referrerpolicy="no-referrer" class="max-w-full max-h-full object-contain">
+                        </div>
                     </div>
                 </div>
 
@@ -1399,6 +1432,43 @@
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
          style="display: none;">
         <div @click.away="editPartnerModal = false" 
+             x-data="{
+                 editLogoInput: '',
+                 editLogoPreview: '',
+                 init() {
+                     this.$watch('editPartnerModal', (val) => {
+                         if (val && this.selectedPartner) {
+                             this.editLogoInput = this.selectedPartner.logo_url || '';
+                             this.updatePreview();
+                         }
+                     });
+                 },
+                 updatePreview() {
+                     if (this.editLogoInput) {
+                         const val = this.editLogoInput.trim();
+                         const driveMatch = val.match(/(?:file\/d\/|id=|open\?id=|\/d\/)([a-zA-Z0-9_-]{25,})/i);
+                         if (driveMatch) {
+                             this.editLogoPreview = 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                             return;
+                         }
+                         if (val.startsWith('http://') || val.startsWith('https://')) {
+                             this.editLogoPreview = val;
+                             return;
+                         }
+                         if (val) {
+                             this.editLogoPreview = '{{ asset('') }}' + val.replace(/^\/+/, '');
+                             return;
+                         }
+                     }
+                     this.editLogoPreview = '';
+                 },
+                 onFile(e) {
+                     const file = e.target.files[0];
+                     if (file) {
+                         this.editLogoPreview = URL.createObjectURL(file);
+                     }
+                 }
+             }"
              class="w-full max-w-md bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             
             <div class="flex items-center justify-between pb-3 border-b border-brand-border">
@@ -1429,14 +1499,22 @@
                     </label>
                     <div>
                         <label class="block text-[11px] text-brand-gold font-bold mb-1">تغيير اللوجو من جهازك:</label>
-                        <input type="file" name="logo_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                        <input type="file" name="logo_file" accept="image/*" @change="onFile($event)" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
                     </div>
                     <div>
                         <label class="block text-[11px] text-gray-400 mb-1">أو رابط الشعار (يدعم Google Drive مباشرة):</label>
-                        <input type="text" name="logo_url" x-bind:value="selectedPartner ? selectedPartner.logo_url : ''" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        <input type="text" name="logo_url" x-model="editLogoInput" @input="updatePreview()" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                         <p class="text-[10px] text-brand-gold font-medium mt-1">
                             <i class="fa-solid fa-cloud-arrow-down ml-1"></i> روابط Google Drive يتم حفظها محلياً بالسيرفر تلقائياً.
                         </p>
+                    </div>
+
+                    <!-- Live Logo Preview in White Box -->
+                    <div x-show="editLogoPreview" x-transition class="pt-2 border-t border-purple-800/40 text-center space-y-1.5">
+                        <span class="text-[10px] text-brand-gold font-bold block">معاينة ظهور اللوجو داخل كرت الشريك الأبيض:</span>
+                        <div class="w-44 h-24 rounded-2xl bg-white p-3 mx-auto flex items-center justify-center shadow-lg border border-gray-200">
+                            <img :src="editLogoPreview" referrerpolicy="no-referrer" class="max-w-full max-h-full object-contain">
+                        </div>
                     </div>
                 </div>
 
