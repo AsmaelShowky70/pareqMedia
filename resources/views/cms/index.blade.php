@@ -962,13 +962,22 @@
                     </div>
 
                     <!-- Visual / Media Preview if any -->
-                    @if($test->thumbnail || $test->media_url)
+                    @php
+                        $tCardThumb = $test->display_thumbnail ?: ($test->thumbnail ? \App\Support\MediaHelper::formatDisplayUrl($test->thumbnail) : null);
+                        if (!$tCardThumb && !empty($test->media_url)) {
+                            $ytId = \App\Support\MediaHelper::extractYouTubeId($test->media_url);
+                            if ($ytId) {
+                                $tCardThumb = 'https://img.youtube.com/vi/' . $ytId . '/hqdefault.jpg';
+                            }
+                        }
+                    @endphp
+                    @if($tCardThumb || $test->media_url)
                     <div class="relative aspect-video bg-black/60 overflow-hidden">
-                        @if($test->thumbnail)
-                        <img src="{{ str_starts_with($test->thumbnail, 'http') ? $test->thumbnail : asset(ltrim($test->thumbnail, '/')) }}" alt="{{ $test->client_name }}" class="w-full h-full object-cover">
+                        @if($tCardThumb)
+                        <img src="{{ $tCardThumb }}" alt="{{ $test->client_name }}" referrerpolicy="no-referrer" class="w-full h-full object-cover">
                         @endif
                         @if($test->type === 'video_reel')
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none">
                             <div class="w-10 h-10 rounded-full bg-brand-yellow text-brand-dark flex items-center justify-center text-sm shadow">
                                 <i class="fa-solid fa-play mr-0.5"></i>
                             </div>
@@ -1565,12 +1574,68 @@
         </div>
     </div>
 
-    <!-- MODAL: ADD TESTIMONIAL -->
+    <!-- MODAL: ADD TESTIMONIAL (إضافة فيدباك جديد) -->
     <div x-show="addTestimonialModal" 
          x-transition 
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
          style="display: none;">
         <div @click.away="addTestimonialModal = false" 
+             x-data="{
+                 type: 'video_reel',
+                 mediaUrl: '',
+                 thumbUrl: '',
+                 previewSrc: '',
+                 previewBadge: '',
+                 updatePreview() {
+                     // 1. If custom thumbnail provided (Google Drive or direct URL)
+                     if (this.thumbUrl) {
+                         const val = this.thumbUrl.trim();
+                         const driveMatch = val.match(/(?:file(?:\/u\/\d+)?\/d\/|\/d\/|id=|open\?id=|\/folders\/|uc\?.*id=|thumbnail\?id=)([a-zA-Z0-9_-]{25,})/i);
+                         if (driveMatch) {
+                             this.previewSrc = 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                             this.previewBadge = 'Google Drive Cloud CDN (0 MB مساحة)';
+                             return;
+                         }
+                         if (val.startsWith('http://') || val.startsWith('https://')) {
+                             this.previewSrc = val;
+                             this.previewBadge = 'رابط صورة خارجي';
+                             return;
+                         }
+                         if (val) {
+                             this.previewSrc = '{{ asset('') }}' + val.replace(/^\/+/, '');
+                             this.previewBadge = 'مسار محلي';
+                             return;
+                         }
+                     }
+
+                     // 2. If video URL provided (YouTube Shorts, YouTube video, Google Drive)
+                     if (this.mediaUrl) {
+                         const val = this.mediaUrl.trim();
+                         const ytMatch = val.match(/(?:(?:youtube\.com|youtu\.be)?\/(?:watch\?.*v=|shorts\/|embed\/|v\/)|youtu\.be\/|^\/?shorts\/|shorts\/)([a-zA-Z0-9_-]{11})/i);
+                         if (ytMatch) {
+                             this.previewSrc = 'https://img.youtube.com/vi/' + ytMatch[1] + '/hqdefault.jpg';
+                             this.previewBadge = 'غلاف YouTube التلقائي (دقة عالية)';
+                             return;
+                         }
+                         const driveMatch = val.match(/(?:file(?:\/u\/\d+)?\/d\/|\/d\/|id=|open\?id=|\/folders\/|uc\?.*id=|thumbnail\?id=)([a-zA-Z0-9_-]{25,})/i);
+                         if (driveMatch) {
+                             this.previewSrc = 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                             this.previewBadge = 'Google Drive';
+                             return;
+                         }
+                     }
+
+                     this.previewSrc = '';
+                     this.previewBadge = '';
+                 },
+                 onFileChosen(e) {
+                     const file = e.target.files[0];
+                     if (file) {
+                         this.previewSrc = URL.createObjectURL(file);
+                         this.previewBadge = 'صورة مرفوعة من جهازك (' + file.name + ')';
+                     }
+                 }
+             }"
              class="w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             
             <div class="flex items-center justify-between pb-3 border-b border-brand-border">
@@ -1601,7 +1666,7 @@
                     </div>
                     <div>
                         <label class="block font-bold text-amber-300 mb-1">نوع الفيدباك <span class="text-red-400">*</span></label>
-                        <select name="type" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        <select name="type" x-model="type" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                             <option value="video_reel">فيديو ريلز طولي (Reel 9:16)</option>
                             <option value="image_review">صورة تقييم معتمدة</option>
                             <option value="text_review">تقييم كتابي موثق</option>
@@ -1634,26 +1699,51 @@
                             <input type="file" name="video_file" accept="video/mp4,video/webm,video/mov" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-purple file:text-brand-gold">
                         </div>
                         <div>
-                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط/مسار الفيديو المباشر:</label>
-                            <input type="text" name="media_url" placeholder="/videos/promo_reels_1.mp4" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط فيديو (يدعم Shorts و YouTube):</label>
+                            <input type="text" name="media_url" x-model="mediaUrl" @input="updatePreview()" placeholder="/shorts/... أو رابط YouTube" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <p class="text-[10px] text-emerald-400 font-medium mt-1">
+                                <i class="fa-solid fa-circle-check ml-1"></i> يتم جلب صورة الغلاف تلقائياً من YouTube وبأعلى جودة.
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Thumbnail -->
                 <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
-                    <label class="block font-bold text-amber-300">
-                        <i class="fa-solid fa-image ml-1"></i>
-                        صورة الغلاف / صورة التقييم
-                    </label>
+                    <div class="flex items-center justify-between">
+                        <label class="block font-bold text-amber-300">
+                            <i class="fa-solid fa-image ml-1"></i>
+                            صورة الغلاف / صورة التقييم
+                        </label>
+                        <span class="text-[10px] text-gray-400">(اختياري في حال وجود فيديو يوتيوب)</span>
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div>
                             <label class="block text-[11px] text-brand-gold font-bold mb-1">رفع صورة من جهازك:</label>
-                            <input type="file" name="thumbnail_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                            <input type="file" name="thumbnail_file" accept="image/*" @change="onFileChosen($event)" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
                         </div>
                         <div>
-                            <label class="block text-[11px] text-gray-400 mb-1">أو رابط/مسار صورة الغلاف:</label>
-                            <input type="text" name="thumbnail" placeholder="/images/portfolio/social_4.webp" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <label class="block text-[11px] text-gray-400 mb-1">أو رابط صورة (يدعم Google Drive مباشرة):</label>
+                            <input type="text" name="thumbnail" x-model="thumbUrl" @input="updatePreview()" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+
+                    <!-- Live Thumbnail Preview -->
+                    <div x-show="previewSrc" x-transition class="pt-2 border-t border-purple-800/40 space-y-1.5">
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="font-bold text-brand-gold flex items-center gap-1.5">
+                                <i class="fa-solid fa-eye text-emerald-400"></i>
+                                <span>معاينة غلاف الفيدباك المعروض للزوار:</span>
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-brand-purple text-[10px] text-amber-300 font-medium" x-text="previewBadge"></span>
+                        </div>
+                        <div class="relative aspect-video rounded-lg overflow-hidden bg-black/70 border border-purple-800/60 flex items-center justify-center max-h-40 mx-auto">
+                            <img :src="previewSrc" referrerpolicy="no-referrer" class="w-full h-full object-cover">
+                            <div x-show="type === 'video_reel'" class="absolute inset-0 bg-black/30 flex items-center justify-center pointer-events-none">
+                                <div class="w-10 h-10 rounded-full bg-brand-yellow text-brand-dark flex items-center justify-center text-sm shadow">
+                                    <i class="fa-solid fa-play mr-0.5"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1671,12 +1761,78 @@
         </div>
     </div>
 
-    <!-- MODAL: EDIT TESTIMONIAL -->
+    <!-- MODAL: EDIT TESTIMONIAL (تعديل الفيدباك الحالي) -->
     <div x-show="editTestimonialModal" 
          x-transition 
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
          style="display: none;">
         <div @click.away="editTestimonialModal = false" 
+             x-data="{
+                 type: 'video_reel',
+                 mediaUrl: '',
+                 thumbUrl: '',
+                 previewSrc: '',
+                 previewBadge: '',
+                 init() {
+                     this.$watch('editTestimonialModal', (val) => {
+                         if (val && this.selectedTestimonial) {
+                             this.type = this.selectedTestimonial.type || 'video_reel';
+                             this.mediaUrl = this.selectedTestimonial.media_url || '';
+                             this.thumbUrl = this.selectedTestimonial.thumbnail || '';
+                             this.updatePreview();
+                         }
+                     });
+                 },
+                 updatePreview() {
+                     // 1. If custom thumbnail provided (Google Drive or direct URL)
+                     if (this.thumbUrl) {
+                         const val = this.thumbUrl.trim();
+                         const driveMatch = val.match(/(?:file(?:\/u\/\d+)?\/d\/|\/d\/|id=|open\?id=|\/folders\/|uc\?.*id=|thumbnail\?id=)([a-zA-Z0-9_-]{25,})/i);
+                         if (driveMatch) {
+                             this.previewSrc = 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                             this.previewBadge = 'Google Drive Cloud CDN (0 MB مساحة)';
+                             return;
+                         }
+                         if (val.startsWith('http://') || val.startsWith('https://')) {
+                             this.previewSrc = val;
+                             this.previewBadge = 'رابط صورة خارجي';
+                             return;
+                         }
+                         if (val) {
+                             this.previewSrc = '{{ asset('') }}' + val.replace(/^\/+/, '');
+                             this.previewBadge = 'صورة حالية';
+                             return;
+                         }
+                     }
+
+                     // 2. If video URL provided (YouTube Shorts, YouTube video, Google Drive)
+                     if (this.mediaUrl) {
+                         const val = this.mediaUrl.trim();
+                         const ytMatch = val.match(/(?:(?:youtube\.com|youtu\.be)?\/(?:watch\?.*v=|shorts\/|embed\/|v\/)|youtu\.be\/|^\/?shorts\/|shorts\/)([a-zA-Z0-9_-]{11})/i);
+                         if (ytMatch) {
+                             this.previewSrc = 'https://img.youtube.com/vi/' + ytMatch[1] + '/hqdefault.jpg';
+                             this.previewBadge = 'غلاف YouTube التلقائي (دقة عالية)';
+                             return;
+                         }
+                         const driveMatch = val.match(/(?:file(?:\/u\/\d+)?\/d\/|\/d\/|id=|open\?id=|\/folders\/|uc\?.*id=|thumbnail\?id=)([a-zA-Z0-9_-]{25,})/i);
+                         if (driveMatch) {
+                             this.previewSrc = 'https://lh3.googleusercontent.com/d/' + driveMatch[1];
+                             this.previewBadge = 'Google Drive';
+                             return;
+                         }
+                     }
+
+                     this.previewSrc = '';
+                     this.previewBadge = '';
+                 },
+                 onFileChosen(e) {
+                     const file = e.target.files[0];
+                     if (file) {
+                         this.previewSrc = URL.createObjectURL(file);
+                         this.previewBadge = 'صورة مرفوعة من جهازك (' + file.name + ')';
+                     }
+                 }
+             }"
              class="w-full max-w-lg bg-brand-card border border-brand-border rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             
             <div class="flex items-center justify-between pb-3 border-b border-brand-border">
@@ -1708,7 +1864,7 @@
                     </div>
                     <div>
                         <label class="block font-bold text-amber-300 mb-1">نوع الفيدباك <span class="text-red-400">*</span></label>
-                        <select name="type" x-bind:value="selectedTestimonial ? selectedTestimonial.type : 'video_reel'" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        <select name="type" x-model="type" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                             <option value="video_reel">فيديو ريلز طولي (Reel 9:16)</option>
                             <option value="image_review">صورة تقييم معتمدة</option>
                             <option value="text_review">تقييم كتابي موثق</option>
@@ -1740,25 +1896,50 @@
                             <input type="file" name="video_file" accept="video/mp4,video/webm,video/mov" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-purple file:text-brand-gold">
                         </div>
                         <div>
-                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط/مسار الفيديو المباشر:</label>
-                            <input type="text" name="media_url" x-bind:value="selectedTestimonial ? selectedTestimonial.media_url : ''" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط فيديو (يدعم Shorts و YouTube):</label>
+                            <input type="text" name="media_url" x-model="mediaUrl" @input="updatePreview()" placeholder="/shorts/... أو رابط YouTube" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <p class="text-[10px] text-emerald-400 font-medium mt-1">
+                                <i class="fa-solid fa-circle-check ml-1"></i> يدعم روابط Shorts ويتم جلب غلافها تلقائياً.
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
-                    <label class="block font-bold text-amber-300">
-                        <i class="fa-solid fa-image ml-1"></i>
-                        صورة الغلاف / صورة التقييم
-                    </label>
+                    <div class="flex items-center justify-between">
+                        <label class="block font-bold text-amber-300">
+                            <i class="fa-solid fa-image ml-1"></i>
+                            صورة الغلاف / صورة التقييم
+                        </label>
+                        <span class="text-[10px] text-gray-400">(اختياري في حال وجود فيديو يوتيوب)</span>
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div>
                             <label class="block text-[11px] text-brand-gold font-bold mb-1">تغيير صورة الغلاف من جهازك:</label>
-                            <input type="file" name="thumbnail_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
+                            <input type="file" name="thumbnail_file" accept="image/*" @change="onFileChosen($event)" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-yellow file:text-brand-dark">
                         </div>
                         <div>
-                            <label class="block text-[11px] text-gray-400 mb-1">أو رابط/مسار صورة الغلاف:</label>
-                            <input type="text" name="thumbnail" x-bind:value="selectedTestimonial ? selectedTestimonial.thumbnail : ''" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <label class="block text-[11px] text-gray-400 mb-1">أو رابط صورة (يدعم Google Drive مباشرة):</label>
+                            <input type="text" name="thumbnail" x-model="thumbUrl" @input="updatePreview()" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+
+                    <!-- Live Thumbnail Preview in Edit Modal -->
+                    <div x-show="previewSrc" x-transition class="pt-2 border-t border-purple-800/40 space-y-1.5">
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="font-bold text-brand-gold flex items-center gap-1.5">
+                                <i class="fa-solid fa-eye text-emerald-400"></i>
+                                <span>معاينة غلاف الفيدباك المعروض للزوار:</span>
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-brand-purple text-[10px] text-amber-300 font-medium" x-text="previewBadge"></span>
+                        </div>
+                        <div class="relative aspect-video rounded-lg overflow-hidden bg-black/70 border border-purple-800/60 flex items-center justify-center max-h-40 mx-auto">
+                            <img :src="previewSrc" referrerpolicy="no-referrer" class="w-full h-full object-cover">
+                            <div x-show="type === 'video_reel'" class="absolute inset-0 bg-black/30 flex items-center justify-center pointer-events-none">
+                                <div class="w-10 h-10 rounded-full bg-brand-yellow text-brand-dark flex items-center justify-center text-sm shadow">
+                                    <i class="fa-solid fa-play mr-0.5"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

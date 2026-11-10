@@ -328,7 +328,7 @@
               let type = mediaType;
               let embed = '';
               if (type === 'video' && src) {
-                  const ytMatch = src.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+                  const ytMatch = src.match(/(?:(?:youtube\.com|youtu\.be)?\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/)|youtu\.be\/|^\/?shorts\/|shorts\/)([\w-]{11})/i);
                   if (ytMatch) {
                       type = 'youtube';
                       embed = 'https://www.youtube-nocookie.com/embed/' + ytMatch[1] + '?autoplay=1&rel=0';

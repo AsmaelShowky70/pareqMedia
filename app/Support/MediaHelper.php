@@ -120,6 +120,13 @@ class MediaHelper
 
     /**
      * Extract YouTube 11-character Video ID from any YouTube URL.
+     * Supports:
+     * - https://www.youtube.com/watch?v=ID
+     * - https://www.youtube.com/shorts/ID
+     * - /shorts/ID?feature=share or shorts/ID
+     * - https://youtu.be/ID
+     * - https://www.youtube.com/embed/ID
+     * - Raw 11-character ID
      */
     public static function extractYouTubeId(?string $url): ?string
     {
@@ -128,15 +135,43 @@ class MediaHelper
         }
 
         $url = trim($url);
-        if (preg_match('/(?:youtube\.com\/(?:watch\?.*v=|shorts\/|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i', $url, $matches)) {
+
+        // Standard link patterns: /shorts/id, watch?v=id, embed/id, youtu.be/id
+        if (preg_match('/(?:(?:youtube\.com|youtu\.be)?\/(?:watch\?.*v=|shorts\/|embed\/|v\/)|youtu\.be\/|^\/?shorts\/|shorts\/)([a-zA-Z0-9_-]{11})/i', $url, $matches)) {
             return $matches[1];
+        }
+
+        if (preg_match('/[?&]v=([a-zA-Z0-9_-]{11})/i', $url, $matches)) {
+            return $matches[1];
+        }
+
+        if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $url)) {
+            return $url;
         }
 
         return null;
     }
 
     /**
-     * Fetch YouTube thumbnail and cache it locally in uploads/portfolio/.
+     * Normalize any YouTube URL (including /shorts/... or youtu.be) to a canonical full YouTube URL.
+     */
+    public static function normalizeYouTubeUrl(?string $url): ?string
+    {
+        if (empty($url)) {
+            return null;
+        }
+
+        $url = trim($url);
+        $ytId = self::extractYouTubeId($url);
+        if ($ytId) {
+            return 'https://www.youtube.com/watch?v=' . $ytId;
+        }
+
+        return $url;
+    }
+
+    /**
+     * Fetch YouTube thumbnail via high-speed Google/YouTube CDN (0 MB hosting storage!).
      */
     public static function fetchAndCacheYouTubeThumbnail(?string $videoUrl): ?string
     {
@@ -145,43 +180,7 @@ class MediaHelper
             return null;
         }
 
-        $uploadDir = public_path('uploads/portfolio');
-        if (!file_exists($uploadDir)) {
-            @mkdir($uploadDir, 0755, true);
-        }
-
-        $filename = 'yt_' . $ytId . '.jpg';
-        $filepath = $uploadDir . DIRECTORY_SEPARATOR . $filename;
-
-        if (file_exists($filepath) && filesize($filepath) > 1000) {
-            return '/uploads/portfolio/' . $filename;
-        }
-
-        // Try maxresdefault first, then hqdefault
-        $candidates = [
-            'https://img.youtube.com/vi/' . $ytId . '/maxresdefault.jpg',
-            'https://img.youtube.com/vi/' . $ytId . '/hqdefault.jpg',
-        ];
-
-        foreach ($candidates as $cand) {
-            $ch = curl_init($cand);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
-            $data = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            // YouTube returns a tiny ~1097 byte transparent/blank gif on 404 for maxres
-            if ($httpCode === 200 && is_string($data) && strlen($data) > 3000) {
-                @file_put_contents($filepath, $data);
-                return '/uploads/portfolio/' . $filename;
-            }
-        }
-
-        // Fallback directly to hqdefault
+        // Return direct high-res CDN cover from YouTube: 0 MB host space used, loads instantly!
         return 'https://img.youtube.com/vi/' . $ytId . '/hqdefault.jpg';
     }
 

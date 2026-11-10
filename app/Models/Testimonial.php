@@ -53,12 +53,32 @@ class Testimonial extends Model
 
     public function getDisplayThumbnailAttribute(): ?string
     {
-        return \App\Support\MediaHelper::formatDisplayUrl($this->thumbnail);
+        if (!empty($this->thumbnail)) {
+            return \App\Support\MediaHelper::formatDisplayUrl($this->thumbnail);
+        }
+
+        // If thumbnail is empty, auto-generate from media_url if YouTube or Google Drive
+        if (!empty($this->media_url)) {
+            $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($this->media_url);
+            if ($ytThumb) {
+                return $ytThumb;
+            }
+
+            if (str_contains($this->media_url, 'drive.google.com') || str_contains($this->media_url, 'googleusercontent.com')) {
+                return \App\Support\MediaHelper::formatDisplayUrl($this->media_url);
+            }
+        }
+
+        return asset('images/portfolio/social_4.webp');
     }
 
     public function getDisplayMediaAttribute(): ?string
     {
-        return \App\Support\MediaHelper::formatDisplayUrl($this->media_url);
+        if (empty($this->media_url)) {
+            return null;
+        }
+
+        return \App\Support\MediaHelper::normalizeYouTubeUrl($this->media_url);
     }
 }
 

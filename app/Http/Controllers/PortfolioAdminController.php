@@ -417,8 +417,17 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['media_url'] = '/uploads/testimonials/videos/' . $filename;
-        } elseif (!empty($validated['media_url']) && str_contains($validated['media_url'], 'drive.google.com')) {
-            $validated['media_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['media_url']);
+        } elseif (!empty($validated['media_url'])) {
+            // Normalize YouTube URL and support /shorts/...
+            $validated['media_url'] = \App\Support\MediaHelper::normalizeYouTubeUrl($validated['media_url']);
+        }
+
+        // Auto-fetch YouTube thumbnail if thumbnail was not explicitly uploaded
+        if (empty($validated['thumbnail']) && !empty($validated['media_url'])) {
+            $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($validated['media_url']);
+            if ($ytThumb) {
+                $validated['thumbnail'] = $ytThumb;
+            }
         }
 
         \App\Support\DatabaseSchemaAligner::alignTestimonials();
@@ -474,8 +483,17 @@ class PortfolioAdminController extends Controller
             $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $filename);
             $validated['media_url'] = '/uploads/testimonials/videos/' . $filename;
-        } elseif (!empty($validated['media_url']) && str_contains($validated['media_url'], 'drive.google.com')) {
-            $validated['media_url'] = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($validated['media_url']);
+        } elseif (!empty($validated['media_url'])) {
+            // Normalize YouTube URL and support /shorts/...
+            $validated['media_url'] = \App\Support\MediaHelper::normalizeYouTubeUrl($validated['media_url']);
+        }
+
+        // Auto-fetch YouTube thumbnail if thumbnail was not explicitly uploaded
+        if (empty($validated['thumbnail']) && !empty($validated['media_url'])) {
+            $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($validated['media_url']);
+            if ($ytThumb) {
+                $validated['thumbnail'] = $ytThumb;
+            }
         }
 
         $validated['is_active'] = $request->boolean('is_active');

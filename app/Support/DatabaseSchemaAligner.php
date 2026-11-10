@@ -338,6 +338,25 @@ class DatabaseSchemaAligner
                     $table->timestamps();
                 });
             }
+
+            // Self-repair: Auto-fetch YouTube thumbnails and normalize URLs for any existing testimonial
+            $existingTestimonials = DB::table('testimonials')->whereNotNull('media_url')->get();
+            foreach ($existingTestimonials as $et) {
+                $ytId = \App\Support\MediaHelper::extractYouTubeId($et->media_url);
+                if ($ytId) {
+                    $updates = [];
+                    $normalized = \App\Support\MediaHelper::normalizeYouTubeUrl($et->media_url);
+                    if ($normalized !== $et->media_url) {
+                        $updates['media_url'] = $normalized;
+                    }
+                    if (empty($et->thumbnail)) {
+                        $updates['thumbnail'] = 'https://img.youtube.com/vi/' . $ytId . '/hqdefault.jpg';
+                    }
+                    if (!empty($updates)) {
+                        DB::table('testimonials')->where('id', $et->id)->update($updates);
+                    }
+                }
+            }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('alignTestimonials warning: ' . $e->getMessage());
         }

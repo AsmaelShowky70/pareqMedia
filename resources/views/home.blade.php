@@ -1078,8 +1078,14 @@
                 ];
             } else {
                 foreach ($rawTestimonials as $t) {
-                    $tThumb = $t->thumbnail ? (str_starts_with($t->thumbnail, 'http') ? $t->thumbnail : asset(ltrim($t->thumbnail, '/'))) : null;
-                    $tMedia = $t->media_url ? (str_starts_with($t->media_url, 'http') ? $t->media_url : asset(ltrim($t->media_url, '/'))) : null;
+                    $tThumb = $t->display_thumbnail ?: ($t->thumbnail ? \App\Support\MediaHelper::formatDisplayUrl($t->thumbnail) : null);
+                    if (!$tThumb && !empty($t->media_url)) {
+                        $ytId = \App\Support\MediaHelper::extractYouTubeId($t->media_url);
+                        if ($ytId) {
+                            $tThumb = 'https://img.youtube.com/vi/' . $ytId . '/hqdefault.jpg';
+                        }
+                    }
+                    $tMedia = $t->display_media ?: ($t->media_url ? (str_starts_with($t->media_url, 'http') ? $t->media_url : asset(ltrim($t->media_url, '/'))) : null);
                     $testimonialsList[] = [
                         'id' => $t->id,
                         'name' => $t->client_name,
