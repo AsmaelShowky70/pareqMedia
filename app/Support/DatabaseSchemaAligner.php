@@ -14,6 +14,9 @@ class DatabaseSchemaAligner
     public static function align(): void
     {
         try {
+            self::alignTasks();
+            self::alignProjects();
+            self::alignUsers();
             self::alignPayments();
             self::alignInvoices();
             self::alignExpenses();
@@ -541,6 +544,171 @@ class DatabaseSchemaAligner
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('alignTeamMembers warning: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ensure `tasks` table has all required columns (priority, delivery dates, location, etc.).
+     */
+    public static function alignTasks(): void
+    {
+        try {
+            if (!Schema::hasTable('tasks')) {
+                return;
+            }
+
+            $columnsToAdd = [];
+
+            if (!Schema::hasColumn('tasks', 'priority')) {
+                $columnsToAdd[] = "ADD COLUMN `priority` varchar(50) NOT NULL DEFAULT 'medium'";
+            }
+            if (!Schema::hasColumn('tasks', 'delivery_deadline')) {
+                $columnsToAdd[] = "ADD COLUMN `delivery_deadline` date DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'daily_delivery_deadline')) {
+                $columnsToAdd[] = "ADD COLUMN `daily_delivery_deadline` varchar(255) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'material_link')) {
+                $columnsToAdd[] = "ADD COLUMN `material_link` text DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'delivery_link')) {
+                $columnsToAdd[] = "ADD COLUMN `delivery_link` text DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'notes')) {
+                $columnsToAdd[] = "ADD COLUMN `notes` text DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'status')) {
+                $columnsToAdd[] = "ADD COLUMN `status` varchar(50) NOT NULL DEFAULT 'not_started'";
+            }
+            if (!Schema::hasColumn('tasks', 'department')) {
+                $columnsToAdd[] = "ADD COLUMN `department` varchar(100) NOT NULL DEFAULT 'editing'";
+            }
+            if (!Schema::hasColumn('tasks', 'completed_at')) {
+                $columnsToAdd[] = "ADD COLUMN `completed_at` timestamp NULL DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'location_address')) {
+                $columnsToAdd[] = "ADD COLUMN `location_address` varchar(500) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'location_map_url')) {
+                $columnsToAdd[] = "ADD COLUMN `location_map_url` text DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'location_lat')) {
+                $columnsToAdd[] = "ADD COLUMN `location_lat` decimal(10,8) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'location_lng')) {
+                $columnsToAdd[] = "ADD COLUMN `location_lng` decimal(11,8) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'geofence_radius_meters')) {
+                $columnsToAdd[] = "ADD COLUMN `geofence_radius_meters` int(11) NOT NULL DEFAULT 100";
+            }
+            if (!Schema::hasColumn('tasks', 'photographer_accepted_at')) {
+                $columnsToAdd[] = "ADD COLUMN `photographer_accepted_at` timestamp NULL DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'photographer_start_lat')) {
+                $columnsToAdd[] = "ADD COLUMN `photographer_start_lat` decimal(10,8) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'photographer_start_lng')) {
+                $columnsToAdd[] = "ADD COLUMN `photographer_start_lng` decimal(11,8) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'photographer_arrived_at')) {
+                $columnsToAdd[] = "ADD COLUMN `photographer_arrived_at` timestamp NULL DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'photographer_arrival_lat')) {
+                $columnsToAdd[] = "ADD COLUMN `photographer_arrival_lat` decimal(10,8) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'photographer_arrival_lng')) {
+                $columnsToAdd[] = "ADD COLUMN `photographer_arrival_lng` decimal(11,8) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'photographer_arrival_distance_meters')) {
+                $columnsToAdd[] = "ADD COLUMN `photographer_arrival_distance_meters` int(11) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'attendance_status')) {
+                $columnsToAdd[] = "ADD COLUMN `attendance_status` varchar(50) NOT NULL DEFAULT 'none'";
+            }
+            if (!Schema::hasColumn('tasks', 'client_id')) {
+                $columnsToAdd[] = "ADD COLUMN `client_id` bigint(20) UNSIGNED DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('tasks', 'project_id')) {
+                $columnsToAdd[] = "ADD COLUMN `project_id` bigint(20) UNSIGNED DEFAULT NULL";
+            }
+
+            if (!empty($columnsToAdd)) {
+                DB::statement("ALTER TABLE `tasks` " . implode(', ', $columnsToAdd));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('alignTasks warning: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ensure `projects` table has all required columns.
+     */
+    public static function alignProjects(): void
+    {
+        try {
+            if (!Schema::hasTable('projects')) {
+                return;
+            }
+
+            $columnsToAdd = [];
+
+            if (!Schema::hasColumn('projects', 'content_creator_id')) {
+                $columnsToAdd[] = "ADD COLUMN `content_creator_id` bigint(20) UNSIGNED DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('projects', 'submitted_to_gm_at')) {
+                $columnsToAdd[] = "ADD COLUMN `submitted_to_gm_at` timestamp NULL DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('projects', 'gm_approval_status')) {
+                $columnsToAdd[] = "ADD COLUMN `gm_approval_status` varchar(50) NOT NULL DEFAULT 'pending'";
+            }
+            if (!Schema::hasColumn('projects', 'delivery_notes')) {
+                $columnsToAdd[] = "ADD COLUMN `delivery_notes` text DEFAULT NULL";
+            }
+
+            if (!empty($columnsToAdd)) {
+                DB::statement("ALTER TABLE `projects` " . implode(', ', $columnsToAdd));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('alignProjects warning: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ensure `users` table has all required columns (role, department, quota, etc.).
+     */
+    public static function alignUsers(): void
+    {
+        try {
+            if (!Schema::hasTable('users')) {
+                return;
+            }
+
+            $columnsToAdd = [];
+
+            if (!Schema::hasColumn('users', 'role')) {
+                $columnsToAdd[] = "ADD COLUMN `role` varchar(50) NOT NULL DEFAULT 'employee'";
+            }
+            if (!Schema::hasColumn('users', 'department')) {
+                $columnsToAdd[] = "ADD COLUMN `department` varchar(100) NOT NULL DEFAULT 'editing'";
+            }
+            if (!Schema::hasColumn('users', 'job_title')) {
+                $columnsToAdd[] = "ADD COLUMN `job_title` varchar(255) NOT NULL DEFAULT 'عضو فريق'";
+            }
+            if (!Schema::hasColumn('users', 'daily_quota')) {
+                $columnsToAdd[] = "ADD COLUMN `daily_quota` varchar(255) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('users', 'phone')) {
+                $columnsToAdd[] = "ADD COLUMN `phone` varchar(50) DEFAULT NULL";
+            }
+            if (!Schema::hasColumn('users', 'is_active')) {
+                $columnsToAdd[] = "ADD COLUMN `is_active` tinyint(1) NOT NULL DEFAULT 1";
+            }
+
+            if (!empty($columnsToAdd)) {
+                DB::statement("ALTER TABLE `users` " . implode(', ', $columnsToAdd));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('alignUsers warning: ' . $e->getMessage());
         }
     }
 }

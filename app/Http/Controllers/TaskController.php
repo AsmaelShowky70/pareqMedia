@@ -15,6 +15,8 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
+        \App\Support\DatabaseSchemaAligner::alignTasks();
+
         $user = Auth::user();
         $query = Task::with(['assignee', 'client', 'project', 'creator']);
 
@@ -112,6 +114,14 @@ class TaskController extends Controller
             $validated['completed_at'] = Carbon::now();
         }
 
+        \App\Support\DatabaseSchemaAligner::alignTasks();
+        try {
+            $availableCols = \Illuminate\Support\Facades\Schema::getColumnListing('tasks');
+            if (!empty($availableCols)) {
+                $validated = array_intersect_key($validated, array_flip($availableCols));
+            }
+        } catch (\Throwable $e) {}
+
         $task = Task::create($validated);
 
         // Notify Assigned Employee
@@ -181,6 +191,14 @@ class TaskController extends Controller
                 $validated['completed_at'] = null;
             }
         }
+
+        \App\Support\DatabaseSchemaAligner::alignTasks();
+        try {
+            $availableCols = \Illuminate\Support\Facades\Schema::getColumnListing('tasks');
+            if (!empty($availableCols)) {
+                $validated = array_intersect_key($validated, array_flip($availableCols));
+            }
+        } catch (\Throwable $e) {}
 
         $task->update($validated);
 

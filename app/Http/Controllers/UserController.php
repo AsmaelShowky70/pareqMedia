@@ -10,6 +10,8 @@ class UserController extends Controller
 {
     public function index()
     {
+        \App\Support\DatabaseSchemaAligner::alignUsers();
+
         if (! auth()->user()->isAdmin() && ! auth()->user()->isManager()) {
             abort(403, 'غير مصرح لك بالوصول لإدارة فريق العمل.');
         }
@@ -41,6 +43,14 @@ class UserController extends Controller
         $validated['password'] = Hash::make($validated['password']);
         $validated['is_active'] = true;
 
+        \App\Support\DatabaseSchemaAligner::alignUsers();
+        try {
+            $availableCols = \Illuminate\Support\Facades\Schema::getColumnListing('users');
+            if (!empty($availableCols)) {
+                $validated = array_intersect_key($validated, array_flip($availableCols));
+            }
+        } catch (\Throwable $e) {}
+
         User::create($validated);
 
         return back()->with('success', 'تمت إضافة عضو الفريق الجديد وتحديد صلاحياته بنجاح.');
@@ -71,6 +81,14 @@ class UserController extends Controller
         }
 
         $validated['is_active'] = $request->has('is_active');
+
+        \App\Support\DatabaseSchemaAligner::alignUsers();
+        try {
+            $availableCols = \Illuminate\Support\Facades\Schema::getColumnListing('users');
+            if (!empty($availableCols)) {
+                $validated = array_intersect_key($validated, array_flip($availableCols));
+            }
+        } catch (\Throwable $e) {}
 
         $user->update($validated);
 
