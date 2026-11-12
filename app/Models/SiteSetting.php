@@ -104,5 +104,58 @@ class SiteSetting extends Model
             'real_team' => $realTeam,
         ];
     }
+
+    /**
+     * Get promo video settings for the homepage.
+     */
+    public static function getPromoVideoData(): array
+    {
+        $defaultVideo = asset('videos/bariq.mp4');
+        $defaultPoster = asset('videos/bariq-poster.jpg');
+
+        $videoUrl = static::get('promo_video_url');
+        $hasCustomVideo = !empty($videoUrl);
+
+        if (!$hasCustomVideo) {
+            $videoUrl = $defaultVideo;
+        }
+
+        $posterUrl = static::get('promo_poster_url');
+        if (empty($posterUrl)) {
+            $posterUrl = $defaultPoster;
+        }
+
+        $badge = static::get('promo_badge', 'فيديو شو ريل وكالة بريق الرسمي');
+        $title = static::get('promo_title', 'شاهد إبداع بريق في دقيقة واحدة');
+        $subtitle = static::get('promo_subtitle', 'أعمالنا السينمائية ومونتاجنا الإعلاني بملء الشاشة بجودة فائقة');
+        $tag = static::get('promo_tag', 'PARIQ SHOWREEL • 4K');
+
+        $youtubeId = \App\Support\MediaHelper::extractYouTubeId($videoUrl);
+
+        return [
+            'video_url' => $videoUrl,
+            'poster_url' => $posterUrl,
+            'badge' => $badge,
+            'title' => $title,
+            'subtitle' => $subtitle,
+            'tag' => $tag,
+            'is_youtube' => !empty($youtubeId),
+            'youtube_id' => $youtubeId,
+            'is_custom' => $hasCustomVideo,
+        ];
+    }
+
+    /**
+     * Get social media platform links.
+     */
+    public static function getSocialLinks(): array
+    {
+        return [
+            'facebook' => static::get('social_facebook', 'https://www.facebook.com/bariq.dm/?locale=ar_AR'),
+            'instagram' => static::get('social_instagram', 'https://www.instagram.com/pariqmedia?utm_source=ig_web_button_share_sheet&obrf=ZDNlZDc0MzIxNw=='),
+            'tiktok' => static::get('social_tiktok', 'https://www.tiktok.com/@pariq82?is_from_webapp=1&sender_device=pc'),
+            'whatsapp' => static::get('social_whatsapp', 'https://wa.me/201062330838?text=مرحباً%20بريق'),
+        ];
+    }
 }
 

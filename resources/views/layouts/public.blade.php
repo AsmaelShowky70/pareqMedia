@@ -493,16 +493,16 @@
                         وكالة إبداعية متكاملة متخصصة في التصوير السينمائي، المونتاج فائق السرعة والجودة، تصميم الهويات البصرية، وإدارة الحملات الإعلانية القائمة على أعلى عائد استثماري.
                     </p>
                     <div class="flex items-center gap-2.5 text-base">
-                        <a href="https://wa.me/201062330838?text=مرحباً%20بريق" target="_blank" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-emerald-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-emerald-400 flex items-center justify-center transition shadow-lg text-white">
+                        <a href="{{ \App\Models\SiteSetting::get('social_whatsapp', 'https://wa.me/201062330838?text=مرحباً%20بريق') }}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-emerald-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-emerald-400 flex items-center justify-center transition shadow-lg text-white" title="واتساب">
                             <i class="fa-brands fa-whatsapp"></i>
                         </a>
-                        <a href="https://facebook.com" target="_blank" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-blue-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-blue-400 flex items-center justify-center transition shadow-lg text-white">
+                        <a href="{{ \App\Models\SiteSetting::get('social_facebook', 'https://www.facebook.com/bariq.dm/?locale=ar_AR') }}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-blue-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-blue-400 flex items-center justify-center transition shadow-lg text-white" title="فيسبوك">
                             <i class="fa-brands fa-facebook-f"></i>
                         </a>
-                        <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-pink-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-pink-400 flex items-center justify-center transition shadow-lg text-white">
+                        <a href="{{ \App\Models\SiteSetting::get('social_instagram', 'https://www.instagram.com/pariqmedia?utm_source=ig_web_button_share_sheet&obrf=ZDNlZDc0MzIxNw==') }}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-pink-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-pink-400 flex items-center justify-center transition shadow-lg text-white" title="انستغرام">
                             <i class="fa-brands fa-instagram"></i>
                         </a>
-                        <a href="https://tiktok.com" target="_blank" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-white hover:text-black border-2 border-[#3E24C5]/60 hover:border-white flex items-center justify-center transition shadow-lg text-white">
+                        <a href="{{ \App\Models\SiteSetting::get('social_tiktok', 'https://www.tiktok.com/@pariq82?is_from_webapp=1&sender_device=pc') }}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-[#1B082B] hover:bg-white hover:text-black border-2 border-[#3E24C5]/60 hover:border-white flex items-center justify-center transition shadow-lg text-white" title="تيك توك">
                             <i class="fa-brands fa-tiktok"></i>
                         </a>
                     </div>

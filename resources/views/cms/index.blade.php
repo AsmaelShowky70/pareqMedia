@@ -68,6 +68,20 @@
             <span>إحصائيات ومؤشرات المنصة (Stats Counter)</span>
         </button>
 
+        <button type="button" @click="tab = 'promo'" 
+                :class="tab === 'promo' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
+                class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
+            <i class="fa-solid fa-film text-brand-gold"></i>
+            <span>فيديو البرومو والشو ريل (الصفحة الرئيسية)</span>
+        </button>
+
+        <button type="button" @click="tab = 'social'" 
+                :class="tab === 'social' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
+                class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
+            <i class="fa-solid fa-share-nodes text-brand-gold"></i>
+            <span>روابط السوشيال ميديا (الفوتر)</span>
+        </button>
+
         <button type="button" @click="tab = 'inquiries'" 
                 :class="tab === 'inquiries' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
                 class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
@@ -1371,6 +1385,340 @@
             </div>
             @endforelse
         </div>
+    </div>
+
+    @php
+        $promoVideo = $promoVideo ?? \App\Models\SiteSetting::getPromoVideoData();
+        $socialLinks = $socialLinks ?? \App\Models\SiteSetting::getSocialLinks();
+    @endphp
+
+    <!-- 8. PROMO VIDEO & SHOWREEL TAB (إدارة فيديو البرومو والشو ريل بالصفحة الرئيسية) -->
+    <div x-show="tab === 'promo'" class="space-y-6" style="display: none;"
+         x-data="{
+             title: '{{ addslashes($promoVideo['title'] ?? 'شاهد إبداع بريق في دقيقة واحدة') }}',
+             subtitle: '{{ addslashes($promoVideo['subtitle'] ?? 'أعمالنا السينمائية ومونتاجنا الإعلاني بملء الشاشة بجودة فائقة') }}',
+             badge: '{{ addslashes($promoVideo['badge'] ?? 'فيديو شو ريل وكالة بريق الرسمي') }}',
+             tag: '{{ addslashes($promoVideo['tag'] ?? 'PARIQ SHOWREEL • 4K') }}',
+             videoType: '{{ !empty($promoVideo['is_youtube']) ? 'url' : 'file' }}',
+             videoUrl: '{{ addslashes($promoVideo['video_url'] ?? '') }}',
+             posterUrl: '{{ addslashes($promoVideo['poster_url'] ?? '') }}'
+         }">
+
+        <!-- Header Banner -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-brand-card/90 border border-brand-border p-5 rounded-2xl shadow-lg relative overflow-hidden">
+            <div class="space-y-1 relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/15 border border-brand-orange/40 text-brand-orange text-xs font-bold">
+                    <i class="fa-solid fa-film"></i>
+                    <span>فيديو البرومو والشو ريل الرسمي (Official Homepage Showreel)</span>
+                </div>
+                <h3 class="text-base font-bold text-white">إدارة محتوى وعرض فيديو الصفحة الرئيسية</h3>
+                <p class="text-xs text-gray-400 max-w-2xl leading-relaxed">
+                    يمكنك هنا تغيير وتخصيص فيديو البرومو المعروض في أعلى الصفحة الرئيسية لموقع بريق. يمكنك رفع فيديو جديد من جهازك مباشرة (MP4/WebM/MOV) أو وضع رابط فيديو يوتيوب أو رابط مباشر، وتعديل العناوين والشارات، أو استعادة الفيديو الأصلي في أي وقت.
+                </p>
+            </div>
+
+            <!-- Restore Default Button -->
+            <form method="POST" action="{{ route('cms.promo-video.reset') }}" onsubmit="return confirm('هل تريد بالتأكيد استعادة فيديو شو ريل بريق الافتراضي الأصلي؟')">
+                @csrf
+                <button type="submit" 
+                        class="px-4 py-2.5 rounded-xl bg-purple-900/60 hover:bg-brand-orange hover:text-brand-dark text-white border border-purple-700/60 font-bold text-xs transition flex items-center gap-2 shadow-md whitespace-nowrap active:scale-95">
+                    <i class="fa-solid fa-rotate-left text-brand-peach"></i>
+                    <span>استعادة شو ريل بريق الأصلي</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- LIVE PREVIEW BOX -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-300 flex items-center gap-2">
+                    <i class="fa-solid fa-eye text-brand-orange"></i>
+                    <span>معاينة حية لشكل قسم البرومو بالصفحة الرئيسية</span>
+                </span>
+                <span class="text-[11px] text-gray-400">تتحدث العناوين والشارات مباشرة مع كتابتك أدناه</span>
+            </div>
+
+            <div class="p-6 rounded-3xl bg-[#0e031a] border border-purple-900/40 text-center max-w-4xl mx-auto space-y-4">
+                <div class="space-y-2">
+                    <span class="text-[10px] font-black text-brand-orange uppercase tracking-widest px-3 py-1 rounded-full bg-brand-orange/15 border border-brand-orange/40"
+                          x-text="badge"></span>
+                    <h4 class="text-lg sm:text-2xl font-black text-white" x-text="title"></h4>
+                    <p class="text-xs text-gray-300" x-text="subtitle"></p>
+                </div>
+
+                <div class="conic-glow-border rounded-2xl overflow-hidden shadow-2xl relative aspect-video max-w-2xl mx-auto bg-black flex items-center justify-center">
+                    @if(!empty($promoVideo['is_youtube']) && !empty($promoVideo['youtube_id']))
+                        <iframe src="https://www.youtube-nocookie.com/embed/{{ $promoVideo['youtube_id'] }}?controls=1&rel=0" 
+                                class="w-full h-full border-0" 
+                                allowfullscreen>
+                        </iframe>
+                    @else
+                        <video playsinline controls poster="{{ $promoVideo['poster_url'] ?? asset('videos/bariq-poster.jpg') }}" class="w-full h-full object-contain bg-black">
+                            <source src="{{ $promoVideo['video_url'] ?? asset('videos/bariq.mp4') }}" type="video/mp4">
+                        </video>
+                    @endif
+
+                    <div class="absolute top-2 right-2 flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-brand-orange/40 text-[10px] text-white font-bold pointer-events-none">
+                        <span class="w-1.5 h-1.5 rounded-full bg-brand-orange animate-ping"></span>
+                        <span x-text="tag"></span>
+                    </div>
+                </div>
+
+                <div class="text-[11px] text-gray-400">
+                    <span>الفيديو المعروض حالياً: </span>
+                    <span class="text-brand-orange font-mono font-bold">{{ $promoVideo['is_custom'] ? 'فيديو مخصص' : 'فيديو بريق الافتراضي (Default)' }}</span>
+                    <span class="mx-1">•</span>
+                    <span class="text-gray-300 font-mono text-[10px]">{{ $promoVideo['video_url'] }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM TO UPDATE PROMO VIDEO -->
+        <form method="POST" action="{{ route('cms.promo-video.update') }}" enctype="multipart/form-data" class="bg-brand-card border border-brand-border rounded-2xl p-6 shadow-sm space-y-6">
+            @csrf
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Title -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-white">
+                        <span>عنوان البرومو الرئيسي</span>
+                        <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" name="promo_title" x-model="title" required
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition"
+                           placeholder="مثال: شاهد إبداع بريق في دقيقة واحدة">
+                </div>
+
+                <!-- Subtitle -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-white">
+                        <span>الوصف التوضيحي للبرومو</span>
+                    </label>
+                    <input type="text" name="promo_subtitle" x-model="subtitle"
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition"
+                           placeholder="مثال: أعمالنا السينمائية ومونتاجنا الإعلاني بملء الشاشة بجودة فائقة">
+                </div>
+
+                <!-- Badge -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-white">
+                        <span>الشارة العلوية (Badge)</span>
+                    </label>
+                    <input type="text" name="promo_badge" x-model="badge"
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition"
+                           placeholder="مثال: فيديو شو ريل وكالة بريق الرسمي">
+                </div>
+
+                <!-- Tag -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-white">
+                        <span>شارة دقة الفيديو (Video Quality Tag)</span>
+                    </label>
+                    <input type="text" name="promo_tag" x-model="tag"
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition"
+                           placeholder="مثال: PARIQ SHOWREEL • 4K">
+                </div>
+            </div>
+
+            <!-- Video File / URL Selector -->
+            <div class="border-t border-brand-border/60 pt-5 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h4 class="text-xs font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-video text-brand-orange"></i>
+                            <span>تحديد ملف أو رابط الفيديو الجديد</span>
+                        </h4>
+                        <p class="text-[11px] text-gray-400">يمكنك رفع ملف فيديو من جهازك مباشرة، أو وضع رابط يوتيوب / رابط مباشر</p>
+                    </div>
+
+                    <!-- Toggle Mode -->
+                    <div class="flex items-center gap-1 bg-brand-dark p-1 rounded-xl border border-brand-border text-xs self-start sm:self-auto">
+                        <button type="button" @click="videoType = 'file'" 
+                                :class="videoType === 'file' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white'"
+                                class="px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-solid fa-upload ml-1"></i> رفع ملف فيديو
+                        </button>
+                        <button type="button" @click="videoType = 'url'" 
+                                :class="videoType === 'url' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white'"
+                                class="px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-solid fa-link ml-1"></i> رابط فيديو / يوتيوب
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Video File Upload Input -->
+                <div x-show="videoType === 'file'" class="space-y-2">
+                    <label class="block text-xs font-bold text-white">
+                        <span>اختر ملف الفيديو من جهازك (MP4, WebM, MOV)</span>
+                    </label>
+                    <input type="file" name="promo_video_file" accept="video/mp4,video/webm,video/quicktime"
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-yellow file:text-brand-dark hover:file:brightness-110">
+                    <p class="text-[10px] text-gray-400">الحد الأقصى الموصى به 200 ميجابايت. يُفضل صيغة MP4 بدقة 1080p لأسرع تحميل وتشغيل فوري في كل المتصفحات.</p>
+                </div>
+
+                <!-- Video URL Input -->
+                <div x-show="videoType === 'url'" class="space-y-2">
+                    <label class="block text-xs font-bold text-white">
+                        <span>رابط الفيديو (YouTube / MP4 Direct Link / Google Drive)</span>
+                    </label>
+                    <input type="text" name="promo_video_url" x-model="videoUrl"
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition"
+                           placeholder="مثال: https://www.youtube.com/watch?v=... أو https://youtu.be/... أو رابط ملف مباشر">
+                    <p class="text-[10px] text-gray-400">يدعم روابط يوتيوب العادية وروابط Shorts، أو روابط الفيديو المباشرة ذات الامتداد .mp4 أو Google Drive.</p>
+                </div>
+            </div>
+
+            <!-- Poster Image Upload / URL -->
+            <div class="border-t border-brand-border/60 pt-5 space-y-4">
+                <div>
+                    <h4 class="text-xs font-bold text-white flex items-center gap-2">
+                        <i class="fa-regular fa-image text-brand-gold"></i>
+                        <span>صورة غلاف الفيديو (Poster Thumbnail) - اختياري</span>
+                    </h4>
+                    <p class="text-[11px] text-gray-400">الصورة التي تظهر قبل بدء تشغيل الفيديو. يمكنك رفع صورة أو ترك الرابط الافتراضي.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-gray-300">رفع صورة بوستر جديدة</label>
+                        <input type="file" name="promo_poster_file" accept="image/*"
+                               class="w-full px-4 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-purple-700 file:text-white">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-gray-300">أو رابط صورة بوستر مباشر</label>
+                        <input type="text" name="promo_poster_url" x-model="posterUrl"
+                               class="w-full px-4 py-2 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition"
+                               placeholder="{{ asset('videos/bariq-poster.jpg') }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex items-center justify-end gap-3 pt-3 border-t border-brand-border/60">
+                <button type="submit" 
+                        class="px-6 py-3 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 shadow-lg flex items-center gap-2 active:scale-95">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>حفظ وتحديث فيديو البرومو بالموقع</span>
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <!-- 9. SOCIAL MEDIA LINKS TAB (إدارة روابط منصات التواصل الاجتماعي بالفوتر) -->
+    <div x-show="tab === 'social'" class="space-y-6" style="display: none;"
+         x-data="{
+             facebook: '{{ addslashes($socialLinks['facebook'] ?? 'https://www.facebook.com/bariq.dm/?locale=ar_AR') }}',
+             instagram: '{{ addslashes($socialLinks['instagram'] ?? 'https://www.instagram.com/pariqmedia?utm_source=ig_web_button_share_sheet&obrf=ZDNlZDc0MzIxNw==') }}',
+             tiktok: '{{ addslashes($socialLinks['tiktok'] ?? 'https://www.tiktok.com/@pariq82?is_from_webapp=1&sender_device=pc') }}',
+             whatsapp: '{{ addslashes($socialLinks['whatsapp'] ?? 'https://wa.me/201062330838?text=مرحباً%20بريق') }}'
+         }">
+
+        <!-- Header Banner -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-brand-card/90 border border-brand-border p-5 rounded-2xl shadow-lg relative overflow-hidden">
+            <div class="space-y-1 relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/15 border border-brand-orange/40 text-brand-orange text-xs font-bold">
+                    <i class="fa-solid fa-share-nodes"></i>
+                    <span>حسابات منصات التواصل الاجتماعي (Footer Social Links)</span>
+                </div>
+                <h3 class="text-base font-bold text-white">إدارة وتعديل روابط السوشيال ميديا المعروضة بالفوتر</h3>
+                <p class="text-xs text-gray-400 max-w-2xl leading-relaxed">
+                    تحكم بالروابط المباشرة لأزرار منصات التواصل الاجتماعي في أسفل جميع صفحات الموقع (فيسبوك، انستغرام، تيك توك، واتساب) لتوجيه العملاء مباشرة إلى قنوات وكالة بريق الرسمية.
+                </p>
+            </div>
+        </div>
+
+        <!-- LIVE PREVIEW OF FOOTER BUTTONS -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-300 flex items-center gap-2">
+                    <i class="fa-solid fa-eye text-brand-orange"></i>
+                    <span>معاينة حية لشكل الأزرار كما تظهر في فوتر الموقع</span>
+                </span>
+                <span class="text-[11px] text-gray-400">انقر لتجربة الروابط مباشرة</span>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-[#0e031a] border border-purple-900/40 flex flex-wrap items-center justify-center gap-4">
+                <a :href="whatsapp" target="_blank" rel="noopener noreferrer" 
+                   class="w-12 h-12 rounded-xl bg-[#1B082B] hover:bg-emerald-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-emerald-400 flex items-center justify-center transition shadow-lg text-white text-lg" title="واتساب">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+                <a :href="facebook" target="_blank" rel="noopener noreferrer" 
+                   class="w-12 h-12 rounded-xl bg-[#1B082B] hover:bg-blue-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-blue-400 flex items-center justify-center transition shadow-lg text-white text-lg" title="فيسبوك">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a :href="instagram" target="_blank" rel="noopener noreferrer" 
+                   class="w-12 h-12 rounded-xl bg-[#1B082B] hover:bg-pink-600 hover:text-white border-2 border-[#3E24C5]/60 hover:border-pink-400 flex items-center justify-center transition shadow-lg text-white text-lg" title="انستغرام">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a :href="tiktok" target="_blank" rel="noopener noreferrer" 
+                   class="w-12 h-12 rounded-xl bg-[#1B082B] hover:bg-white hover:text-black border-2 border-[#3E24C5]/60 hover:border-white flex items-center justify-center transition shadow-lg text-white text-lg" title="تيك توك">
+                    <i class="fa-brands fa-tiktok"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- FORM TO UPDATE SOCIAL LINKS -->
+        <form method="POST" action="{{ route('cms.social-links.update') }}" class="bg-brand-card border border-brand-border rounded-2xl p-6 shadow-sm space-y-5">
+            @csrf
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Facebook -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-white flex items-center gap-2">
+                        <i class="fa-brands fa-facebook text-blue-500"></i>
+                        <span>رابط صفحة الفيسبوك (Facebook URL)</span>
+                    </label>
+                    <input type="text" name="social_facebook" x-model="facebook" required
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition font-mono"
+                           placeholder="https://www.facebook.com/bariq.dm/?locale=ar_AR">
+                </div>
+
+                <!-- Instagram -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-white flex items-center gap-2">
+                        <i class="fa-brands fa-instagram text-pink-500"></i>
+                        <span>رابط حساب انستغرام (Instagram URL)</span>
+                    </label>
+                    <input type="text" name="social_instagram" x-model="instagram" required
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition font-mono"
+                           placeholder="https://www.instagram.com/pariqmedia?...">
+                </div>
+
+                <!-- TikTok -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-white flex items-center gap-2">
+                        <i class="fa-brands fa-tiktok text-cyan-400"></i>
+                        <span>رابط حساب تيك توك (TikTok URL)</span>
+                    </label>
+                    <input type="text" name="social_tiktok" x-model="tiktok" required
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition font-mono"
+                           placeholder="https://www.tiktok.com/@pariq82?is_from_webapp=1&sender_device=pc">
+                </div>
+
+                <!-- WhatsApp -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-white flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-emerald-400"></i>
+                        <span>رابط أو رقم محادثة واتساب (WhatsApp URL)</span>
+                    </label>
+                    <input type="text" name="social_whatsapp" x-model="whatsapp" required
+                           class="w-full px-4 py-2.5 rounded-xl bg-brand-dark border border-brand-border text-white text-xs focus:border-brand-yellow focus:outline-none transition font-mono"
+                           placeholder="https://wa.me/201062330838?text=مرحباً%20بريق">
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-brand-border/60">
+                <button type="submit" 
+                        class="px-6 py-3 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 shadow-lg flex items-center gap-2 active:scale-95">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>حفظ وتحديث روابط السوشيال ميديا بالفوتر</span>
+                </button>
+            </div>
+        </form>
+
     </div>
 
     <!-- MODAL: ADD PARTNER -->

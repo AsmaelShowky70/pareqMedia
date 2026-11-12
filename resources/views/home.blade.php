@@ -222,13 +222,16 @@
 <!-- =========================================================================
      2. OFFICIAL PARIQ SHOWREEL VIDEO SECTION (فيديو شو ريل وكالة بريق في مكانه المعتمد)
      ========================================================================= -->
+@php
+    $promoVideo = $promoVideo ?? \App\Models\SiteSetting::getPromoVideoData();
+@endphp
 <section id="video-showcase" class="py-14 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative z-10">
     <div class="text-center max-w-2xl mx-auto mb-8 space-y-2">
         <span class="text-xs font-black text-brand-orange uppercase tracking-widest px-4 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/30">
-            فيديو شو ريل وكالة بريق الرسمي
+            {{ $promoVideo['badge'] ?? 'فيديو شو ريل وكالة بريق الرسمي' }}
         </span>
-        <h2 class="text-2xl sm:text-4xl font-black text-white">شاهد إبداع بريق في دقيقة واحدة</h2>
-        <p class="text-xs sm:text-sm text-gray-300">أعمالنا السينمائية ومونتاجنا الإعلاني بملء الشاشة بجودة فائقة</p>
+        <h2 class="text-2xl sm:text-4xl font-black text-white">{{ $promoVideo['title'] ?? 'شاهد إبداع بريق في دقيقة واحدة' }}</h2>
+        <p class="text-xs sm:text-sm text-gray-300">{{ $promoVideo['subtitle'] ?? 'أعمالنا السينمائية ومونتاجنا الإعلاني بملء الشاشة بجودة فائقة' }}</p>
     </div>
 
     <!-- 16:9 (1920x1080) Horizontal Video Frame -->
@@ -237,44 +240,61 @@
         
         <div class="relative aspect-video w-full bg-[#08020F] rounded-[1.4rem] overflow-hidden flex items-center justify-center">
             
-            <video id="pariq-hero-video" 
-                   playsinline 
-                   preload="auto"
-                   autoplay
-                   muted
-                   loop
-                   controls
-                   poster="{{ asset('videos/bariq-poster.jpg') }}"
-                   class="w-full h-full object-contain bg-black">
-                <source src="{{ asset('videos/bariq.mp4') }}" type="video/mp4">
-                <source src="{{ asset('videos/bariq.webm') }}" type="video/webm">
-                متصفحك لا يدعم تشغيل الفيديو المباشر.
-            </video>
+            @if(!empty($promoVideo['is_youtube']) && !empty($promoVideo['youtube_id']))
+                <!-- YouTube Embed Video Frame -->
+                <iframe src="https://www.youtube-nocookie.com/embed/{{ $promoVideo['youtube_id'] }}?autoplay=1&mute=1&loop=1&playlist={{ $promoVideo['youtube_id'] }}&controls=1&rel=0&playsinline=1" 
+                        title="{{ $promoVideo['title'] ?? 'فيديو شو ريل بريق' }}"
+                        class="w-full h-full border-0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                </iframe>
+            @else
+                <!-- Direct HTML5 Video Player -->
+                <video id="pariq-hero-video" 
+                       playsinline 
+                       preload="auto"
+                       autoplay
+                       muted
+                       loop
+                       controls
+                       poster="{{ $promoVideo['poster_url'] ?? asset('videos/bariq-poster.jpg') }}"
+                       class="w-full h-full object-contain bg-black">
+                    <source src="{{ $promoVideo['video_url'] ?? asset('videos/bariq.mp4') }}" type="video/mp4">
+                    @if(empty($promoVideo['is_custom']))
+                        <source src="{{ asset('videos/bariq.webm') }}" type="video/webm">
+                    @endif
+                    متصفحك لا يدعم تشغيل الفيديو المباشر.
+                </video>
+            @endif
 
             <!-- Top Video Info Bar -->
             <div class="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-brand-orange/40 text-[9px] sm:text-[11px] text-white font-bold pointer-events-none">
                 <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-orange animate-ping"></span>
-                <span>PARIQ SHOWREEL • 4K</span>
+                <span>{{ $promoVideo['tag'] ?? 'PARIQ SHOWREEL • 4K' }}</span>
             </div>
 
-            <!-- Bottom Left Actions: Sound Toggle + Fullscreen Modal -->
+            <!-- Bottom Left Actions: Sound Toggle (if video) + Fullscreen Modal -->
             <div class="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2">
+                @if(empty($promoVideo['is_youtube']))
                 <!-- Sound Toggle Button -->
                 <button type="button" 
                         @click="
                             const v = document.getElementById('pariq-hero-video');
-                            v.muted = !v.muted;
-                            isMuted = v.muted;
-                            if (v.paused) { v.play(); }
+                            if (v) {
+                                v.muted = !v.muted;
+                                isMuted = v.muted;
+                                if (v.paused) { v.play(); }
+                            }
                         "
                         class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-[10px] sm:text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1 sm:gap-1.5 shadow-lg active:scale-95">
                     <i class="fa-solid" :class="isMuted ? 'fa-volume-xmark text-amber-400' : 'fa-volume-high text-emerald-400'"></i>
                     <span x-text="isMuted ? 'تشغيل الصوت' : 'كتم الصوت'"></span>
                 </button>
+                @endif
 
                 <!-- Fullscreen Modal Button -->
                 <button type="button" 
-                        @click="openMedia('video', '{{ asset('videos/bariq.mp4') }}', 'شو ريل وكالة بريق الرسمي 2026', 'أحدث إنتاجات وكالة بريق للتسويق والتصوير السينمائي والمونتاج الإعلاني')"
+                        @click="openMedia('{{ !empty($promoVideo['is_youtube']) ? 'youtube' : 'video' }}', '{{ $promoVideo['video_url'] ?? asset('videos/bariq.mp4') }}', '{{ addslashes($promoVideo['title'] ?? 'شو ريل وكالة بريق الرسمي') }}', '{{ addslashes($promoVideo['subtitle'] ?? 'أحدث إنتاجات وكالة بريق للتسويق والتصوير السينمائي والمونتاج الإعلاني') }}')"
                         class="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-black/80 hover:bg-brand-orange hover:text-brand-dark text-white font-bold text-[10px] sm:text-xs backdrop-blur-md border border-white/20 transition flex items-center gap-1 sm:gap-1.5 shadow-lg active:scale-95">
                     <i class="fa-solid fa-expand"></i>
                     <span>نافذة كاملة</span>
@@ -686,11 +706,7 @@
                 <div class="flex flex-col items-center gap-2 w-56 sm:w-80">
                     <div class="flex items-center justify-between w-full text-[11px] font-mono">
                         <span class="font-black text-[#FF9420]" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
-                        <span class="text-[10px] text-[#FFBA70] flex items-center gap-1 font-sans">
-                            <i class="fa-solid fa-clock-rotate-left text-[9px] animate-spin-slow"></i>
-                            <span>تبديل تلقائي كل 5ث</span>
-                        </span>
-                        <span class="font-bold text-gray-300">10</span>
+                        <span class="font-bold text-gray-300" x-text="(services.length < 10 ? '0' : '') + services.length">10</span>
                     </div>
                     <!-- Dynamic 5-Second Countdown Track -->
                     <div class="w-full h-2 bg-black rounded-full overflow-hidden relative border border-[#3E24C5]/60 p-0.5">

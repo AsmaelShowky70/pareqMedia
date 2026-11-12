@@ -141,6 +141,13 @@ Route::middleware('auth')->group(function () {
     // Platform Stats CMS Management
     Route::post('/cms/stats', [PortfolioAdminController::class, 'updateStats'])->name('cms.stats.update');
 
+    // Homepage Promo Video & Showreel CMS Management
+    Route::post('/cms/promo-video', [PortfolioAdminController::class, 'updatePromoVideo'])->name('cms.promo-video.update');
+    Route::post('/cms/promo-video/reset', [PortfolioAdminController::class, 'resetPromoVideo'])->name('cms.promo-video.reset');
+
+    // Social Media Links CMS Management
+    Route::post('/cms/social-links', [PortfolioAdminController::class, 'updateSocialLinks'])->name('cms.social-links.update');
+
     // Team Members (من نحن) CMS Management
     Route::post('/cms/team-members', [PortfolioAdminController::class, 'storeTeamMember'])->name('cms.team-members.store');
     Route::put('/cms/team-members/{teamMember}', [PortfolioAdminController::class, 'updateTeamMember'])->name('cms.team-members.update');

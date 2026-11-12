@@ -36,8 +36,9 @@ class HomeController extends Controller
         }
 
         $stats = SiteSetting::getFrontendStats();
+        $promoVideo = SiteSetting::getPromoVideoData();
 
-        return view('home', compact('services', 'portfolioItems', 'featuredItems', 'clients', 'partners', 'testimonials', 'stats'));
+        return view('home', compact('services', 'portfolioItems', 'featuredItems', 'clients', 'partners', 'testimonials', 'stats', 'promoVideo'));
     }
 
     public function services()

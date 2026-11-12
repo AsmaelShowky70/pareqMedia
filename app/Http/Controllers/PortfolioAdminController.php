@@ -42,8 +42,10 @@ class PortfolioAdminController extends Controller
         }
 
         $stats = SiteSetting::getFrontendStats();
+        $promoVideo = SiteSetting::getPromoVideoData();
+        $socialLinks = SiteSetting::getSocialLinks();
 
-        return view('cms.index', compact('services', 'portfolioItems', 'inquiries', 'serviceCategories', 'partners', 'testimonials', 'teamMembers', 'stats'));
+        return view('cms.index', compact('services', 'portfolioItems', 'inquiries', 'serviceCategories', 'partners', 'testimonials', 'teamMembers', 'stats', 'promoVideo', 'socialLinks'));
     }
 
     public function storeService(Request $request)
@@ -614,6 +616,98 @@ class PortfolioAdminController extends Controller
         $teamMember->delete();
 
         return back()->with('success', 'تم حذف عضو الفريق بنجاح.');
+    }
+
+    public function updatePromoVideo(Request $request)
+    {
+        $validated = $request->validate([
+            'promo_title' => 'required|string|max:255',
+            'promo_subtitle' => 'nullable|string|max:500',
+            'promo_badge' => 'nullable|string|max:255',
+            'promo_tag' => 'nullable|string|max:100',
+            'promo_video_url' => 'nullable|string',
+            'promo_video_file' => 'nullable|file|mimes:mp4,webm,mov,ogg,mkv|max:204800',
+            'promo_poster_url' => 'nullable|string',
+            'promo_poster_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:15360',
+        ]);
+
+        \App\Support\DatabaseSchemaAligner::alignSiteSettings();
+
+        SiteSetting::set('promo_title', $validated['promo_title']);
+        SiteSetting::set('promo_subtitle', $validated['promo_subtitle'] ?? '');
+        SiteSetting::set('promo_badge', $validated['promo_badge'] ?? 'فيديو شو ريل وكالة بريق الرسمي');
+        SiteSetting::set('promo_tag', $validated['promo_tag'] ?? 'PARIQ SHOWREEL • 4K');
+
+        if ($request->hasFile('promo_video_file')) {
+            $file = $request->file('promo_video_file');
+            $uploadPath = public_path('uploads/videos');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = 'promo_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            SiteSetting::set('promo_video_url', '/uploads/videos/' . $filename);
+        } elseif ($request->filled('promo_video_url')) {
+            $videoUrl = $request->input('promo_video_url');
+            $videoUrl = \App\Support\MediaHelper::convertToDirectCdnUrl($videoUrl);
+            SiteSetting::set('promo_video_url', $videoUrl);
+        }
+
+        if ($request->hasFile('promo_poster_file')) {
+            $file = $request->file('promo_poster_file');
+            $uploadPath = public_path('uploads/videos');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = 'poster_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            SiteSetting::set('promo_poster_url', '/uploads/videos/' . $filename);
+        } elseif ($request->filled('promo_poster_url')) {
+            SiteSetting::set('promo_poster_url', \App\Support\MediaHelper::convertToDirectCdnUrl($request->input('promo_poster_url')));
+        }
+
+        return back()->with('success', 'تم حفظ وتحديث فيديو البرومو والشو ريل بنجاح.');
+    }
+
+    public function resetPromoVideo()
+    {
+        \App\Support\DatabaseSchemaAligner::alignSiteSettings();
+
+        SiteSetting::set('promo_video_url', null);
+        SiteSetting::set('promo_poster_url', null);
+        SiteSetting::set('promo_title', 'شاهد إبداع بريق في دقيقة واحدة');
+        SiteSetting::set('promo_subtitle', 'أعمالنا السينمائية ومونتاجنا الإعلاني بملء الشاشة بجودة فائقة');
+        SiteSetting::set('promo_badge', 'فيديو شو ريل وكالة بريق الرسمي');
+        SiteSetting::set('promo_tag', 'PARIQ SHOWREEL • 4K');
+
+        return back()->with('success', 'تمت استعادة فيديو البرومو الافتراضي الأصلي للوكالة بنجاح.');
+    }
+
+    public function updateSocialLinks(Request $request)
+    {
+        $validated = $request->validate([
+            'social_facebook' => 'nullable|string|max:500',
+            'social_instagram' => 'nullable|string|max:500',
+            'social_tiktok' => 'nullable|string|max:500',
+            'social_whatsapp' => 'nullable|string|max:500',
+        ]);
+
+        \App\Support\DatabaseSchemaAligner::alignSiteSettings();
+
+        if (array_key_exists('social_facebook', $validated)) {
+            SiteSetting::set('social_facebook', $validated['social_facebook']);
+        }
+        if (array_key_exists('social_instagram', $validated)) {
+            SiteSetting::set('social_instagram', $validated['social_instagram']);
+        }
+        if (array_key_exists('social_tiktok', $validated)) {
+            SiteSetting::set('social_tiktok', $validated['social_tiktok']);
+        }
+        if (array_key_exists('social_whatsapp', $validated)) {
+            SiteSetting::set('social_whatsapp', $validated['social_whatsapp']);
+        }
+
+        return back()->with('success', 'تم حفظ وتحديث روابط منصات التواصل الاجتماعي بنجاح.');
     }
 
     /**
