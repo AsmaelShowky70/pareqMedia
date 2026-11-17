@@ -496,29 +496,43 @@
                 $partnersRow2 = $partnersRow1;
             }
         }
+
+        // Ensure sufficient items for smooth infinite seamless scrolling on all screen sizes
+        if (!empty($partnersRow1)) {
+            $baseRow1 = $partnersRow1;
+            while (count($partnersRow1) < 8) {
+                $partnersRow1 = array_merge($partnersRow1, $baseRow1);
+            }
+        }
+        if (!empty($partnersRow2)) {
+            $baseRow2 = $partnersRow2;
+            while (count($partnersRow2) < 8) {
+                $partnersRow2 = array_merge($partnersRow2, $baseRow2);
+            }
+        }
     @endphp
 
     <!-- Dual Reverse Marquee Tracks -->
     <div class="space-y-6 overflow-hidden py-4">
         
         <!-- Row 1: Moves Left to Right -->
-        <div class="marquee-reverse-track flex items-center gap-6 sm:gap-7 whitespace-nowrap select-none">
+        <div class="marquee-reverse-track flex items-center gap-5 sm:gap-6 whitespace-nowrap select-none">
             @for($i = 0; $i < 2; $i++)
                 @foreach($partnersRow1 as $p)
-                <div class="partner-card inline-flex items-center justify-center w-44 sm:w-52 h-24 sm:h-28 px-5 py-3 rounded-2xl sm:rounded-3xl bg-white shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-2 border-white/80 hover:border-[#FF9420] hover:shadow-[0_0_35px_rgba(255,148,32,0.65)] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:scale-105 group relative overflow-hidden"
+                <div class="partner-card shrink-0 inline-flex items-center justify-center w-48 sm:w-56 md:w-60 h-20 sm:h-22 md:h-24 px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-white shadow-[0_4px_20px_rgba(0,0,0,0.35)] border border-gray-100 hover:border-[#FF9420] hover:shadow-[0_0_30px_rgba(255,148,32,0.5)] transition-all duration-300 cursor-pointer transform hover:-translate-y-1.5 hover:scale-105 group relative overflow-hidden"
                      title="{{ $p['name'] }}">
                     <div class="w-full h-full flex items-center justify-center overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
-                                 class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform duration-300 pointer-events-none"
+                                 class="max-w-full max-h-full object-contain filter group-hover:scale-105 transition-transform duration-300 pointer-events-none"
                                  referrerpolicy="no-referrer"
                                  loading="lazy"
                                  onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
-                            <span style="display: none;" class="w-full h-full items-center justify-center text-sm font-black text-gray-900 font-sans tracking-wide">
+                            <span style="display: none;" class="w-full h-full items-center justify-center text-xs sm:text-sm font-black text-gray-900 font-sans tracking-wide text-center truncate px-2">
                                 {{ $p['name'] }}
                             </span>
                         @else
-                            <span class="text-base sm:text-lg font-black text-gray-900 font-sans tracking-wide group-hover:text-[#FF9420] transition-colors">
+                            <span class="text-xs sm:text-sm font-black text-gray-900 font-sans tracking-wide text-center truncate px-2 group-hover:text-[#FF9420] transition-colors">
                                 {{ $p['name'] }}
                             </span>
                         @endif
@@ -529,23 +543,23 @@
         </div>
 
         <!-- Row 2: Moves Right to Left (Opposite Direction) -->
-        <div class="marquee-track flex items-center gap-6 sm:gap-7 whitespace-nowrap select-none">
+        <div class="marquee-track flex items-center gap-5 sm:gap-6 whitespace-nowrap select-none">
             @for($i = 0; $i < 2; $i++)
                 @foreach($partnersRow2 as $p)
-                <div class="partner-card inline-flex items-center justify-center w-44 sm:w-52 h-24 sm:h-28 px-5 py-3 rounded-2xl sm:rounded-3xl bg-white shadow-[0_10px_30px_rgba(0,0,0,0.6)] border-2 border-white/80 hover:border-[#FF9420] hover:shadow-[0_0_35px_rgba(255,148,32,0.65)] transition-all duration-300 cursor-pointer transform hover:-translate-y-2 hover:scale-105 group relative overflow-hidden"
+                <div class="partner-card shrink-0 inline-flex items-center justify-center w-48 sm:w-56 md:w-60 h-20 sm:h-22 md:h-24 px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl bg-white shadow-[0_4px_20px_rgba(0,0,0,0.35)] border border-gray-100 hover:border-[#FF9420] hover:shadow-[0_0_30px_rgba(255,148,32,0.5)] transition-all duration-300 cursor-pointer transform hover:-translate-y-1.5 hover:scale-105 group relative overflow-hidden"
                      title="{{ $p['name'] }}">
                     <div class="w-full h-full flex items-center justify-center overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
-                                 class="max-w-full max-h-full object-contain filter group-hover:scale-110 transition-transform duration-300 pointer-events-none"
+                                 class="max-w-full max-h-full object-contain filter group-hover:scale-105 transition-transform duration-300 pointer-events-none"
                                  referrerpolicy="no-referrer"
                                  loading="lazy"
                                  onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
-                            <span style="display: none;" class="w-full h-full items-center justify-center text-sm font-black text-gray-900 font-sans tracking-wide">
+                            <span style="display: none;" class="w-full h-full items-center justify-center text-xs sm:text-sm font-black text-gray-900 font-sans tracking-wide text-center truncate px-2">
                                 {{ $p['name'] }}
                             </span>
                         @else
-                            <span class="text-base sm:text-lg font-black text-gray-900 font-sans tracking-wide group-hover:text-[#FF9420] transition-colors">
+                            <span class="text-xs sm:text-sm font-black text-gray-900 font-sans tracking-wide text-center truncate px-2 group-hover:text-[#FF9420] transition-colors">
                                 {{ $p['name'] }}
                             </span>
                         @endif
@@ -1684,21 +1698,37 @@
 
 @push('styles')
 <style>
-    /* Reverse Marquee Motion */
+    /* Marquee Motion for Partners Section */
+    @keyframes marquee {
+        0% { transform: translateX(0%); }
+        100% { transform: translateX(50%); }
+    }
     @keyframes marqueeReverse {
         0% { transform: translateX(50%); }
         100% { transform: translateX(0%); }
     }
+    .marquee-track {
+        display: flex;
+        width: max-content;
+        flex-shrink: 0;
+        will-change: transform;
+        animation: marquee 35s linear infinite;
+    }
     .marquee-reverse-track {
         display: flex;
-        width: 200%;
-        animation: marqueeReverse 30s linear infinite;
+        width: max-content;
+        flex-shrink: 0;
+        will-change: transform;
+        animation: marqueeReverse 35s linear infinite;
     }
-    .marquee-reverse-track:hover, .marquee-track:hover {
+    .marquee-track:hover, .marquee-reverse-track:hover {
         animation-play-state: paused;
     }
 
     /* Partner Card Hover Color & Tilt */
+    .partner-card {
+        flex-shrink: 0 !important;
+    }
     .partner-card:hover .partner-name {
         color: #FF9420 !important;
     }

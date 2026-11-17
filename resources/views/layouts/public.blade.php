@@ -232,8 +232,10 @@
         }
         .marquee-track {
             display: flex;
-            width: 200%;
-            animation: marquee 32s linear infinite;
+            width: max-content;
+            flex-shrink: 0;
+            will-change: transform;
+            animation: marquee 35s linear infinite;
         }
         .marquee-track:hover {
             animation-play-state: paused;
