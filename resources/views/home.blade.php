@@ -480,10 +480,12 @@
                 if ($rawLogo) {
                     $rawLogo = \App\Support\MediaHelper::formatDisplayUrl($rawLogo);
                 }
+                $driveId = \App\Support\MediaHelper::extractGoogleDriveId($rawLogo ?? ($pItem->logo_url ?? null));
                 $pData = [
                     'name' => $pItem->name,
                     'type' => $pItem->category ?: 'شريك نجاح',
                     'img' => $rawLogo,
+                    'drive_id' => $driveId,
                     'icon' => $rawLogo ? null : 'fa-solid fa-building',
                 ];
                 if ($pIdx % 2 === 0) {
@@ -524,10 +526,11 @@
                     <div class="w-full h-full flex items-center justify-center overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
+                                 data-drive-id="{{ $p['drive_id'] ?? '' }}"
                                  loading="eager"
                                  decoding="async"
                                  class="max-w-full max-h-full object-contain filter group-hover:scale-105 transition-transform duration-300 pointer-events-none"
-                                 onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
+                                 onerror="if (!this.dataset.retry && this.dataset.driveId) { this.dataset.retry = '1'; this.src = 'https://lh3.googleusercontent.com/d/' + this.dataset.driveId; } else if (this.dataset.retry === '1' && this.dataset.driveId) { this.dataset.retry = '2'; this.src = '/media/drive/' + this.dataset.driveId; } else { this.onerror = null; this.style.display = 'none'; if (this.nextElementSibling) this.nextElementSibling.style.display = 'flex'; }">
                             <span style="display: none;" class="w-full h-full items-center justify-center text-xs sm:text-sm font-black text-gray-900 font-sans tracking-wide text-center truncate px-2">
                                 {{ $p['name'] }}
                             </span>
@@ -551,10 +554,11 @@
                     <div class="w-full h-full flex items-center justify-center overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
+                                 data-drive-id="{{ $p['drive_id'] ?? '' }}"
                                  loading="eager"
                                  decoding="async"
                                  class="max-w-full max-h-full object-contain filter group-hover:scale-105 transition-transform duration-300 pointer-events-none"
-                                 onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
+                                 onerror="if (!this.dataset.retry && this.dataset.driveId) { this.dataset.retry = '1'; this.src = 'https://lh3.googleusercontent.com/d/' + this.dataset.driveId; } else if (this.dataset.retry === '1' && this.dataset.driveId) { this.dataset.retry = '2'; this.src = '/media/drive/' + this.dataset.driveId; } else { this.onerror = null; this.style.display = 'none'; if (this.nextElementSibling) this.nextElementSibling.style.display = 'flex'; }">
                             <span style="display: none;" class="w-full h-full items-center justify-center text-xs sm:text-sm font-black text-gray-900 font-sans tracking-wide text-center truncate px-2">
                                 {{ $p['name'] }}
                             </span>

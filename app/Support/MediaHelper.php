@@ -17,13 +17,18 @@ class MediaHelper
 
         $url = trim($url);
 
+        // Path like /uploads/drive_cache/{id}.png or /media/drive/{id}
+        if (preg_match('/(?:uploads[\/\\\\]drive_cache[\/\\\\]|media[\/\\\\]drive[\/\\\\])([a-zA-Z0-9_-]{25,})/i', $url, $matches)) {
+            return $matches[1];
+        }
+
         // Standard link patterns: /file/d/{id}, /file/u/0/d/{id}, id={id}, /d/{id}, /uc?id={id}, /folders/{id}
         if (preg_match('/(?:file(?:\/u\/\d+)?\/d\/|\/d\/|id=|open\?id=|\/folders\/|uc\?.*id=|thumbnail\?id=)([a-zA-Z0-9_-]{25,})/i', $url, $matches)) {
             return $matches[1];
         }
 
         // If user pasted just the raw ID string
-        if (preg_match('/^[a-zA-Z0-9_-]{28,45}$/', $url)) {
+        if (preg_match('/^[a-zA-Z0-9_-]{25,45}$/', $url)) {
             return $url;
         }
 
@@ -86,7 +91,7 @@ class MediaHelper
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
             $data = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -187,7 +192,7 @@ class MediaHelper
     /**
      * Format any image URL for display in Blade views:
      * - Checks local cache for Google Drive links
-     * - Returns proper asset() or external URL
+     * - Returns proper asset() or stream route or external URL
      */
     public static function formatDisplayUrl(?string $url): ?string
     {
@@ -197,26 +202,18 @@ class MediaHelper
 
         $url = trim($url);
 
-        // Check if it's a Google Drive link or direct Google CDN link
-        if (str_contains($url, 'drive.google.com') || str_contains($url, 'googleusercontent.com')) {
-            $id = self::extractGoogleDriveId($url);
-            if ($id) {
-                // If a local cached file exists (e.g. partner logo), use it immediately:
-                $cacheDir = public_path('uploads/drive_cache');
-                $existing = glob($cacheDir . DIRECTORY_SEPARATOR . $id . '.*');
-                if (!empty($existing)) {
-                    return asset('uploads/drive_cache/' . basename($existing[0]));
-                }
-
-                // Auto download and cache now in background
-                $cached = self::downloadAndCacheGoogleDrive($url);
-                if ($cached && !str_starts_with($cached, 'http')) {
-                    return asset(ltrim($cached, '/'));
-                }
-
-                // Fallback to internal same-domain stream route (never blocked on mobile Safari/iOS!)
-                return url('/media/drive/' . $id);
+        // Check if it's a drive_cache path or Google Drive / CDN link
+        $id = self::extractGoogleDriveId($url);
+        if ($id) {
+            // If local cached file exists on disk (e.g. partner logo), use it directly:
+            $cacheDir = public_path('uploads/drive_cache');
+            $existing = glob($cacheDir . DIRECTORY_SEPARATOR . $id . '.*');
+            if (!empty($existing) && file_exists($existing[0])) {
+                return asset('uploads/drive_cache/' . basename($existing[0]));
             }
+
+            // Fallback to internal same-domain stream route (auto-downloads, caches on disk, and streams HTTP 200)
+            return url('/media/drive/' . $id);
         }
 
         if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://')) {

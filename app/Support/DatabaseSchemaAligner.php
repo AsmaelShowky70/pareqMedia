@@ -300,17 +300,29 @@ class DatabaseSchemaAligner
                     $table->timestamps();
                 });
             } else {
-                // Self-heal and cache any Google Drive links already stored in `partners` table
-                $drivePartners = DB::table('partners')
-                    ->where('logo_url', 'like', '%drive.google.com%')
-                    ->orWhere('logo_url', 'like', '%googleusercontent.com%')
+                // Self-heal and cache any Google Drive links or missing drive_cache files
+                $cacheDir = public_path('uploads/drive_cache');
+                if (!file_exists($cacheDir)) {
+                    @mkdir($cacheDir, 0755, true);
+                }
+
+                $partnersWithLogo = DB::table('partners')
+                    ->whereNotNull('logo_url')
+                    ->where('logo_url', '!=', '')
                     ->get();
-                foreach ($drivePartners as $dp) {
-                    $localPath = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($dp->logo_url);
-                    if ($localPath) {
-                        DB::table('partners')->where('id', $dp->id)->update([
-                            'logo_url' => $localPath
-                        ]);
+
+                foreach ($partnersWithLogo as $dp) {
+                    $id = \App\Support\MediaHelper::extractGoogleDriveId($dp->logo_url);
+                    if ($id) {
+                        $existing = glob($cacheDir . DIRECTORY_SEPARATOR . $id . '.*');
+                        if (empty($existing) || !file_exists($existing[0])) {
+                            $localPath = \App\Support\MediaHelper::downloadAndCacheGoogleDrive($id);
+                            if ($localPath) {
+                                DB::table('partners')->where('id', $dp->id)->update([
+                                    'logo_url' => $localPath
+                                ]);
+                            }
+                        }
                     }
                 }
             }
