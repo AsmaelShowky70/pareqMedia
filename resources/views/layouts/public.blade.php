@@ -325,8 +325,9 @@
           mobileNav: false, 
           previewModal: false, 
           showBackToTop: false,
-          activeMedia: { type: '', src: '', embedSrc: '', title: '', desc: '', aspect: 'landscape', brandItems: [] },
-          openMedia(mediaType, src, title, desc, aspect = 'landscape', brandItems = []) {
+          touchStartX: 0,
+          activeMedia: { type: '', src: '', embedSrc: '', title: '', desc: '', aspect: 'landscape', brandItems: [], gallery: [], currentIndex: 0 },
+          openMedia(mediaType, src, title, desc, aspect = 'landscape', brandItems = [], gallery = []) {
               let type = mediaType;
               let embed = '';
               if (type === 'video' && src) {
@@ -351,14 +352,53 @@
                       embed = src;
                   }
               }
-              this.activeMedia = { type: type, src: src, embedSrc: embed, title: title, desc: desc, aspect: aspect, brandItems: brandItems || [] };
+
+              let cleanGallery = Array.isArray(gallery) ? gallery.filter(Boolean) : [];
+              if (type === 'image' || type === 'branding') {
+                  if (src && !cleanGallery.includes(src)) {
+                      cleanGallery.unshift(src);
+                  }
+              }
+
+              this.activeMedia = { 
+                  type: type, 
+                  src: cleanGallery.length > 0 ? cleanGallery[0] : src, 
+                  embedSrc: embed, 
+                  title: title, 
+                  desc: desc, 
+                  aspect: aspect, 
+                  brandItems: brandItems || [],
+                  gallery: cleanGallery,
+                  currentIndex: 0
+              };
               this.previewModal = true;
+          },
+          nextSlide() {
+              if (this.activeMedia.gallery && this.activeMedia.gallery.length > 1) {
+                  this.activeMedia.currentIndex = (this.activeMedia.currentIndex + 1) % this.activeMedia.gallery.length;
+                  this.activeMedia.src = this.activeMedia.gallery[this.activeMedia.currentIndex];
+              }
+          },
+          prevSlide() {
+              if (this.activeMedia.gallery && this.activeMedia.gallery.length > 1) {
+                  this.activeMedia.currentIndex = (this.activeMedia.currentIndex - 1 + this.activeMedia.gallery.length) % this.activeMedia.gallery.length;
+                  this.activeMedia.src = this.activeMedia.gallery[this.activeMedia.currentIndex];
+              }
+          },
+          goToSlide(idx) {
+              if (this.activeMedia.gallery && this.activeMedia.gallery[idx]) {
+                  this.activeMedia.currentIndex = idx;
+                  this.activeMedia.src = this.activeMedia.gallery[idx];
+              }
           },
           closeMedia() {
               this.previewModal = false;
-              this.activeMedia = { type: '', src: '', embedSrc: '', title: '', desc: '', aspect: 'landscape', brandItems: [] };
+              this.activeMedia = { type: '', src: '', embedSrc: '', title: '', desc: '', aspect: 'landscape', brandItems: [], gallery: [], currentIndex: 0 };
           }
       }"
+      @keydown.window.escape="if (previewModal) closeMedia()"
+      @keydown.window.arrow-left="if (previewModal) nextSlide()"
+      @keydown.window.arrow-right="if (previewModal) prevSlide()"
       @scroll.window="showBackToTop = (window.pageYOffset > 400)">
 
     <!-- Ambient Cursor Glow Spotlight Follower -->
@@ -640,7 +680,9 @@
             <!-- Media Container (Standard Video / Reel / Image) -->
             <template x-if="activeMedia.type !== 'branding'">
                 <div :class="activeMedia.aspect === 'vertical' ? 'aspect-[9/16] max-h-[70vh] mx-auto' : 'aspect-video'"
-                     class="w-full bg-black rounded-2xl overflow-hidden flex items-center justify-center relative shadow-inner">
+                     class="w-full bg-black rounded-2xl overflow-hidden flex items-center justify-center relative shadow-inner group/viewer"
+                     @touchstart.passive="touchStartX = $event.touches[0].clientX"
+                     @touchend="if ($event.changedTouches[0].clientX - touchStartX > 40) prevSlide(); else if (touchStartX - $event.changedTouches[0].clientX > 40) nextSlide();">
                     <template x-if="previewModal && activeMedia.type === 'video'">
                         <video :src="activeMedia.src" controls autoplay playsinline class="w-full h-full object-contain"></video>
                     </template>
@@ -648,7 +690,49 @@
                         <iframe :src="activeMedia.embedSrc" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </template>
                     <template x-if="previewModal && activeMedia.type === 'image' && activeMedia.src">
-                        <img :src="activeMedia.src" :alt="activeMedia.title" class="w-full h-full object-contain">
+                        <div class="w-full h-full relative flex items-center justify-center overflow-hidden">
+                            <img :src="activeMedia.src" :alt="activeMedia.title" 
+                                 :key="activeMedia.src"
+                                 class="w-full h-full object-contain transition-all duration-300 transform select-none">
+
+                            <!-- Multi-Image Navigation Overlay (❮ Previous & ❯ Next Buttons) -->
+                            <template x-if="activeMedia.gallery && activeMedia.gallery.length > 1">
+                                <div class="absolute inset-0 pointer-events-none flex items-center justify-between p-2 sm:p-4 z-20">
+                                    <!-- Right arrow (Previous in RTL) -->
+                                    <button type="button" 
+                                            @click.stop="prevSlide()"
+                                            aria-label="التصميم السابق"
+                                            class="pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-black/80 hover:bg-[#FF9420] text-white hover:text-black border border-white/20 hover:border-transparent flex items-center justify-center text-sm sm:text-base backdrop-blur-md shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 group">
+                                        <i class="fa-solid fa-chevron-right group-hover:scale-115 transition-transform"></i>
+                                    </button>
+
+                                    <!-- Left arrow (Next in RTL) -->
+                                    <button type="button" 
+                                            @click.stop="nextSlide()"
+                                            aria-label="التصميم التالي"
+                                            class="pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-black/80 hover:bg-[#FF9420] text-white hover:text-black border border-white/20 hover:border-transparent flex items-center justify-center text-sm sm:text-base backdrop-blur-md shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 group">
+                                        <i class="fa-solid fa-chevron-left group-hover:scale-115 transition-transform"></i>
+                                    </button>
+                                </div>
+                            </template>
+
+                            <!-- Slide Counter & Badge (Top Right) -->
+                            <template x-if="activeMedia.gallery && activeMedia.gallery.length > 1">
+                                <div class="absolute top-3 right-3 z-20 flex items-center gap-2">
+                                    <span class="px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-[#FF9420]/50 text-xs font-black text-[#FFBA70] shadow-lg flex items-center gap-1.5">
+                                        <i class="fa-solid fa-layer-group text-[#FF9420]"></i>
+                                        <span x-text="(activeMedia.currentIndex + 1) + ' / ' + activeMedia.gallery.length"></span>
+                                    </span>
+                                </div>
+                            </template>
+
+                            <!-- Direct High-Res Link (Top Left) -->
+                            <a :href="activeMedia.src" target="_blank" rel="noopener noreferrer"
+                               class="absolute top-3 left-3 z-20 w-8 h-8 rounded-xl bg-black/75 hover:bg-[#FF9420] hover:text-black text-gray-200 border border-white/20 flex items-center justify-center text-xs backdrop-blur-md transition shadow"
+                               title="فتح الصورة بالحجم الكامل">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
                     </template>
                     <template x-if="previewModal && (!activeMedia.src || activeMedia.type === 'text')">
                         <div class="p-6 sm:p-10 text-center space-y-4 max-w-lg mx-auto my-auto">
@@ -667,15 +751,71 @@
                 </div>
             </template>
 
+            <!-- Thumbnail Navigation Strip (شريط مصغرات تفاعلي سريع أسفل الصورة) -->
+            <template x-if="activeMedia.gallery && activeMedia.gallery.length > 1">
+                <div class="pt-1">
+                    <div class="flex items-center gap-2 sm:gap-3 overflow-x-auto py-2 px-1 no-scrollbar select-none" style="scroll-behavior: smooth;">
+                        <template x-for="(imgUrl, gIdx) in activeMedia.gallery" :key="gIdx">
+                            <button type="button" 
+                                    @click="goToSlide(gIdx)"
+                                    :class="activeMedia.currentIndex === gIdx 
+                                        ? 'border-2 border-[#FF9420] ring-2 ring-[#FF9420]/60 scale-105 shadow-[0_0_20px_rgba(255,148,32,0.6)] opacity-100' 
+                                        : 'border border-purple-800/60 opacity-50 hover:opacity-100 hover:border-gray-300'"
+                                    class="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-black/60 transition-all duration-300 cursor-pointer transform focus:outline-none">
+                                <img :src="imgUrl" class="w-full h-full object-cover pointer-events-none">
+                                <div x-show="activeMedia.currentIndex === gIdx" class="absolute inset-0 bg-[#FF9420]/15 pointer-events-none"></div>
+                                <span class="absolute bottom-0.5 right-0.5 text-[8px] font-bold px-1 rounded bg-black/80 text-white font-mono pointer-events-none" x-text="gIdx + 1"></span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
             <!-- Multi-Item Brand Identity Showcase (بنود الهوية البصرية المتعددة) -->
             <template x-if="activeMedia.type === 'branding'">
-                <div class="space-y-6">
-                    <div class="relative aspect-video max-h-[50vh] bg-black/60 rounded-2xl overflow-hidden flex items-center justify-center border border-purple-800/60">
+                <div class="space-y-4">
+                    <div class="relative aspect-video max-h-[50vh] bg-black/60 rounded-2xl overflow-hidden flex items-center justify-center border border-purple-800/60"
+                         @touchstart.passive="touchStartX = $event.touches[0].clientX"
+                         @touchend="if ($event.changedTouches[0].clientX - touchStartX > 40) prevSlide(); else if (touchStartX - $event.changedTouches[0].clientX > 40) nextSlide();">
                         <img :src="activeMedia.src" :alt="activeMedia.title" class="w-full h-full object-contain">
-                        <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-brand-orange/90 text-brand-dark font-black text-xs shadow">
+                        <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-brand-orange/90 text-brand-dark font-black text-xs shadow z-10">
                             هوية بصرية متكاملة
                         </span>
+
+                        <!-- Multi-Image Navigation Overlay for Branding -->
+                        <template x-if="activeMedia.gallery && activeMedia.gallery.length > 1">
+                            <div class="absolute inset-0 pointer-events-none flex items-center justify-between p-2 sm:p-4 z-20">
+                                <button type="button" @click.stop="prevSlide()" class="pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-black/80 hover:bg-[#FF9420] text-white hover:text-black border border-white/20 flex items-center justify-center text-sm backdrop-blur-md shadow-2xl transition transform hover:scale-110 active:scale-95">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+                                <button type="button" @click.stop="nextSlide()" class="pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-black/80 hover:bg-[#FF9420] text-white hover:text-black border border-white/20 flex items-center justify-center text-sm backdrop-blur-md shadow-2xl transition transform hover:scale-110 active:scale-95">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </button>
+                            </div>
+                        </template>
+
+                        <!-- Counter for Branding -->
+                        <template x-if="activeMedia.gallery && activeMedia.gallery.length > 1">
+                            <span class="absolute bottom-3 right-3 z-20 px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-[#FF9420]/50 text-xs font-black text-[#FFBA70] shadow-lg flex items-center gap-1.5">
+                                <i class="fa-solid fa-layer-group text-[#FF9420]"></i>
+                                <span x-text="(activeMedia.currentIndex + 1) + ' / ' + activeMedia.gallery.length"></span>
+                            </span>
+                        </template>
                     </div>
+
+                    <!-- Thumbnails Strip for Branding -->
+                    <template x-if="activeMedia.gallery && activeMedia.gallery.length > 1">
+                        <div class="flex items-center gap-2 overflow-x-auto py-1 px-1 no-scrollbar select-none">
+                            <template x-for="(imgUrl, gIdx) in activeMedia.gallery" :key="gIdx">
+                                <button type="button" @click="goToSlide(gIdx)"
+                                        :class="activeMedia.currentIndex === gIdx ? 'border-2 border-[#FF9420] ring-2 ring-[#FF9420]/60 scale-105 opacity-100' : 'border border-purple-800/60 opacity-50 hover:opacity-100'"
+                                        class="relative shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-black/60 transition transform focus:outline-none">
+                                    <img :src="imgUrl" class="w-full h-full object-cover pointer-events-none">
+                                    <span class="absolute bottom-0.5 right-0.5 text-[8px] font-bold px-1 rounded bg-black/80 text-white" x-text="gIdx + 1"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </template>
 
                     <div class="space-y-3">
                         <h4 class="text-sm font-black text-brand-gold flex items-center gap-2">

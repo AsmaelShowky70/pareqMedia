@@ -210,6 +210,9 @@ class DatabaseSchemaAligner
             if (!Schema::hasColumn('portfolio_items', 'sort_order')) {
                 $columnsToAdd[] = "ADD COLUMN `sort_order` int(11) NOT NULL DEFAULT 0";
             }
+            if (!Schema::hasColumn('portfolio_items', 'gallery_images')) {
+                $columnsToAdd[] = "ADD COLUMN `gallery_images` text DEFAULT NULL";
+            }
 
             if (!empty($columnsToAdd)) {
                 DB::statement("ALTER TABLE `portfolio_items` " . implode(', ', $columnsToAdd));

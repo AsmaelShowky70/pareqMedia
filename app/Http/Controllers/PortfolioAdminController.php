@@ -110,6 +110,9 @@ class PortfolioAdminController extends Controller
             'thumbnail' => 'nullable|string',
             'thumbnail_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:12288',
             'video_file' => 'nullable|mimes:mp4,webm,mov,ogg|max:51200',
+            'gallery_files' => 'nullable|array',
+            'gallery_files.*' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:15360',
+            'gallery_urls' => 'nullable|string',
             'metrics' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
@@ -153,11 +156,40 @@ class PortfolioAdminController extends Controller
             $validated['video_url'] = '/uploads/videos/' . $filename;
         }
 
-        // 4. Identify if category is an image/design type
+        // 4. Handle gallery images (Multi-Image Campaign Slides / Branding Items)
+        $gallery = [];
+        if ($request->hasFile('gallery_files')) {
+            $galleryPath = public_path('uploads/portfolio/gallery');
+            if (!file_exists($galleryPath)) {
+                @mkdir($galleryPath, 0755, true);
+            }
+            foreach ($request->file('gallery_files') as $gFile) {
+                if ($gFile && $gFile->isValid()) {
+                    $gFilename = time() . '_' . Str::random(10) . '.' . $gFile->getClientOriginalExtension();
+                    $gFile->move($galleryPath, $gFilename);
+                    $gallery[] = '/uploads/portfolio/gallery/' . $gFilename;
+                }
+            }
+        }
+        if (!empty($validated['gallery_urls'])) {
+            $rawLines = preg_split('/[\r\n,]+/', $validated['gallery_urls']);
+            foreach ($rawLines as $line) {
+                $line = trim($line);
+                if (!empty($line)) {
+                    $cleanUrl = \App\Support\MediaHelper::convertToDirectCdnUrl($line);
+                    if ($cleanUrl && !in_array($cleanUrl, $gallery, true)) {
+                        $gallery[] = $cleanUrl;
+                    }
+                }
+            }
+        }
+        $validated['gallery_images'] = !empty($gallery) ? $gallery : null;
+
+        // 5. Identify if category is an image/design type
         $imageCategories = ['social_design', 'branding', 'youtube_thumbnail', 'ad_results', 'design', 'campaigns'];
         $isImageCategory = in_array($validated['category'] ?? '', $imageCategories, true);
 
-        // 5. If thumbnail was not provided and we have a YouTube video, auto-fetch high-res YouTube thumbnail
+        // 6. If thumbnail was not provided and we have a YouTube video, auto-fetch high-res YouTube thumbnail
         if (empty($validated['thumbnail']) && !empty($validated['video_url'])) {
             $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($validated['video_url']);
             if ($ytThumb) {
@@ -205,6 +237,11 @@ class PortfolioAdminController extends Controller
             'thumbnail' => 'nullable|string',
             'thumbnail_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:12288',
             'video_file' => 'nullable|mimes:mp4,webm,mov,ogg|max:51200',
+            'gallery_files' => 'nullable|array',
+            'gallery_files.*' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:15360',
+            'gallery_urls' => 'nullable|string',
+            'existing_gallery' => 'nullable|array',
+            'existing_gallery.*' => 'nullable|string',
             'metrics' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
@@ -251,11 +288,45 @@ class PortfolioAdminController extends Controller
             $validated['media_url'] = $validated['video_url'];
         }
 
-        // 4. Identify if category is an image/design type
+        // 4. Handle gallery images (existing, uploaded, and newly typed URLs)
+        $currentGallery = is_array($portfolioItem->gallery_images) ? $portfolioItem->gallery_images : [];
+        if ($request->has('existing_gallery')) {
+            $currentGallery = array_values(array_filter($request->input('existing_gallery', [])));
+        }
+
+        if ($request->hasFile('gallery_files')) {
+            $galleryPath = public_path('uploads/portfolio/gallery');
+            if (!file_exists($galleryPath)) {
+                @mkdir($galleryPath, 0755, true);
+            }
+            foreach ($request->file('gallery_files') as $gFile) {
+                if ($gFile && $gFile->isValid()) {
+                    $gFilename = time() . '_' . Str::random(10) . '.' . $gFile->getClientOriginalExtension();
+                    $gFile->move($galleryPath, $gFilename);
+                    $currentGallery[] = '/uploads/portfolio/gallery/' . $gFilename;
+                }
+            }
+        }
+
+        if (!empty($validated['gallery_urls'])) {
+            $rawLines = preg_split('/[\r\n,]+/', $validated['gallery_urls']);
+            foreach ($rawLines as $line) {
+                $line = trim($line);
+                if (!empty($line)) {
+                    $cleanUrl = \App\Support\MediaHelper::convertToDirectCdnUrl($line);
+                    if ($cleanUrl && !in_array($cleanUrl, $currentGallery, true)) {
+                        $currentGallery[] = $cleanUrl;
+                    }
+                }
+            }
+        }
+        $validated['gallery_images'] = !empty($currentGallery) ? $currentGallery : null;
+
+        // 5. Identify if category is an image/design type
         $imageCategories = ['social_design', 'branding', 'youtube_thumbnail', 'ad_results', 'design', 'campaigns'];
         $isImageCategory = in_array($validated['category'] ?? '', $imageCategories, true);
 
-        // 5. If thumbnail wasn't given, or is still the mock image, and video_url is a YouTube video:
+        // 6. If thumbnail wasn't given, or is still the mock image, and video_url is a YouTube video:
         if (!empty($validated['video_url']) && (empty($validated['thumbnail']) || $validated['thumbnail'] === '/images/portfolio/social_1.webp')) {
             $ytThumb = \App\Support\MediaHelper::fetchAndCacheYouTubeThumbnail($validated['video_url']);
             if ($ytThumb) {

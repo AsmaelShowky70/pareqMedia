@@ -223,13 +223,18 @@
                 </div>
 
                 <div class="pt-3 border-t border-brand-border/60 flex items-center justify-between text-xs">
-                    @if($item->video_url)
+                    @if($item->has_gallery)
+                    <span class="px-2 py-0.5 rounded-full bg-[#FF9420]/20 text-[#FFBA70] border border-[#FF9420]/40 font-bold text-[10px] flex items-center gap-1">
+                        <i class="fa-solid fa-images text-[9px]"></i>
+                        <span>ألبوم ({{ $item->gallery_count }} صور)</span>
+                    </span>
+                    @elseif($item->video_url)
                     <a href="{{ $item->video_url }}" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1 font-bold">
                         <i class="fa-solid fa-play text-[10px]"></i>
                         <span>معاينة الرابط</span>
                     </a>
                     @else
-                    <span class="text-gray-400">تصميم ثابت</span>
+                    <span class="text-gray-400">تصميم مفرد</span>
                     @endif
 
                     <div class="flex items-center gap-2">
@@ -636,6 +641,38 @@
                     </div>
                 </div>
 
+                <!-- Multi-Image Gallery Showcase (ألبوم ومعرض صور مكملة للحملات الإعلانية والهوية البصرية) -->
+                <div class="p-3.5 rounded-xl bg-[#260B3F]/70 border border-[#FF9420]/50 space-y-2.5 shadow-inner">
+                    <div class="flex items-center justify-between">
+                        <label class="block font-black text-amber-300 flex items-center gap-2 text-xs">
+                            <i class="fa-solid fa-images text-[#FF9420] text-sm"></i>
+                            <span>معرض الصور الملحقة بالعمل (ألبوم حملة تصميمات / بنود هوية بصرية)</span>
+                        </label>
+                        <span class="text-[10px] text-amber-300 font-bold px-2.5 py-0.5 rounded-full bg-[#FF9420]/20 border border-[#FF9420]/40">
+                            تصفح وتقليب Slider
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-gray-300 leading-relaxed">
+                        إذا كانت الحملة الإعلانية تتكون من عدة تصميمات مكملة (مثال: 5 إلى 8 تصميمات لسنتر الخلود أو أي براند)، أو هوية بصرية تضم أكثر من تطبيق، أضف باقي الصور هنا ليتمكن الزائر من التقليب بينها بسلاسة من نفس البطاقة!
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div>
+                            <label class="block text-[11px] text-brand-gold font-bold mb-1">
+                                <i class="fa-solid fa-cloud-arrow-up ml-1"></i> رفع عدة صور من جهازك دفعة واحدة:
+                            </label>
+                            <input type="file" name="gallery_files[]" multiple accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-[#FF9420] file:text-black hover:file:bg-amber-400 cursor-pointer">
+                            <span class="text-[10px] text-gray-400 mt-1 block">اضغط باستمرار على Ctrl أو Shift لتحديد أكثر من صورة معاً.</span>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 font-bold mb-1">
+                                <i class="fa-brands fa-google-drive text-amber-400 ml-1"></i> أو إضافة روابط Google Drive / مباشرة (رابط في كل سطر):
+                            </label>
+                            <textarea name="gallery_urls" rows="2" placeholder="https://drive.google.com/file/d/...&#10;https://drive.google.com/file/d/..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold font-mono"></textarea>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Video Options -->
                 <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
                     <label class="block font-bold text-brand-gold">
@@ -687,15 +724,20 @@
                  editThumb: '',
                  editPreview: '',
                  editBadge: '',
+                 editGallery: [],
                  init() {
                      this.$watch('editPortfolioModal', (val) => {
                          if (val && this.selectedPortfolio) {
                              this.editCategory = this.selectedPortfolio.category || 'video_reels';
                              this.editVideo = this.selectedPortfolio.video_url || '';
                              this.editThumb = this.selectedPortfolio.thumbnail || '';
+                             this.editGallery = Array.isArray(this.selectedPortfolio.gallery_images) ? [...this.selectedPortfolio.gallery_images] : [];
                              this.updatePreview();
                          }
                      });
+                 },
+                 removeGalleryItem(idx) {
+                     this.editGallery.splice(idx, 1);
                  },
                  isImageCat() {
                      return ['social_design', 'branding', 'youtube_thumbnail', 'ad_results'].includes(this.editCategory);
@@ -839,6 +881,54 @@
                         </div>
                         <div class="relative aspect-video rounded-lg overflow-hidden bg-black/70 border border-purple-800/60 flex items-center justify-center max-h-40 mx-auto">
                             <img :src="editPreview" referrerpolicy="no-referrer" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multi-Image Gallery Showcase in Edit Modal -->
+                <div class="p-3.5 rounded-xl bg-[#260B3F]/70 border border-[#FF9420]/50 space-y-3 shadow-inner">
+                    <div class="flex items-center justify-between">
+                        <label class="block font-black text-amber-300 flex items-center gap-2 text-xs">
+                            <i class="fa-solid fa-images text-[#FF9420] text-sm"></i>
+                            <span>معرض وألبوم الصور الملحقة بالعمل (سلايدر التقليب)</span>
+                        </label>
+                        <span class="text-[10px] text-amber-300 font-bold px-2 py-0.5 rounded-full bg-[#FF9420]/20 border border-[#FF9420]/40" x-text="editGallery.length + ' صور مضافة'"></span>
+                    </div>
+
+                    <!-- Existing Gallery Images Grid with Delete Buttons -->
+                    <template x-if="editGallery.length > 0">
+                        <div class="space-y-1.5">
+                            <span class="text-[11px] font-bold text-gray-300 block">الصور الحالية بالألبوم (انقر على أيقونة الحذف الحمراء لإزالة الصورة):</span>
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                                <template x-for="(gImg, gIdx) in editGallery" :key="gIdx">
+                                    <div class="relative group rounded-xl overflow-hidden aspect-square border border-purple-800/60 bg-black/60 shadow">
+                                        <img :src="gImg.startsWith('http') ? gImg : '{{ asset('') }}' + gImg.replace(/^\/+/, '')" class="w-full h-full object-cover">
+                                        <input type="hidden" name="existing_gallery[]" :value="gImg">
+                                        <button type="button" 
+                                                @click="removeGalleryItem(gIdx)"
+                                                title="حذف الصورة من الألبوم"
+                                                class="absolute top-1 left-1 w-6 h-6 rounded-lg bg-red-600/90 text-white flex items-center justify-center text-[10px] opacity-90 group-hover:opacity-100 hover:bg-red-700 transition shadow">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-purple-800/40">
+                        <div>
+                            <label class="block text-[11px] text-brand-gold font-bold mb-1">
+                                <i class="fa-solid fa-cloud-arrow-up ml-1"></i> رفع صور إضافية من جهازك:
+                            </label>
+                            <input type="file" name="gallery_files[]" multiple accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-[#FF9420] file:text-black hover:file:bg-amber-400 cursor-pointer">
+                            <span class="text-[10px] text-gray-400 mt-1 block">يمكنك اختيار عدة صور جديدة معاً.</span>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 font-bold mb-1">
+                                <i class="fa-brands fa-google-drive text-amber-400 ml-1"></i> أو إضافة روابط Google Drive / مباشرة (رابط في كل سطر):
+                            </label>
+                            <textarea name="gallery_urls" rows="2" placeholder="https://drive.google.com/file/d/...&#10;https://drive.google.com/file/d/..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold font-mono"></textarea>
                         </div>
                     </div>
                 </div>

@@ -774,11 +774,12 @@
             $finalMedia = $singleItem->video_url ?: $finalThumb;
             $mediaType = $singleItem->video_url ? 'video' : ($singleItem->category === 'branding' ? 'branding' : 'image');
             $aspectType = $singleItem->category === 'reels' ? 'vertical' : 'landscape';
+            $singleGalleryJson = json_encode($singleItem->display_gallery, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
         @endphp
         <!-- Single Featured Item Spotlight Showcase (عرض العمل المنفرد كما تم إضافته بالـ CMS بدون تكرار مصطنع) -->
         <div class="max-w-4xl mx-auto px-4 sm:px-6">
             <div class="glass-card-purple rounded-3xl overflow-hidden border-2 border-[#FF9420] shadow-[0_0_50px_rgba(255,148,32,0.45)] group cursor-pointer transition-all duration-300 hover:scale-[1.01]"
-                 @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($singleItem->title) }}', '{{ addslashes($singleItem->description ?? '') }}', '{{ $aspectType }}')">
+                 @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($singleItem->title) }}', '{{ addslashes($singleItem->description ?? '') }}', '{{ $aspectType }}', [], {{ $singleGalleryJson }})">
                 <div class="relative aspect-video bg-black/70 overflow-hidden">
                     <img src="{{ $finalThumb }}" alt="{{ $singleItem->title }}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#1B082B] via-black/30 to-transparent"></div>
@@ -802,7 +803,12 @@
                         {{ $singleItem->category_arabic }}
                     </span>
 
-                    @if($singleItem->metrics)
+                    @if($singleItem->has_gallery)
+                    <span class="absolute top-4 left-4 text-xs font-black px-3.5 py-1.5 rounded-full bg-[#FF9420] text-black shadow-[0_0_20px_rgba(255,148,32,0.7)] flex items-center gap-1.5">
+                        <i class="fa-solid fa-images"></i>
+                        <span>{{ $singleItem->gallery_count }} تصميمات مكملة</span>
+                    </span>
+                    @elseif($singleItem->metrics)
                     <span class="absolute top-4 left-4 text-xs font-bold px-3.5 py-1.5 rounded-full bg-[#FF9420] text-black shadow-lg font-black">
                         {{ $singleItem->metrics }}
                     </span>
@@ -900,9 +906,10 @@
                     $finalMedia = $item->video_url ?: $finalThumb;
                     $mediaType = $item->video_url ? 'video' : ($item->category === 'branding' ? 'branding' : 'image');
                     $aspectType = $item->category === 'reels' ? 'vertical' : 'landscape';
+                    $itemGalleryJson = json_encode($item->display_gallery, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
                 @endphp
                 <div class="w-72 sm:w-80 flex-shrink-0 glass-card-purple rounded-2xl overflow-hidden border-2 border-[#3E24C5]/60 hover:border-[#FF9420] transition-all duration-300 group cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:shadow-[0_0_35px_rgba(255,148,32,0.4)] hover:-translate-y-2 select-none"
-                     @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')">
+                     @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}', [], {{ $itemGalleryJson }})">
                     
                     <div class="relative aspect-video bg-black/60 overflow-hidden">
                         <img src="{{ $finalThumb }}" alt="{{ $item->title }}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 pointer-events-none">
@@ -923,6 +930,13 @@
                         <span class="absolute top-2.5 right-2.5 text-[9px] font-bold px-2.5 py-1 rounded-full bg-black/85 backdrop-blur text-[#FFBA70] border border-[#FF9420]/40 pointer-events-none">
                             {{ $item->category_arabic }}
                         </span>
+
+                        @if($item->has_gallery)
+                        <span class="absolute top-2.5 left-2.5 text-[9px] font-black px-2.5 py-1 rounded-full bg-[#FF9420] text-black shadow-[0_0_15px_rgba(255,148,32,0.6)] flex items-center gap-1 pointer-events-none">
+                            <i class="fa-solid fa-images text-[8px]"></i>
+                            <span>{{ $item->gallery_count }} تصميمات</span>
+                        </span>
+                        @endif
                     </div>
 
                     <div class="p-4 space-y-1.5 text-right pointer-events-none">

@@ -62,6 +62,9 @@
                 'metrics' => $pItem->metrics ?: 'عمل موثق',
                 'desc' => $pItem->description ?: 'إنتاج إبداعي سينمائي بأعلى معايير الجودة والإتقان من وكالة بريق.',
                 'aspect' => $asp,
+                'gallery' => $pItem->display_gallery,
+                'hasGallery' => $pItem->has_gallery,
+                'galleryCount' => $pItem->gallery_count,
             ];
         }
     }
@@ -142,7 +145,7 @@
             <div class="relative h-[270px] sm:h-[330px] md:h-[370px] lg:h-[400px] w-full flex items-center justify-center overflow-hidden"
                  :class="works.length === 1 ? '!h-[280px] sm:!h-[360px] md:!h-[420px] lg:!h-[460px]' : ''">
                 <template x-for="(item, idx) in works" :key="item.id + '-' + idx">
-                    <div @click="activeIdx === idx ? openMedia(item.mediaType, item.finalMedia, item.title, item.desc, item.aspect) : (activeIdx = idx)"
+                    <div @click="activeIdx === idx ? openMedia(item.mediaType, item.finalMedia, item.title, item.desc, item.aspect, [], item.gallery) : (activeIdx = idx)"
                          :style="getCardStyle(idx)"
                          :class="[
                              activeIdx === idx ? 'border-2 border-brand-orange shadow-[0_0_55px_rgba(255,148,32,0.45)] ring-2 ring-brand-orange/50' : 'border border-purple-800/60 hover:border-brand-orange/60',
@@ -156,10 +159,18 @@
                          
                          <!-- Top Category & Client Info -->
                          <div class="relative z-10 p-4 sm:p-5 flex items-center justify-between gap-2">
-                             <span class="px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-brand-orange/50 text-[10px] sm:text-xs font-black text-brand-orange flex items-center gap-1.5 shadow-md">
-                                 <i class="fa-solid" :class="item.mediaType === 'video' ? 'fa-clapperboard' : 'fa-image'"></i>
-                                 <span x-text="item.category"></span>
-                             </span>
+                             <div class="flex items-center gap-2">
+                                 <span class="px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-brand-orange/50 text-[10px] sm:text-xs font-black text-brand-orange flex items-center gap-1.5 shadow-md">
+                                     <i class="fa-solid" :class="item.mediaType === 'video' ? 'fa-clapperboard' : 'fa-image'"></i>
+                                     <span x-text="item.category"></span>
+                                 </span>
+                                 <template x-if="item.hasGallery">
+                                     <span class="px-2.5 py-1 rounded-full bg-[#FF9420] text-black text-[10px] sm:text-xs font-black flex items-center gap-1 shadow-md">
+                                         <i class="fa-solid fa-images text-[9px]"></i>
+                                         <span x-text="item.galleryCount + ' تصميمات'"></span>
+                                     </span>
+                                 </template>
+                             </div>
                              <span class="px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-[10px] sm:text-xs font-bold text-gray-200 truncate max-w-[200px]"
                                    x-text="item.client"></span>
                          </div>
@@ -167,7 +178,7 @@
                          <!-- Centered Play/Inspect Glowing Button -->
                          <div class="relative z-10 flex items-center justify-center my-auto pointer-events-none">
                              <div class="w-13 h-13 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-brand-orange to-amber-400 text-brand-dark flex items-center justify-center text-lg sm:text-2xl shadow-[0_0_30px_#FF9420] group-hover:scale-115 transition-transform duration-300">
-                                 <i class="fa-solid" :class="item.mediaType === 'video' ? 'fa-play mr-0.5' : 'fa-expand'"></i>
+                                 <i class="fa-solid" :class="item.mediaType === 'video' ? 'fa-play mr-0.5' : (item.hasGallery ? 'fa-images' : 'fa-expand')"></i>
                              </div>
                          </div>
 
@@ -179,10 +190,10 @@
                              </div>
                              
                              <button type="button"
-                                     @click.stop="openMedia(item.mediaType, item.finalMedia, item.title, item.desc, item.aspect)"
+                                     @click.stop="openMedia(item.mediaType, item.finalMedia, item.title, item.desc, item.aspect, [], item.gallery)"
                                      class="shrink-0 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-brand-dark font-black text-[10px] sm:text-xs transition shadow-lg flex items-center gap-1.5 active:scale-95">
-                                 <i class="fa-solid" :class="item.mediaType === 'video' ? 'fa-play' : 'fa-eye'"></i>
-                                 <span class="hidden sm:inline">مشاهدة العمل</span>
+                                 <i class="fa-solid" :class="item.mediaType === 'video' ? 'fa-play' : (item.hasGallery ? 'fa-images' : 'fa-eye')"></i>
+                                 <span class="hidden sm:inline" x-text="item.hasGallery ? 'تصفح الألبوم (' + item.galleryCount + ')' : 'مشاهدة العمل'"></span>
                              </button>
                          </div>
                     </div>
@@ -298,6 +309,9 @@
             $aspectType = $isReel ? 'vertical' : 'landscape';
         @endphp
 
+        @php
+            $itemGalleryJson = json_encode($item->display_gallery, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+        @endphp
         <div x-show="activeFilter === 'all' || 
                      (activeFilter === 'promo' && ('{{ $cat }}' === 'promo' || '{{ $cat }}' === 'promo_video')) || 
                      (activeFilter === 'reels' && ('{{ $cat }}' === 'reels' || '{{ $cat }}' === 'video_reels')) || 
@@ -312,7 +326,7 @@
             <div>
                 <!-- Thumbnail Box with Adjusted Aspect Ratio per Client Request -->
                 <div class="relative {{ $aspectRatio }} bg-black/70 flex items-center justify-center overflow-hidden cursor-pointer"
-                     @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')">
+                     @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}', [], {{ $itemGalleryJson }})">
                     
                     <img src="{{ $finalThumb }}" alt="{{ $item->title }}" referrerpolicy="no-referrer" loading="lazy"
                          class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
@@ -347,7 +361,12 @@
                         {{ $item->category_arabic }}
                     </span>
 
-                    @if($isReel)
+                    @if($item->has_gallery)
+                    <span class="absolute top-3 left-3 z-20 text-[10px] font-black px-2.5 py-1 rounded-full bg-[#FF9420] text-black shadow-[0_0_15px_rgba(255,148,32,0.6)] flex items-center gap-1">
+                        <i class="fa-solid fa-images text-[9px]"></i>
+                        <span>{{ $item->gallery_count }} تصميمات</span>
+                    </span>
+                    @elseif($isReel)
                     <span class="absolute top-3 left-3 z-20 text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-[#FF9420] text-black font-mono">
                         9:16 Reel
                     </span>
@@ -384,9 +403,12 @@
             <!-- Action Button -->
             <div class="p-6 pt-0">
                 <button type="button"
-                        @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}')"
+                        @click="openMedia('{{ $mediaType }}', '{{ $finalMedia }}', '{{ addslashes($item->title) }}', '{{ addslashes($item->description ?? '') }}', '{{ $aspectType }}', [], {{ $itemGalleryJson }})"
                         class="w-full py-2.5 rounded-xl bg-[#1B082B] hover:bg-gradient-to-r hover:from-[#FF9420] hover:to-[#FFBA70] hover:text-black text-white font-bold text-xs border-2 border-[#3E24C5]/60 hover:border-transparent transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(62,36,197,0.3)]">
-                    @if($item->video_url)
+                    @if($item->has_gallery)
+                    <i class="fa-solid fa-images"></i>
+                    <span>تصفح ألبوم التصميمات ({{ $item->gallery_count }})</span>
+                    @elseif($item->video_url)
                     <i class="fa-solid fa-play"></i>
                     <span>تشغيل ومعاينة الفيديو</span>
                     @elseif($isBranding)

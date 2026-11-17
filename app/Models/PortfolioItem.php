@@ -20,6 +20,7 @@ class PortfolioItem extends Model
         'thumbnail_url',
         'video_url',
         'thumbnail',
+        'gallery_images',
         'metrics',
         'description',
         'is_featured',
@@ -28,6 +29,7 @@ class PortfolioItem extends Model
 
     protected $casts = [
         'is_featured' => 'boolean',
+        'gallery_images' => 'array',
     ];
 
     public function service()
@@ -89,5 +91,50 @@ class PortfolioItem extends Model
             'branding' => 'هوية بصرية وبراندينج',
             default => 'عمل إبداعي',
         };
+    }
+
+    /**
+     * Get all displayable images for this portfolio item (multi-image campaign / branding gallery).
+     * Returns an array of processed displayable URLs starting with the main thumbnail.
+     *
+     * @return array<string>
+     */
+    public function getDisplayGalleryAttribute(): array
+    {
+        $images = [];
+        $mainThumb = $this->display_thumbnail;
+
+        if (!empty($mainThumb) && !str_ends_with($mainThumb, '/images/portfolio/social_1.webp')) {
+            $images[] = $mainThumb;
+        }
+
+        if (!empty($this->gallery_images) && is_array($this->gallery_images)) {
+            foreach ($this->gallery_images as $img) {
+                if (!empty($img)) {
+                    $formatted = \App\Support\MediaHelper::formatDisplayUrl(trim($img));
+                    if ($formatted && !in_array($formatted, $images, true)) {
+                        $images[] = $formatted;
+                    }
+                }
+            }
+        }
+
+        return $images;
+    }
+
+    /**
+     * Check if item has multiple images (carousel/slider mode).
+     */
+    public function getHasGalleryAttribute(): bool
+    {
+        return count($this->display_gallery) > 1;
+    }
+
+    /**
+     * Total number of slides/images.
+     */
+    public function getGalleryCountAttribute(): int
+    {
+        return count($this->display_gallery);
     }
 }
