@@ -587,6 +587,7 @@
                         <select name="category" x-model="category" @change="checkPreview()" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                             <option value="video_reels">فيديوهات ريلز وقصيرة</option>
                             <option value="promo_video">برومو وفيديوهات إعلانية</option>
+                            <option value="motion_graphic">موشن جرافيك وأنيميشن</option>
                             <option value="social_design">تصميمات سوشيال ميديا</option>
                             <option value="youtube_thumbnail">أغلفة يوتيوب مصغرة</option>
                             <option value="branding">لوجو وهويات بصرية</option>
@@ -832,6 +833,7 @@
                         <select name="category" x-model="editCategory" @change="updatePreview()" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                             <option value="video_reels">فيديوهات ريلز وقصيرة</option>
                             <option value="promo_video">برومو وفيديوهات إعلانية</option>
+                            <option value="motion_graphic">موشن جرافيك وأنيميشن</option>
                             <option value="social_design">تصميمات سوشيال ميديا</option>
                             <option value="youtube_thumbnail">أغلفة يوتيوب مصغرة</option>
                             <option value="branding">لوجو وهويات بصرية</option>

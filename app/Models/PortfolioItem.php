@@ -86,6 +86,7 @@ class PortfolioItem extends Model
         return match ($this->category) {
             'promo', 'promo_video' => 'برومو وفيديوهات إعلانية',
             'reels', 'video_reels' => 'فيديوهات ريلز وقصيرة',
+            'motion', 'motion_graphic', 'motion_graphics' => 'موشن جرافيك وأنيميشن',
             'design', 'social_design', 'youtube_thumbnail' => 'تصميمات جرافيك وأغلفة',
             'campaigns', 'ad_results' => 'حملات إعلانية ونتائج ROAS',
             'branding' => 'هوية بصرية وبراندينج',

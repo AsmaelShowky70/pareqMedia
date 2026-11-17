@@ -137,7 +137,7 @@
                 صالة عرض سينمائية عريضة 3D
             </span>
             <h2 class="text-2xl sm:text-4xl font-black text-white">استعراض تفاعلي لأبرز أعمال بريق</h2>
-            <p class="text-xs sm:text-sm text-gray-300">تصميم عريض سينمائي يتحرك تلقائياً كل 5 ثوانٍ • انقر على أي عمل لفتحه بجودة فائقة</p>
+            <p class="text-xs sm:text-sm text-gray-300">تصميم عريض سينمائي لأعمالنا • انقر على أي عمل لفتحه بجودة فائقة</p>
         </div>
 
         <!-- 3D Widescreen Track -->
@@ -208,14 +208,10 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
 
-                <!-- Dual Visual Track: Current Item Number + Live 5s Countdown Bar -->
+                <!-- Dual Visual Track: Current Item Number + Live Countdown Bar -->
                 <div class="flex flex-col items-center gap-2 w-56 sm:w-80">
                     <div class="flex items-center justify-between w-full text-[11px] font-mono">
                         <span class="font-black text-brand-orange" x-text="(activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1)">01</span>
-                        <span class="text-[10px] text-brand-peach/80 flex items-center gap-1 font-sans">
-                            <i class="fa-solid fa-clock-rotate-left text-[9px] animate-spin-slow"></i>
-                            <span>تبديل تلقائي كل 5ث</span>
-                        </span>
                         <span class="font-bold text-gray-400" x-text="works.length < 10 ? '0' + works.length : works.length">05</span>
                     </div>
                     <!-- Dynamic 5-Second Countdown Track -->
@@ -287,6 +283,14 @@
             <i class="fa-solid fa-palette text-[#FFBA70]"></i>
             <span>هوية بصرية</span>
         </button>
+
+        <!-- 7. موشن جرافيك (أنيميشن ورسوم متحركة) -->
+        <button type="button" @click="activeFilter = 'motion'" 
+                :class="activeFilter === 'motion' ? 'bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black shadow-[0_0_25px_rgba(255,148,32,0.55)] scale-105' : 'bg-[#1B082B] text-gray-200 hover:text-white border-2 border-[#3E24C5]/60 hover:border-[#FF9420]'"
+                class="px-5 py-2.5 rounded-2xl text-xs transition-all duration-200 flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-[#FF9420]"></i>
+            <span>موشن جرافيك</span>
+        </button>
     </div>
 
     <!-- Portfolio Cards Grid -->
@@ -300,6 +304,7 @@
             $cat = $item->category;
             $isReel = in_array($cat, ['reels', 'video_reels']);
             $isPromo = in_array($cat, ['promo', 'promo_video']);
+            $isMotion = in_array($cat, ['motion', 'motion_graphic', 'motion_graphics']);
             $isDesign = in_array($cat, ['design', 'social_design', 'youtube_thumbnail']);
             $isCampaign = in_array($cat, ['campaigns', 'ad_results']);
             $isBranding = ($cat === 'branding');
@@ -317,7 +322,8 @@
                      (activeFilter === 'reels' && ('{{ $cat }}' === 'reels' || '{{ $cat }}' === 'video_reels')) || 
                      (activeFilter === 'design' && ('{{ $cat }}' === 'design' || '{{ $cat }}' === 'social_design' || '{{ $cat }}' === 'youtube_thumbnail')) || 
                      (activeFilter === 'campaigns' && ('{{ $cat }}' === 'campaigns' || '{{ $cat }}' === 'ad_results')) || 
-                     (activeFilter === 'branding' && ('{{ $cat }}' === 'branding'))"
+                     (activeFilter === 'branding' && ('{{ $cat }}' === 'branding')) ||
+                     (activeFilter === 'motion' && ('{{ $cat }}' === 'motion' || '{{ $cat }}' === 'motion_graphic' || '{{ $cat }}' === 'motion_graphics'))"
              x-transition:enter="transition ease-out duration-300 transform"
              x-transition:enter-start="opacity-0 scale-95 translate-y-4"
              x-transition:enter-end="opacity-100 scale-100 translate-y-0"
