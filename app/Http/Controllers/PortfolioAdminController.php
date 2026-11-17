@@ -721,10 +721,31 @@ class PortfolioAdminController extends Controller
             if (file_exists($path)) {
                 return response()->file($path, [
                     'Cache-Control' => 'public, max-age=31536000',
+                    'Access-Control-Allow-Origin' => '*',
                 ]);
             }
         }
 
-        return redirect('https://lh3.googleusercontent.com/d/' . $id);
+        // Direct cURL stream to bypass mobile Safari cross-origin tracking/cookie restrictions
+        $directUrl = 'https://lh3.googleusercontent.com/d/' . $id;
+        $ch = curl_init($directUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+        $data = curl_exec($ch);
+        $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE) ?: 'image/png';
+        curl_close($ch);
+
+        if ($data && strlen($data) > 300) {
+            return response($data, 200, [
+                'Content-Type' => $contentType,
+                'Cache-Control' => 'public, max-age=31536000',
+                'Access-Control-Allow-Origin' => '*',
+            ]);
+        }
+
+        return redirect($directUrl);
     }
 }

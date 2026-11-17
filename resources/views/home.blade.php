@@ -524,9 +524,9 @@
                     <div class="w-full h-full flex items-center justify-center overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
+                                 loading="eager"
+                                 decoding="async"
                                  class="max-w-full max-h-full object-contain filter group-hover:scale-105 transition-transform duration-300 pointer-events-none"
-                                 referrerpolicy="no-referrer"
-                                 loading="lazy"
                                  onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
                             <span style="display: none;" class="w-full h-full items-center justify-center text-xs sm:text-sm font-black text-gray-900 font-sans tracking-wide text-center truncate px-2">
                                 {{ $p['name'] }}
@@ -551,9 +551,9 @@
                     <div class="w-full h-full flex items-center justify-center overflow-hidden">
                         @if(!empty($p['img']))
                             <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}" 
+                                 loading="eager"
+                                 decoding="async"
                                  class="max-w-full max-h-full object-contain filter group-hover:scale-105 transition-transform duration-300 pointer-events-none"
-                                 referrerpolicy="no-referrer"
-                                 loading="lazy"
                                  onerror="this.onerror=null; this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';">
                             <span style="display: none;" class="w-full h-full items-center justify-center text-xs sm:text-sm font-black text-gray-900 font-sans tracking-wide text-center truncate px-2">
                                 {{ $p['name'] }}

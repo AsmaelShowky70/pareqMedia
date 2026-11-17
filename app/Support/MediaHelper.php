@@ -197,18 +197,25 @@ class MediaHelper
 
         $url = trim($url);
 
-        // Check if it's a Google Drive link
+        // Check if it's a Google Drive link or direct Google CDN link
         if (str_contains($url, 'drive.google.com') || str_contains($url, 'googleusercontent.com')) {
             $id = self::extractGoogleDriveId($url);
             if ($id) {
-                // If a local cached file exists (e.g. partner logo), use it:
+                // If a local cached file exists (e.g. partner logo), use it immediately:
                 $cacheDir = public_path('uploads/drive_cache');
                 $existing = glob($cacheDir . DIRECTORY_SEPARATOR . $id . '.*');
                 if (!empty($existing)) {
                     return asset('uploads/drive_cache/' . basename($existing[0]));
                 }
-                // Otherwise serve directly from Google's high-speed CDN (Zero bytes of hosting storage!)
-                return 'https://lh3.googleusercontent.com/d/' . $id;
+
+                // Auto download and cache now in background
+                $cached = self::downloadAndCacheGoogleDrive($url);
+                if ($cached && !str_starts_with($cached, 'http')) {
+                    return asset(ltrim($cached, '/'));
+                }
+
+                // Fallback to internal same-domain stream route (never blocked on mobile Safari/iOS!)
+                return url('/media/drive/' . $id);
             }
         }
 
