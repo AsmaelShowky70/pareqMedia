@@ -46,7 +46,9 @@
 @php
     $showcasePortfolio = [];
     if (isset($portfolioItems) && $portfolioItems->isNotEmpty()) {
-        foreach ($portfolioItems->take(12) as $pItem) {
+        $featured = $portfolioItems->where('is_featured', true);
+        $sourceList = $featured->count() >= 3 ? $featured : $portfolioItems;
+        foreach ($sourceList->take(12) as $pItem) {
             $fThumb = $pItem->display_thumbnail ?: ($pItem->thumbnail ? \App\Support\MediaHelper::formatDisplayUrl($pItem->thumbnail) : asset('images/portfolio/social_1.webp'));
             $fMedia = $pItem->video_url ? (str_starts_with($pItem->video_url, 'http') ? $pItem->video_url : asset(ltrim($pItem->video_url, '/'))) : ($pItem->media_url ?: $fThumb);
             $mType = ($pItem->video_url || $pItem->media_type === 'video') ? 'video' : 'image';

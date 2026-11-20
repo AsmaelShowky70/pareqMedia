@@ -53,23 +53,50 @@ class PortfolioAdminController extends Controller
         $validated = $request->validate([
             'title_ar' => 'required|string|max:255',
             'title_en' => 'nullable|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
             'category' => 'required|string',
             'icon' => 'required|string',
+            'image' => 'nullable|string',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:12288',
             'short_description' => 'required|string',
             'full_description' => 'nullable|string',
             'starting_price' => 'nullable|numeric|min:0',
         ]);
 
+        if ($request->hasFile('image_file')) {
+            $file = $request->file('image_file');
+            $uploadPath = public_path('uploads/services');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['image'] = '/uploads/services/' . $filename;
+        } elseif (!empty($validated['image'])) {
+            $validated['image'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['image']);
+        }
+
         // Auto generate slug
-        $baseSlug = ! empty($validated['title_en']) ? Str::slug($validated['title_en']) : 'service';
+        $baseSlug = ! empty($validated['title_en']) ? Str::slug($validated['title_en']) : Str::slug($validated['title_ar']);
+        if (empty($baseSlug)) {
+            $baseSlug = 'service';
+        }
         $slug = $baseSlug.'-'.time();
         $validated['slug'] = $slug;
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['sort_order'] = Service::count() + 1;
 
+        \App\Support\DatabaseSchemaAligner::alignServices();
+        try {
+            $cols = \Illuminate\Support\Facades\Schema::getColumnListing('services');
+            if (!empty($cols)) {
+                $validated = array_intersect_key($validated, array_flip($cols));
+            }
+        } catch (\Throwable $e) {}
+
         Service::create($validated);
 
-        return back()->with('success', 'تمت إضافة الخدمة الجديدة بنجاح وربطها بنوعها في الموقع.');
+        return back()->with('success', 'تمت إضافة الخدمة الجديدة بنجاح وربطها بالسلايدر 3D وباقي أقسام الموقع.');
     }
 
     public function updateService(Request $request, Service $service)
@@ -77,14 +104,39 @@ class PortfolioAdminController extends Controller
         $validated = $request->validate([
             'title_ar' => 'required|string|max:255',
             'title_en' => 'nullable|string|max:255',
+            'subtitle' => 'nullable|string|max:255',
             'category' => 'required|string',
             'icon' => 'required|string',
+            'image' => 'nullable|string',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:12288',
             'short_description' => 'required|string',
             'full_description' => 'nullable|string',
             'starting_price' => 'nullable|numeric|min:0',
+            'sort_order' => 'nullable|integer',
         ]);
 
+        if ($request->hasFile('image_file')) {
+            $file = $request->file('image_file');
+            $uploadPath = public_path('uploads/services');
+            if (!file_exists($uploadPath)) {
+                @mkdir($uploadPath, 0755, true);
+            }
+            $filename = time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadPath, $filename);
+            $validated['image'] = '/uploads/services/' . $filename;
+        } elseif (!empty($validated['image'])) {
+            $validated['image'] = \App\Support\MediaHelper::convertToDirectCdnUrl($validated['image']);
+        }
+
         $validated['is_active'] = $request->boolean('is_active');
+
+        \App\Support\DatabaseSchemaAligner::alignServices();
+        try {
+            $cols = \Illuminate\Support\Facades\Schema::getColumnListing('services');
+            if (!empty($cols)) {
+                $validated = array_intersect_key($validated, array_flip($cols));
+            }
+        } catch (\Throwable $e) {}
 
         $service->update($validated);
 

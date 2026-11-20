@@ -579,22 +579,42 @@
 <!-- =========================================================================
      5. 10 SERVICES 3D COVERFLOW CAROUSEL (شكل تقليب دائري ثلاثي الأبعاد زي essenceadvertising.com)
      ========================================================================= -->
+@php
+    $carouselServices = [];
+    if (isset($services) && $services->isNotEmpty()) {
+        foreach ($services as $idx => $s) {
+            $carouselServices[] = [
+                'id' => $idx + 1,
+                'db_id' => $s->id,
+                'slug' => $s->slug,
+                'title' => $s->title_ar,
+                'category' => $s->subtitle ?: ($s->category_arabic ?? 'حلول إبداعية'),
+                'icon' => $s->display_icon,
+                'desc' => $s->short_description,
+                'img' => $s->display_image,
+            ];
+        }
+    }
+    if (empty($carouselServices)) {
+        $carouselServices = [
+            ['id' => 1, 'slug' => 'video-shooting', 'title' => 'تصوير الفيديو السينمائي', 'category' => 'إنتاج سينمائي 4K', 'icon' => 'fa-solid fa-video', 'desc' => 'تصوير فيديوهات دعائية، بروموهات، كواليس، أو محتوى مخصص للسوشيال ميديا، بأسلوب عصري وجودة عالية تعبر عن هويتك.', 'img' => asset('images/portfolio/social_4.webp')],
+            ['id' => 2, 'slug' => 'video-editing', 'title' => 'مونتاج الفيديو السريع', 'category' => 'ريلز وبرومو فائق الجاذبية', 'icon' => 'fa-solid fa-film', 'desc' => 'نستخدم أحدث برامج المونتاج لنقدم فيديوهات عصرية عالية الجودة، بتأثيرات بصرية وصوتية احترافية، وتلوين دقيق، مما يضمن إخراجاً جذاباً يحقق أهدافك ويوصل رسالتك بوضوح.', 'img' => asset('images/portfolio/social_2.webp')],
+            ['id' => 3, 'slug' => 'social-media', 'title' => 'إدارة وسائل التواصل الاجتماعي', 'category' => 'نمو وتفاعل رقمي', 'icon' => 'fa-solid fa-share-nodes', 'desc' => 'نُدير حساباتك على مختلف المنصات من خلال إنشاء محتوى جذاب، وتصميم منشورات احترافية، والتفاعل مع الجمهور، إلى جانب دراسة أفضل أوقات النشر لتحقيق أقصى وصول وتفاعل.', 'img' => asset('images/portfolio/social_1.webp')],
+            ['id' => 4, 'slug' => 'paid-ads', 'title' => 'الإعلانات الممولة', 'category' => 'حملات بأعلى عائد ROAS', 'icon' => 'fa-solid fa-chart-line', 'desc' => 'نصمم ونُدير حملات إعلانية احترافية تستهدف جمهورك بدقة عبر المنصات الرقمية المختلفة، لزيادة الانتشار وتحقيق أهدافك التسويقية.', 'img' => asset('images/portfolio/ad_result_69.webp')],
+            ['id' => 5, 'slug' => 'photography', 'title' => 'جلسات التصوير الفوتوغرافي', 'category' => 'منتجات وأماكن وفعاليات', 'icon' => 'fa-solid fa-camera', 'desc' => 'جلسات تصوير احترافية للمنتجات، الأماكن، الفعاليات، أو فريق العمل، باستخدام أحدث المعدات لإبراز كل التفاصيل بأعلى دقة.', 'img' => asset('images/portfolio/free_delivery.webp')],
+            ['id' => 6, 'slug' => 'graphic-design', 'title' => 'تصميم الجرافيك الإبداعي', 'category' => 'أغلفة وسوشيال ميديا', 'icon' => 'fa-solid fa-bezier-curve', 'desc' => 'إبداع في التصميم البصري يعكس هوية علامتك التجارية ويجذب انتباه جمهورك المستهدف.', 'img' => asset('images/portfolio/ramez_qlight.webp')],
+            ['id' => 7, 'slug' => 'branding', 'title' => 'الهوية البصرية والبراندينج', 'category' => 'بناء العلامات التجارية', 'icon' => 'fa-solid fa-palette', 'desc' => 'نساعدك على بناء هوية قوية لعلامتك التجارية من الألف إلى الياء، تعزز وجودك في السوق وتزيد من ثقة العملاء.', 'img' => asset('images/portfolio/logo_1.webp')],
+            ['id' => 8, 'slug' => 'marketing-strategy', 'title' => 'إعداد الخطط والاستراتيجيات', 'category' => 'تحليل ودراسة سوق شاملة', 'icon' => 'fa-solid fa-lightbulb', 'desc' => 'نضع خطط تسويقية شاملة ومخصصة تناسب أهدافك، مدعومة بتحليل السوق والمنافسين.', 'img' => asset('images/portfolio/ad_result_70.webp')],
+            ['id' => 9, 'slug' => 'data-analysis', 'title' => 'تحليل البيانات والتقارير', 'category' => 'قياس دقيق للأداء والنتائج', 'icon' => 'fa-solid fa-chart-pie', 'desc' => 'نقيس الأداء، ونحلل النتائج بدقة، ونقدم لك تقارير واضحة تساعدك في اتخاذ قرارات مدروسة.', 'img' => asset('images/portfolio/ad_result_72.webp')],
+            ['id' => 10, 'slug' => 'content-writing', 'title' => 'صناعة وكتابة المحتوى', 'category' => 'سيناريوهات ونصوص تسويقية', 'icon' => 'fa-solid fa-pen-nib', 'desc' => 'نكتب محتوى مبتكر بأسلوب احترافي بعيداً عن التكرار، لكي نجذب الجمهور من أول جملة وتصل رسالتك بأسرع شكل وبأسلوب سلس.', 'img' => asset('images/portfolio/social_3.webp')],
+        ];
+    }
+@endphp
 <section id="services-summary" class="py-24 bg-gradient-to-b from-[#08020F] via-[#140626] to-[#0A0216] relative z-10 overflow-hidden"
          x-data="{ 
              activeIdx: 0, 
              autoplayTimer: null,
-             services: [
-                 { id: 1, slug: 'video-shooting', title: 'تصوير الفيديو السينمائي', category: 'إنتاج سينمائي 4K', icon: 'fa-solid fa-video', desc: 'تصوير فيديوهات دعائية، بروموهات، كواليس، أو محتوى مخصص للسوشيال ميديا، بأسلوب عصري وجودة عالية تعبر عن هويتك.', img: '{{ asset('images/portfolio/social_4.webp') }}' },
-                 { id: 2, slug: 'video-editing', title: 'مونتاج الفيديو السريع', category: 'ريلز وبرومو فائق الجاذبية', icon: 'fa-solid fa-film', desc: 'نستخدم أحدث برامج المونتاج لنقدم فيديوهات عصرية عالية الجودة، بتأثيرات بصرية وصوتية احترافية، وتلوين دقيق، مما يضمن إخراجاً جذاباً يحقق أهدافك ويوصل رسالتك بوضوح.', img: '{{ asset('images/portfolio/social_2.webp') }}' },
-                 { id: 3, slug: 'social-media', title: 'إدارة وسائل التواصل الاجتماعي', category: 'نمو وتفاعل رقمي', icon: 'fa-solid fa-share-nodes', desc: 'نُدير حساباتك على مختلف المنصات من خلال إنشاء محتوى جذاب، وتصميم منشورات احترافية، والتفاعل مع الجمهور، إلى جانب دراسة أفضل أوقات النشر لتحقيق أقصى وصول وتفاعل.', img: '{{ asset('images/portfolio/social_1.webp') }}' },
-                 { id: 4, slug: 'paid-ads', title: 'الإعلانات الممولة', category: 'حملات بأعلى عائد ROAS', icon: 'fa-solid fa-chart-line', desc: 'نصمم ونُدير حملات إعلانية احترافية تستهدف جمهورك بدقة عبر المنصات الرقمية المختلفة، لزيادة الانتشار وتحقيق أهدافك التسويقية.', img: '{{ asset('images/portfolio/ad_result_69.webp') }}' },
-                 { id: 5, slug: 'photography', title: 'جلسات التصوير الفوتوغرافي', category: 'منتجات وأماكن وفعاليات', icon: 'fa-solid fa-camera', desc: 'جلسات تصوير احترافية للمنتجات، الأماكن، الفعاليات، أو فريق العمل، باستخدام أحدث المعدات لإبراز كل التفاصيل بأعلى دقة.', img: '{{ asset('images/portfolio/free_delivery.webp') }}' },
-                 { id: 6, slug: 'graphic-design', title: 'تصميم الجرافيك الإبداعي', category: 'أغلفة وسوشيال ميديا', icon: 'fa-solid fa-bezier-curve', desc: 'إبداع في التصميم البصري يعكس هوية علامتك التجارية ويجذب انتباه جمهورك المستهدف.', img: '{{ asset('images/portfolio/ramez_qlight.webp') }}' },
-                 { id: 7, slug: 'branding', title: 'الهوية البصرية والبراندينج', category: 'بناء العلامات التجارية', icon: 'fa-solid fa-palette', desc: 'نساعدك على بناء هوية قوية لعلامتك التجارية من الألف إلى الياء، تعزز وجودك في السوق وتزيد من ثقة العملاء.', img: '{{ asset('images/portfolio/logo_1.webp') }}' },
-                 { id: 8, slug: 'marketing-strategy', title: 'إعداد الخطط والاستراتيجيات', category: 'تحليل ودراسة سوق شاملة', icon: 'fa-solid fa-lightbulb', desc: 'نضع خطط تسويقية شاملة ومخصصة تناسب أهدافك، مدعومة بتحليل السوق والمنافسين.', img: '{{ asset('images/portfolio/ad_result_70.webp') }}' },
-                 { id: 9, slug: 'data-analysis', title: 'تحليل البيانات والتقارير', category: 'قياس دقيق للأداء والنتائج', icon: 'fa-solid fa-chart-pie', desc: 'نقيس الأداء، ونحلل النتائج بدقة، ونقدم لك تقارير واضحة تساعدك في اتخاذ قرارات مدروسة.', img: '{{ asset('images/portfolio/ad_result_72.webp') }}' },
-                 { id: 10, slug: 'content-writing', title: 'صناعة وكتابة المحتوى', category: 'سيناريوهات ونصوص تسويقية', icon: 'fa-solid fa-pen-nib', desc: 'نكتب محتوى مبتكر بأسلوب احترافي بعيداً عن التكرار، لكي نجذب الجمهور من أول جملة وتصل رسالتك بأسرع شكل وبأسلوب سلس.', img: '{{ asset('images/portfolio/social_3.webp') }}' }
-             ],
+             services: {{ Js::from($carouselServices) }},
              next() { 
                  this.activeIdx = (this.activeIdx + 1) % this.services.length; 
                  this.resetTimer();
@@ -650,7 +670,7 @@
                     حلول إبداعية متكاملة
                 </span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white">
-                    خدماتنا التسويقية والإبداعية (10 خدمات)
+                    خدماتنا التسويقية والإبداعية ({{ count($carouselServices) }} خدمات)
                 </h2>
                 <p class="text-xs sm:text-sm text-gray-300 max-w-xl">
                     نقدم مجموعة واسعة من الخدمات الإبداعية والتسويقية التي تساعد علامتك على الظهور، النمو، وبناء حضور قوي في السوق.
@@ -685,7 +705,7 @@
                          <!-- Top Category & Number Pill -->
                          <div class="relative z-10 p-5 flex items-center justify-between">
                              <span class="px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-[#FF9420]/60 text-[11px] font-black text-[#FF9420] font-mono shadow-md"
-                                   x-text="'0' + srv.id"></span>
+                                   x-text="(srv.id < 10 ? '0' : '') + srv.id"></span>
                              <div class="w-9 h-9 rounded-2xl bg-[#FF9420] text-black flex items-center justify-center text-xs shadow-[0_0_15px_rgba(255,148,32,0.5)]">
                                  <i :class="srv.icon"></i>
                              </div>

@@ -656,6 +656,42 @@
             </div>
         </div>
 
+        @if(isset($services))
+            @foreach($services->whereNotIn('slug', ['video-shooting', 'video-editing', 'social-media', 'paid-ads', 'photography', 'graphic-design', 'branding', 'marketing-strategy', 'data-analysis', 'content-writing']) as $cIdx => $customSrv)
+            <div id="{{ $customSrv->slug }}" 
+                 class="relative rounded-[2.2rem] p-6 sm:p-10 lg:p-12 bg-gradient-to-br from-[#130426]/90 via-[#180730]/85 to-[#0E031E]/95 border border-purple-800/60 hover:border-brand-orange/80 transition-all duration-500 shadow-2xl hover:shadow-[0_0_45px_rgba(255,148,32,0.18)] group overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+                    <div class="lg:col-span-7 space-y-5">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-orange/15 border border-brand-orange/40 text-brand-orange text-xs font-black shadow-sm">
+                            <i class="{{ $customSrv->display_icon }}"></i>
+                            <span>{{ $customSrv->subtitle ?: $customSrv->category_arabic }}</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight group-hover:text-brand-orange transition-colors">{{ $customSrv->title_ar }}</h2>
+                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed font-normal">
+                            {{ $customSrv->short_description }}
+                        </p>
+                        @if($customSrv->full_description)
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            {{ $customSrv->full_description }}
+                        </p>
+                        @endif
+                    </div>
+                    <div class="lg:col-span-5 bg-[#140528]/80 rounded-2xl p-4 border border-purple-800/60 hover:border-brand-orange/50 transition shadow-inner space-y-4">
+                        <div class="relative aspect-video rounded-xl overflow-hidden bg-black/60 border border-purple-700/40 group/img">
+                            <img src="{{ $customSrv->display_image }}" alt="{{ $customSrv->title_ar }}" class="w-full h-full object-cover group-hover/img:scale-108 transition-transform duration-700">
+                        </div>
+                        <a href="https://wa.me/201062330838?text={{ urlencode('مرحباً وكالة بريق، أرغب في الاستفسار عن خدمة ' . $customSrv->title_ar) }}" 
+                           target="_blank"
+                           class="w-full py-3.5 rounded-xl bg-gradient-to-l from-brand-orange to-[#FF7A00] text-brand-dark font-black text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 hover:brightness-110 active:scale-95">
+                            <i class="fa-brands fa-whatsapp text-base"></i>
+                            <span>طلب هذه الخدمة المباشرة</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        @endif
+
     </div>
 
 </section>

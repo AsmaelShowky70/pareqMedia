@@ -12,9 +12,11 @@ class Service extends Model
     protected $fillable = [
         'title_ar',
         'title_en',
+        'subtitle',
         'slug',
         'category',
         'icon',
+        'image',
         'short_description',
         'full_description',
         'starting_price',
@@ -46,6 +48,25 @@ class Service extends Model
         $categories = self::getCategories();
 
         return $categories[$this->category] ?? 'خدمة تسويقية';
+    }
+
+    public function getDisplayImageAttribute(): string
+    {
+        if (!empty($this->image)) {
+            return \App\Support\MediaHelper::formatDisplayUrl($this->image);
+        }
+        return asset('images/portfolio/social_1.webp');
+    }
+
+    public function getDisplayIconAttribute(): string
+    {
+        if (empty($this->icon)) {
+            return 'fa-solid fa-briefcase';
+        }
+        if (str_starts_with($this->icon, 'fa-') || str_contains($this->icon, ' ')) {
+            return $this->icon;
+        }
+        return 'fa-solid fa-' . $this->icon;
     }
 
     public function portfolioItems()

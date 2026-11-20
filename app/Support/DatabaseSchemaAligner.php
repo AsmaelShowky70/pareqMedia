@@ -14,6 +14,7 @@ class DatabaseSchemaAligner
     public static function align(): void
     {
         try {
+            self::alignServices();
             self::alignTasks();
             self::alignProjects();
             self::alignUsers();
@@ -559,6 +560,208 @@ class DatabaseSchemaAligner
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::warning('alignTeamMembers warning: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Ensure `services` table has image and subtitle columns and initial 10 services.
+     */
+    public static function alignServices(): void
+    {
+        try {
+            if (!Schema::hasTable('services')) {
+                Schema::create('services', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->id();
+                    $table->string('title_ar');
+                    $table->string('title_en')->nullable();
+                    $table->string('subtitle')->nullable();
+                    $table->string('slug')->unique();
+                    $table->string('category')->default('other');
+                    $table->string('icon')->default('fa-solid fa-briefcase');
+                    $table->string('image')->nullable();
+                    $table->text('short_description')->nullable();
+                    $table->text('full_description')->nullable();
+                    $table->decimal('starting_price', 12, 2)->nullable();
+                    $table->integer('sort_order')->default(0);
+                    $table->boolean('is_active')->default(true);
+                    $table->timestamps();
+                });
+            } else {
+                $colsToAdd = [];
+                if (!Schema::hasColumn('services', 'subtitle')) {
+                    $colsToAdd[] = "ADD COLUMN `subtitle` varchar(255) DEFAULT NULL";
+                }
+                if (!Schema::hasColumn('services', 'image')) {
+                    $colsToAdd[] = "ADD COLUMN `image` varchar(500) DEFAULT NULL";
+                }
+                if (!empty($colsToAdd)) {
+                    DB::statement("ALTER TABLE `services` " . implode(', ', $colsToAdd));
+                }
+            }
+
+            $now = now();
+            $defaultServices = [
+                [
+                    'title_ar' => 'تصوير الفيديو السينمائي',
+                    'title_en' => 'Cinematic Video Shooting',
+                    'subtitle' => 'إنتاج سينمائي 4K',
+                    'slug' => 'video-shooting',
+                    'category' => 'video_shooting',
+                    'icon' => 'fa-solid fa-video',
+                    'short_description' => 'تصوير فيديوهات دعائية، بروموهات، كواليس، أو محتوى مخصص للسوشيال ميديا، بأسلوب عصري وجودة عالية تعبر عن هويتك.',
+                    'image' => '/images/portfolio/social_4.webp',
+                    'sort_order' => 1,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'title_ar' => 'مونتاج الفيديو السريع',
+                    'title_en' => 'Fast Video Editing',
+                    'subtitle' => 'ريلز وبرومو فائق الجاذبية',
+                    'slug' => 'video-editing',
+                    'category' => 'video_editing',
+                    'icon' => 'fa-solid fa-film',
+                    'short_description' => 'نستخدم أحدث برامج المونتاج لنقدم فيديوهات عصرية عالية الجودة، بتأثيرات بصرية وصوتية احترافية، وتلوين دقيق، مما يضمن إخراجاً جذاباً يحقق أهدافك ويوصل رسالتك بوضوح.',
+                    'image' => '/images/portfolio/social_2.webp',
+                    'sort_order' => 2,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'title_ar' => 'إدارة وسائل التواصل الاجتماعي',
+                    'title_en' => 'Social Media Management',
+                    'subtitle' => 'نمو وتفاعل رقمي',
+                    'slug' => 'social-media',
+                    'category' => 'social_media',
+                    'icon' => 'fa-solid fa-share-nodes',
+                    'short_description' => 'نُدير حساباتك على مختلف المنصات من خلال إنشاء محتوى جذاب، وتصميم منشورات احترافية، والتفاعل مع الجمهور، إلى جانب دراسة أفضل أوقات النشر لتحقيق أقصى وصول وتفاعل.',
+                    'image' => '/images/portfolio/social_1.webp',
+                    'sort_order' => 3,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'title_ar' => 'الإعلانات الممولة',
+                    'title_en' => 'Paid Ads (Media Buying)',
+                    'subtitle' => 'حملات بأعلى عائد ROAS',
+                    'slug' => 'paid-ads',
+                    'category' => 'media_buying',
+                    'icon' => 'fa-solid fa-chart-line',
+                    'short_description' => 'نصمم ونُدير حملات إعلانية احترافية تستهدف جمهورك بدقة عبر المنصات الرقمية المختلفة، لزيادة الانتشار وتحقيق أهدافك التسويقية.',
+                    'image' => '/images/portfolio/ad_result_69.webp',
+                    'sort_order' => 4,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'title_ar' => 'جلسات التصوير الفوتوغرافي',
+                    'title_en' => 'Commercial Photography',
+                    'subtitle' => 'منتجات وأماكن وفعاليات',
+                    'slug' => 'photography',
+                    'category' => 'other',
+                    'icon' => 'fa-solid fa-camera',
+                    'short_description' => 'جلسات تصوير احترافية للمنتجات، الأماكن، الفعاليات، أو فريق العمل، باستخدام أحدث المعدات لإبراز كل التفاصيل بأعلى دقة.',
+                    'image' => '/images/portfolio/free_delivery.webp',
+                    'sort_order' => 5,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'title_ar' => 'تصميم الجرافيك الإبداعي',
+                    'title_en' => 'Creative Graphic Design',
+                    'subtitle' => 'أغلفة وسوشيال ميديا',
+                    'slug' => 'graphic-design',
+                    'category' => 'graphic_design',
+                    'icon' => 'fa-solid fa-bezier-curve',
+                    'short_description' => 'إبداع في التصميم البصري يعكس هوية علامتك التجارية ويجذب انتباه جمهورك المستهدف.',
+                    'image' => '/images/portfolio/ramez_qlight.webp',
+                    'sort_order' => 6,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'title_ar' => 'الهوية البصرية والبراندينج',
+                    'title_en' => 'Branding & Visual Identity',
+                    'subtitle' => 'بناء العلامات التجارية',
+                    'slug' => 'branding',
+                    'category' => 'branding',
+                    'icon' => 'fa-solid fa-palette',
+                    'short_description' => 'نساعدك على بناء هوية قوية لعلامتك التجارية من الألف إلى الياء، تعزز وجودك في السوق وتزيد من ثقة العملاء.',
+                    'image' => '/images/portfolio/logo_1.webp',
+                    'sort_order' => 7,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'title_ar' => 'إعداد الخطط والاستراتيجيات',
+                    'title_en' => 'Marketing Strategy',
+                    'subtitle' => 'تحليل ودراسة سوق شاملة',
+                    'slug' => 'marketing-strategy',
+                    'category' => 'marketing_strategy',
+                    'icon' => 'fa-solid fa-lightbulb',
+                    'short_description' => 'نضع خطط تسويقية شاملة ومخصصة تناسب أهدافك، مدعومة بتحليل السوق والمنافسين.',
+                    'image' => '/images/portfolio/ad_result_70.webp',
+                    'sort_order' => 8,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'title_ar' => 'تحليل البيانات والتقارير',
+                    'title_en' => 'Data Analysis & Reporting',
+                    'subtitle' => 'قياس دقيق للأداء والنتائج',
+                    'slug' => 'data-analysis',
+                    'category' => 'other',
+                    'icon' => 'fa-solid fa-chart-pie',
+                    'short_description' => 'نقيس الأداء، ونحلل النتائج بدقة، ونقدم لك تقارير واضحة تساعدك في اتخاذ قرارات مدروسة.',
+                    'image' => '/images/portfolio/ad_result_72.webp',
+                    'sort_order' => 9,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'title_ar' => 'صناعة وكتابة المحتوى',
+                    'title_en' => 'Content Creation & Copywriting',
+                    'subtitle' => 'سيناريوهات ونصوص تسويقية',
+                    'slug' => 'content-writing',
+                    'category' => 'other',
+                    'icon' => 'fa-solid fa-pen-nib',
+                    'short_description' => 'نكتب محتوى مبتكر بأسلوب احترافي بعيداً عن التكرار، لكي نجذب الجمهور من أول جملة وتصل رسالتك بأسرع شكل وبأسلوب سلس.',
+                    'image' => '/images/portfolio/social_3.webp',
+                    'sort_order' => 10,
+                    'is_active' => true,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+            ];
+
+            // If empty, insert default services
+            if (DB::table('services')->count() === 0) {
+                DB::table('services')->insert($defaultServices);
+            } else {
+                // Ensure existing services have subtitle and image if they were null
+                foreach ($defaultServices as $ds) {
+                    DB::table('services')
+                        ->where('slug', $ds['slug'])
+                        ->where(function ($q) {
+                            $q->whereNull('image')->orWhere('image', '');
+                        })
+                        ->update([
+                            'image' => $ds['image'],
+                            'subtitle' => $ds['subtitle']
+                        ]);
+                }
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('alignServices warning: ' . $e->getMessage());
         }
     }
 

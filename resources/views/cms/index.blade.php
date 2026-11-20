@@ -10,6 +10,8 @@
     addServiceModal: false, 
     editServiceModal: false, 
     selectedService: null,
+    addServiceImg: '',
+    editServiceImg: '',
     addPortfolioModal: false, 
     editPortfolioModal: false, 
     selectedPortfolio: null,
@@ -29,8 +31,8 @@
         <button type="button" @click="tab = 'services'" 
                 :class="tab === 'services' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
                 class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
-            <i class="fa-solid fa-briefcase"></i>
-            <span>خدمات الوكالة وتصنيفاتها ({{ $services->count() }})</span>
+            <i class="fa-solid fa-layer-group text-brand-gold"></i>
+            <span>خدماتنا (السلايدر 3D بالرئيسية وبطاقات الخدمات) ({{ $services->count() }})</span>
         </button>
 
         <button type="button" @click="tab = 'team'" 
@@ -43,8 +45,8 @@
         <button type="button" @click="tab = 'portfolio'" 
                 :class="tab === 'portfolio' ? 'bg-brand-yellow text-brand-dark font-black' : 'text-gray-400 hover:text-white bg-brand-card'"
                 class="px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 whitespace-nowrap">
-            <i class="fa-solid fa-photo-film"></i>
-            <span>معرض الفيديوهات والأعمال ({{ $portfolioItems->count() }})</span>
+            <i class="fa-solid fa-photo-film text-brand-gold"></i>
+            <span>أعمالنا (معرض الفيديوهات والتصاميم الموثقة) ({{ $portfolioItems->count() }})</span>
         </button>
 
         <button type="button" @click="tab = 'partners'" 
@@ -90,57 +92,69 @@
         </button>
     </div>
 
-    <!-- 1. SERVICES TAB (إدارة وتحديد أنواع الخدمات) -->
+    <!-- 1. SERVICES TAB (إدارة وتحديد أنواع الخدمات وسلايدر 3D) -->
     <div x-show="tab === 'services'" class="space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-brand-card/60 border border-brand-border/60 p-4 rounded-2xl">
             <div>
-                <h3 class="text-xs font-bold text-white">إدارة خدمات وكالة بريق وتحديد أنواعها</h3>
-                <p class="text-[11px] text-gray-400">يمكنك هنا إضافة خدمة جديدة وتحديد نوعها (تصوير، مونتاج، إعلانات ممولة، تصميم، إلخ) وتعديل أو حذف أي خدمة لتنعكس فوراً على الموقع الرئيسي.</p>
+                <h3 class="text-xs font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-brand-gold"></i>
+                    <span>إدارة خدمات بريق وبطاقات السلايدر ثلاثي الأبعاد (3D Coverflow Carousel)</span>
+                </h3>
+                <p class="text-[11px] text-gray-400 mt-1">تتحكم هذه القائمة مباشرة في بطاقات السلايدر ثلاثي الأبعاد المتحرك في الصفحة الرئيسية وصفحة الخدمات. يمكنك تعديل صور الغلاف، الشارات، العناوين، الأيقونات، والترتيب فوراً.</p>
             </div>
-            <button @click="addServiceModal = true" type="button" 
+            <button @click="addServiceImg = ''; addServiceModal = true" type="button" 
                     class="px-5 py-2.5 rounded-xl bg-gradient-to-l from-brand-amber to-brand-yellow text-brand-dark font-black text-xs hover:brightness-110 shadow-lg flex items-center gap-2 self-start sm:self-auto whitespace-nowrap">
                 <i class="fa-solid fa-plus-circle"></i>
-                <span>إضافة خدمة جديدة وتحديد نوعها</span>
+                <span>إضافة خدمة جديدة لسلايدر الخدمات</span>
             </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @forelse($services as $srv)
-            <div class="bg-brand-card border border-brand-border rounded-2xl p-5 space-y-4 flex flex-col justify-between hover:border-brand-yellow/50 transition shadow">
+            <div class="bg-brand-card border border-brand-border rounded-2xl p-4 space-y-3 flex flex-col justify-between hover:border-brand-yellow/50 transition shadow group">
                 <div class="space-y-3">
-                    <div class="flex items-start justify-between gap-2">
-                        <div class="w-12 h-12 rounded-xl bg-brand-yellow/15 border border-brand-yellow/30 text-brand-gold flex items-center justify-center text-xl shadow">
-                            <i class="fa-solid fa-{{ $srv->icon }}"></i>
-                        </div>
-                        <div class="text-right">
-                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                                {{ $srv->category_arabic }}
+                    <!-- Top Cover Image Preview -->
+                    <div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-black/60 border border-brand-border/60 group-hover:border-brand-yellow/40 transition">
+                        <img src="{{ $srv->display_image }}" alt="{{ $srv->title_ar }}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                        
+                        <div class="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-black/85 text-brand-gold border border-brand-gold/40 font-mono">
+                                #{{ $srv->sort_order ?: ($loop->index + 1) }}
                             </span>
-                            <div class="text-xs text-emerald-400 font-bold mt-1">
-                                يبدأ من: {{ number_format($srv->starting_price) }} ج.م
-                            </div>
+                            @if($srv->subtitle)
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FF9420] text-black shadow">
+                                {{ $srv->subtitle }}
+                            </span>
+                            @endif
+                        </div>
+
+                        <div class="absolute top-2.5 left-2.5 w-8 h-8 rounded-xl bg-[#FF9420] text-black flex items-center justify-center text-xs shadow-md">
+                            <i class="{{ $srv->display_icon }}"></i>
+                        </div>
+
+                        <div class="absolute bottom-2 right-2.5 left-2.5 text-right">
+                            <span class="text-[10px] text-brand-peach font-bold block">{{ $srv->category_arabic }}</span>
+                            <h4 class="font-black text-white text-sm truncate">{{ $srv->title_ar }}</h4>
                         </div>
                     </div>
 
-                    <div>
-                        <h4 class="font-bold text-white text-base leading-snug">{{ $srv->title_ar }}</h4>
-                        @if($srv->title_en)
-                        <div class="text-[11px] text-brand-gold/80 font-medium">{{ $srv->title_en }}</div>
-                        @endif
-                    </div>
+                    @if($srv->title_en)
+                    <div class="text-[11px] text-brand-gold/80 font-medium">{{ $srv->title_en }}</div>
+                    @endif
 
-                    <p class="text-xs text-gray-300 leading-relaxed line-clamp-3">{{ $srv->short_description }}</p>
+                    <p class="text-xs text-gray-300 leading-relaxed line-clamp-2">{{ $srv->short_description }}</p>
                 </div>
 
                 <div class="pt-3 border-t border-brand-border/60 flex items-center justify-between text-xs">
                     <span class="text-[11px] font-semibold {{ $srv->is_active ? 'text-emerald-400' : 'text-rose-400' }}">
                         <i class="fa-solid fa-circle text-[8px] ml-1"></i>
-                        {{ $srv->is_active ? 'نشطة بالموقع' : 'معطلة' }}
+                        {{ $srv->is_active ? 'نشطة بالسلايدر' : 'معطلة' }}
                     </span>
 
                     <div class="flex items-center gap-2">
                         <button type="button" 
-                                @click="selectedService = {{ json_encode($srv) }}; editServiceModal = true" 
+                                @click="selectedService = {{ json_encode($srv) }}; editServiceImg = (selectedService.image ? selectedService.image : ''); editServiceModal = true" 
                                 class="px-3 py-1.5 rounded-lg bg-brand-purple hover:bg-brand-hover text-brand-gold hover:text-white border border-brand-border text-xs font-bold transition flex items-center gap-1.5">
                             <i class="fa-solid fa-pen-to-square"></i>
                             <span>تعديل</span>
@@ -158,7 +172,7 @@
             </div>
             @empty
             <div class="col-span-3 text-center py-12 text-gray-400">
-                لا توجد خدمات مضافة حتى الآن. انقر على زر "إضافة خدمة جديدة" للبدء.
+                لا توجد خدمات مضافة حتى الآن. انقر على زر "إضافة خدمة جديدة لسلايدر الخدمات" للبدء.
             </div>
             @endforelse
         </div>
@@ -321,7 +335,7 @@
         </div>
     </div>
 
-    <!-- MODAL: ADD SERVICE (إضافة خدمة جديدة وتحديد نوعها) -->
+    <!-- MODAL: ADD SERVICE (إضافة خدمة جديدة لسلايدر الخدمات 3D) -->
     <div x-show="addServiceModal" 
          x-transition 
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
@@ -331,25 +345,32 @@
             
             <div class="flex items-center justify-between pb-3 border-b border-brand-border">
                 <h3 class="text-base font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-briefcase text-brand-gold"></i>
-                    <span>إضافة خدمة جديدة للموقع وتحديد نوعها</span>
+                    <i class="fa-solid fa-layer-group text-brand-gold"></i>
+                    <span>إضافة خدمة جديدة لسلايدر الخدمات 3D</span>
                 </h3>
                 <button @click="addServiceModal = false" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <form method="POST" action="{{ route('cms.services.store') }}" class="space-y-3 text-xs">
+            <form method="POST" action="{{ route('cms.services.store') }}" enctype="multipart/form-data" class="space-y-3 text-xs">
                 @csrf
 
                 <div>
                     <label class="block font-bold text-gray-300 mb-1">اسم الخدمة باللغة العربية <span class="text-red-400">*</span></label>
-                    <input type="text" name="title_ar" required placeholder="مثال: تصوير إعلانات ومونتاج ريلز سينمائي" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    <input type="text" name="title_ar" required placeholder="مثال: تصوير الفيديو السينمائي" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
+                        <label class="block font-bold text-amber-300 mb-1">الشارة البارزة (Subtitle Badge) <span class="text-red-400">*</span></label>
+                        <input type="text" name="subtitle" placeholder="مثال: إنتاج سينمائي 4K" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
                         <label class="block font-bold text-gray-300 mb-1">الاسم بالإنجليزية (اختياري)</label>
                         <input type="text" name="title_en" placeholder="Cinematic Video Production" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                     </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-amber-300 mb-1">نوع وتصنيف الخدمة <span class="text-red-400">*</span></label>
                         <select name="category" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
@@ -358,42 +379,59 @@
                             @endforeach
                         </select>
                     </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">أيقونة الخدمة <span class="text-red-400">*</span></label>
+                        <select name="icon" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <option value="fa-solid fa-video">كاميرا تصوير فيديو (video)</option>
+                            <option value="fa-solid fa-film">شريط مونتاج وسينما (film)</option>
+                            <option value="fa-solid fa-share-nodes">شبكات سوشيال ميديا (share-nodes)</option>
+                            <option value="fa-solid fa-chart-line">مخطط إعلانات ومبيعات (chart-line)</option>
+                            <option value="fa-solid fa-camera">كاميرا فوتوغرافيا (camera)</option>
+                            <option value="fa-solid fa-bezier-curve">منحنى تصميم وجرافيك (bezier-curve)</option>
+                            <option value="fa-solid fa-palette">لوحة ألوان وهوية (palette)</option>
+                            <option value="fa-solid fa-lightbulb">مصباح استراتيجية (lightbulb)</option>
+                            <option value="fa-solid fa-chart-pie">مخطط بياني وتقارير (chart-pie)</option>
+                            <option value="fa-solid fa-pen-nib">قلم محتوى وسيناريو (pen-nib)</option>
+                            <option value="fa-solid fa-crown">تاج وهوية براند (crown)</option>
+                            <option value="fa-solid fa-bolt">طاقة وسرعة (bolt)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Service Card Background Image -->
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-brand-gold">
+                        <i class="fa-solid fa-image ml-1"></i> صورة خلفية كارت الخدمة في السلايدر 3D:
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">رفع صورة من جهازك:</label>
+                            <input type="file" name="image_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-purple file:text-brand-gold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط صورة / Google Drive:</label>
+                            <input type="text" name="image" x-model="addServiceImg" placeholder="https://drive.google.com/file/d/..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                    <div x-show="addServiceImg" class="pt-2">
+                        <img :src="addServiceImg" class="w-full h-24 object-cover rounded-lg border border-purple-700/60" @error="$el.style.display='none'">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-300 mb-1">الوصف المختصر للخدمة (يظهر في كارت الخدمة بالسلايدر) <span class="text-red-400">*</span></label>
+                    <textarea name="short_description" rows="2" required placeholder="اكتب نبذة جذابة من سطرين أو ثلاثة تلخص ميزة هذه الخدمة..." class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold"></textarea>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-bold text-gray-300 mb-1">أيقونة الخدمة <span class="text-red-400">*</span></label>
-                        <select name="icon" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
-                            <option value="video">كاميرا تصوير فيديو (video)</option>
-                            <option value="film">شريط مونتاج وسينما (film)</option>
-                            <option value="pen-nib">قلم تصميم وجرافيك (pen-nib)</option>
-                            <option value="chart-line">مخطط إعلانات ومبيعات (chart-line)</option>
-                            <option value="bullhorn">مكبر صوت إعلانات (bullhorn)</option>
-                            <option value="share-nodes">شبكات سوشيال ميديا (share-nodes)</option>
-                            <option value="lightbulb">مصباح فكرة واستراتيجية (lightbulb)</option>
-                            <option value="crown">تاج وهوية براند (crown)</option>
-                            <option value="bolt">طاقة وسرعة (bolt)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-gray-300 mb-1">السعر المبدئي (يبدأ من ج.م)</label>
+                        <label class="block font-bold text-gray-300 mb-1">السعر المبدئي (اختياري)</label>
                         <input type="number" name="starting_price" min="0" step="100" placeholder="3500" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                     </div>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-gray-300 mb-1">الوصف المختصر للخدمة (يظهر في كارت الخدمة بالصفحة الرئيسية) <span class="text-red-400">*</span></label>
-                    <textarea name="short_description" rows="2" required placeholder="اكتب نبذة جذابة من سطرين أو ثلاثة تلخص ميزة هذه الخدمة لعملاء الوكالة..." class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold"></textarea>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-gray-300 mb-1">الوصف التفصيلي (اختياري)</label>
-                    <textarea name="full_description" rows="2" placeholder="تفاصيل الباقات، المعدات المستخدمة، مخرجات الخدمة..." class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold"></textarea>
-                </div>
-
-                <div class="flex items-center gap-2 pt-1">
-                    <input type="checkbox" name="is_active" value="1" id="add_is_active" checked class="rounded text-brand-gold focus:ring-0">
-                    <label for="add_is_active" class="text-xs text-gray-300 font-semibold cursor-pointer">تفعيل الخدمة وإظهارها فوراً في الموقع الخارجي</label>
+                    <div class="flex items-center gap-2 pt-5">
+                        <input type="checkbox" name="is_active" value="1" id="add_is_active" checked class="rounded text-brand-gold focus:ring-0">
+                        <label for="add_is_active" class="text-xs text-gray-300 font-semibold cursor-pointer">تفعيل الخدمة بالسلايدر</label>
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
@@ -404,7 +442,7 @@
         </div>
     </div>
 
-    <!-- MODAL: EDIT SERVICE (تعديل بيانات الخدمة وتصنيفها) -->
+    <!-- MODAL: EDIT SERVICE (تعديل بيانات الخدمة وسلايدر 3D) -->
     <div x-show="editServiceModal" 
          x-transition 
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" 
@@ -415,12 +453,12 @@
             <div class="flex items-center justify-between pb-3 border-b border-brand-border">
                 <h3 class="text-base font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-pen-to-square text-brand-gold"></i>
-                    <span>تعديل بيانات الخدمة وتصنيفها</span>
+                    <span>تعديل بيانات كارت الخدمة في السلايدر 3D</span>
                 </h3>
                 <button @click="editServiceModal = false" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <form method="POST" :action="'{{ url('cms/services') }}/' + (selectedService ? selectedService.id : '')" class="space-y-3 text-xs">
+            <form method="POST" :action="'{{ url('cms/services') }}/' + (selectedService ? selectedService.id : '')" enctype="multipart/form-data" class="space-y-3 text-xs">
                 @csrf
                 @method('PUT')
 
@@ -431,9 +469,16 @@
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
+                        <label class="block font-bold text-amber-300 mb-1">الشارة البارزة (Subtitle Badge) <span class="text-red-400">*</span></label>
+                        <input type="text" name="subtitle" x-bind:value="selectedService ? selectedService.subtitle : ''" placeholder="مثال: إنتاج سينمائي 4K" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
                         <label class="block font-bold text-gray-300 mb-1">الاسم بالإنجليزية (اختياري)</label>
                         <input type="text" name="title_en" x-bind:value="selectedService ? selectedService.title_en : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
                     </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-amber-300 mb-1">نوع وتصنيف الخدمة <span class="text-red-400">*</span></label>
                         <select name="category" x-bind:value="selectedService ? selectedService.category : 'video_shooting'" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
@@ -442,42 +487,63 @@
                             @endforeach
                         </select>
                     </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-gray-300 mb-1">أيقونة الخدمة <span class="text-red-400">*</span></label>
-                        <select name="icon" x-bind:value="selectedService ? selectedService.icon : 'video'" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
-                            <option value="video">كاميرا تصوير فيديو (video)</option>
-                            <option value="film">شريط مونتاج وسينما (film)</option>
-                            <option value="pen-nib">قلم تصميم وجرافيك (pen-nib)</option>
-                            <option value="chart-line">مخطط إعلانات ومبيعات (chart-line)</option>
-                            <option value="bullhorn">مكبر صوت إعلانات (bullhorn)</option>
-                            <option value="share-nodes">شبكات سوشيال ميديا (share-nodes)</option>
-                            <option value="lightbulb">مصباح فكرة واستراتيجية (lightbulb)</option>
-                            <option value="crown">تاج وهوية براند (crown)</option>
-                            <option value="bolt">طاقة وسرعة (bolt)</option>
+                        <select name="icon" x-bind:value="selectedService ? selectedService.icon : 'fa-solid fa-video'" required class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                            <option value="fa-solid fa-video">كاميرا تصوير فيديو (video)</option>
+                            <option value="fa-solid fa-film">شريط مونتاج وسينما (film)</option>
+                            <option value="fa-solid fa-share-nodes">شبكات سوشيال ميديا (share-nodes)</option>
+                            <option value="fa-solid fa-chart-line">مخطط إعلانات ومبيعات (chart-line)</option>
+                            <option value="fa-solid fa-camera">كاميرا فوتوغرافيا (camera)</option>
+                            <option value="fa-solid fa-bezier-curve">منحنى تصميم وجرافيك (bezier-curve)</option>
+                            <option value="fa-solid fa-palette">لوحة ألوان وهوية (palette)</option>
+                            <option value="fa-solid fa-lightbulb">مصباح استراتيجية (lightbulb)</option>
+                            <option value="fa-solid fa-chart-pie">مخطط بياني وتقارير (chart-pie)</option>
+                            <option value="fa-solid fa-pen-nib">قلم محتوى وسيناريو (pen-nib)</option>
+                            <option value="fa-solid fa-crown">تاج وهوية براند (crown)</option>
+                            <option value="fa-solid fa-bolt">طاقة وسرعة (bolt)</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block font-bold text-gray-300 mb-1">السعر المبدئي (يبدأ من ج.م)</label>
-                        <input type="number" name="starting_price" min="0" step="100" x-bind:value="selectedService ? selectedService.starting_price : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                </div>
+
+                <!-- Service Card Background Image -->
+                <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/40 space-y-2">
+                    <label class="block font-bold text-brand-gold">
+                        <i class="fa-solid fa-image ml-1"></i> صورة خلفية كارت الخدمة في السلايدر 3D:
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">رفع صورة جديدة من جهازك:</label>
+                            <input type="file" name="image_file" accept="image/*" class="w-full text-xs text-gray-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-brand-purple file:text-brand-gold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-300 mb-1">أو رابط صورة / Google Drive:</label>
+                            <input type="text" name="image" x-model="editServiceImg" placeholder="https://drive.google.com/file/d/..." class="w-full px-3 py-1.5 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+                    <div x-show="editServiceImg" class="pt-2">
+                        <img :src="editServiceImg" class="w-full h-24 object-cover rounded-lg border border-purple-700/60" @error="$el.style.display='none'">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-gray-300 mb-1">الوصف المختصر للخدمة <span class="text-red-400">*</span></label>
+                    <label class="block font-bold text-gray-300 mb-1">الوصف المختصر للخدمة (يظهر في كارت الخدمة بالسلايدر) <span class="text-red-400">*</span></label>
                     <textarea name="short_description" rows="2" required x-bind:value="selectedService ? selectedService.short_description : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold"></textarea>
                 </div>
 
-                <div>
-                    <label class="block font-bold text-gray-300 mb-1">الوصف التفصيلي (اختياري)</label>
-                    <textarea name="full_description" rows="2" x-bind:value="selectedService ? selectedService.full_description : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold"></textarea>
-                </div>
-
-                <div class="flex items-center gap-2 pt-1">
-                    <input type="checkbox" name="is_active" value="1" id="edit_is_active" :checked="selectedService && selectedService.is_active" class="rounded text-brand-gold focus:ring-0">
-                    <label for="edit_is_active" class="text-xs text-gray-300 font-semibold cursor-pointer">الخدمة نشطة وظاهرة على الموقع</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">ترتيب الظهور بالسلايدر</label>
+                        <input type="number" name="sort_order" min="1" x-bind:value="selectedService ? selectedService.sort_order : 1" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-1">السعر المبدئي (اختياري)</label>
+                        <input type="number" name="starting_price" min="0" step="100" x-bind:value="selectedService ? selectedService.starting_price : ''" class="w-full px-3 py-2 bg-brand-purple border border-brand-border rounded-xl text-white text-xs focus:outline-none focus:border-brand-gold">
+                    </div>
+                    <div class="flex items-center gap-2 pt-5">
+                        <input type="checkbox" name="is_active" value="1" id="edit_is_active" :checked="selectedService && selectedService.is_active" class="rounded text-brand-gold focus:ring-0">
+                        <label for="edit_is_active" class="text-xs text-gray-300 font-semibold cursor-pointer">نشطة بالسلايدر</label>
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-3 border-t border-brand-border">
