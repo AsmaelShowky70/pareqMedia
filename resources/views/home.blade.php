@@ -651,7 +651,7 @@
                  if (diff < -total / 2) diff += total;
                  const absDiff = Math.abs(diff);
                  if (absDiff > 2) return 'display: none;';
-                 const translateX = diff * (window.innerWidth < 640 ? 230 : (window.innerWidth < 1024 ? 280 : 330));
+                 const translateX = diff * (window.innerWidth < 640 ? 250 : (window.innerWidth < 1024 ? 350 : 440));
                  const scale = 1 - (absDiff * 0.14);
                  const rotateY = diff * -18;
                  const zIndex = 30 - (absDiff * 10);
@@ -691,38 +691,43 @@
         <div class="relative py-6">
             
             <!-- Carousel Track -->
-            <div class="relative h-[430px] sm:h-[470px] w-full flex items-center justify-center overflow-hidden">
+            <div class="relative h-[290px] sm:h-[350px] md:h-[400px] lg:h-[430px] w-full flex items-center justify-center overflow-hidden">
                 <template x-for="(srv, idx) in services" :key="srv.id">
                     <div @click="activeIdx = idx"
                          :style="getCardStyle(idx)"
-                         :class="activeIdx === idx ? 'border-2 border-[#FF9420] shadow-[0_0_60px_rgba(255,148,32,0.6),0_0_90px_rgba(62,36,197,0.4)]' : 'border-2 border-[#3E24C5]/60 hover:border-[#FF9420] shadow-[0_0_25px_rgba(62,36,197,0.3)]'"
-                         class="absolute w-[270px] sm:w-[320px] md:w-[360px] h-[390px] sm:h-[430px] rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ease-out shadow-2xl group flex flex-col justify-between select-none bg-[#1B082B]">
+                         :class="activeIdx === idx ? 'border-2 border-[#FF9420] shadow-[0_0_60px_rgba(255,148,32,0.6),0_0_90px_rgba(62,36,197,0.4)] ring-2 ring-[#FF9420]/40' : 'border-2 border-[#3E24C5]/60 hover:border-[#FF9420] shadow-[0_0_25px_rgba(62,36,197,0.3)]'"
+                         class="absolute w-[310px] sm:w-[440px] md:w-[540px] lg:w-[600px] h-[175px] sm:h-[248px] md:h-[304px] lg:h-[338px] rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ease-out shadow-2xl group flex flex-col justify-between select-none bg-[#1B082B]">
                          
                          <!-- Full Background Card Image with Gradient Overlay -->
                          <img :src="srv.img" :alt="srv.title" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-108">
-                         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                         <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-black/60"></div>
                          
-                         <!-- Top Category & Number Pill -->
-                         <div class="relative z-10 p-5 flex items-center justify-between">
-                             <span class="px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-[#FF9420]/60 text-[11px] font-black text-[#FF9420] font-mono shadow-md"
-                                   x-text="(srv.id < 10 ? '0' : '') + srv.id"></span>
-                             <div class="w-9 h-9 rounded-2xl bg-[#FF9420] text-black flex items-center justify-center text-xs shadow-[0_0_15px_rgba(255,148,32,0.5)]">
-                                 <i :class="srv.icon"></i>
+                         <!-- Top Bar: Number Pill & Subtitle Badge -->
+                         <div class="relative z-10 p-3 sm:p-4 md:p-5 flex items-center justify-between">
+                             <div class="flex items-center gap-2">
+                                 <span class="px-2.5 sm:px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-[#FF9420]/60 text-[10px] sm:text-[11px] font-black text-[#FF9420] font-mono shadow-md"
+                                       x-text="(srv.id < 10 ? '0' : '') + srv.id"></span>
+                                 <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#FF9420] text-black flex items-center justify-center text-[10px] sm:text-xs shadow-[0_0_15px_rgba(255,148,32,0.5)]">
+                                     <i :class="srv.icon"></i>
+                                 </div>
                              </div>
+                             <span class="px-2.5 sm:px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-[#FFBA70]/50 text-[10px] sm:text-[11px] font-bold text-[#FFBA70] shadow-md"
+                                   x-text="srv.category"></span>
                          </div>
                          
-                         <!-- Bottom Content: Category, Title, Description, and Link Button -->
-                         <div class="relative z-10 p-5 sm:p-6 space-y-2 text-right">
-                             <div class="text-[10px] sm:text-[11px] font-bold text-[#FFBA70] uppercase tracking-wider" x-text="srv.category"></div>
-                             <h3 class="text-base sm:text-xl font-black text-white group-hover:text-[#FF9420] transition-colors" x-text="srv.title"></h3>
-                             <p class="text-[11px] sm:text-xs text-gray-200 line-clamp-2 leading-relaxed" x-text="srv.desc"></p>
+                         <!-- Bottom Frosted Content Bar: Title, Description, and Link Button -->
+                         <div class="relative z-10 p-3 sm:p-4 md:p-5 bg-gradient-to-t from-[#0A0214]/95 via-[#0A0214]/85 to-transparent flex items-center justify-between gap-3 text-right">
+                             <div class="min-w-0 flex-1 space-y-0.5 sm:space-y-1">
+                                 <h3 class="text-sm sm:text-base md:text-lg font-black text-white group-hover:text-[#FF9420] transition-colors truncate" x-text="srv.title"></h3>
+                                 <p class="text-[10px] sm:text-xs text-gray-300 line-clamp-1 leading-relaxed hidden sm:block font-normal" x-text="srv.desc"></p>
+                             </div>
                              
-                             <div class="pt-2">
+                             <div class="shrink-0">
                                  <a :href="'{{ route('public.services') }}#' + srv.slug" 
                                     @click.stop
-                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black text-[11px] transition shadow-[0_0_20px_rgba(255,148,32,0.4)] active:scale-95">
-                                     <span>عرض تفاصيل هذه الخدمة</span>
-                                     <i class="fa-solid fa-arrow-left text-[9px]"></i>
+                                    class="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-[#FF9420] via-[#FFBA70] to-[#BC6200] text-black font-black text-[10px] sm:text-[11px] transition shadow-[0_0_20px_rgba(255,148,32,0.4)] active:scale-95">
+                                     <span>التفاصيل</span>
+                                     <i class="fa-solid fa-arrow-left text-[8px] sm:text-[9px]"></i>
                                  </a>
                              </div>
                          </div>

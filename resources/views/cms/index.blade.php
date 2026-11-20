@@ -416,6 +416,7 @@
                     <div x-show="addServiceImg" class="pt-2">
                         <img :src="addServiceImg" class="w-full h-24 object-cover rounded-lg border border-purple-700/60" x-on:error="$el.style.display='none'">
                     </div>
+                    <p class="text-[10px] text-amber-300 font-bold mt-1"><i class="fa-solid fa-ruler-combined ml-1"></i> المقاس الموحد المعتمد للتصميم: <strong>1920 × 1080 بكسل</strong> (نسبة 16:9 عريض) ليتطابق مع كارت السلايدر وصفحة الخدمات تماماً بدون أي قص.</p>
                 </div>
 
                 <div>
@@ -524,6 +525,7 @@
                     <div x-show="editServiceImg" class="pt-2">
                         <img :src="editServiceImg" class="w-full h-24 object-cover rounded-lg border border-purple-700/60" x-on:error="$el.style.display='none'">
                     </div>
+                    <p class="text-[10px] text-amber-300 font-bold mt-1"><i class="fa-solid fa-ruler-combined ml-1"></i> المقاس الموحد المعتمد للتصميم: <strong>1920 × 1080 بكسل</strong> (نسبة 16:9 عريض) ليتطابق مع كارت السلايدر وصفحة الخدمات تماماً بدون أي قص.</p>
                 </div>
 
                 <div>
