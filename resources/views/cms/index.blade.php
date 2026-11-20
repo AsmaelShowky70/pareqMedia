@@ -414,7 +414,7 @@
                         </div>
                     </div>
                     <div x-show="addServiceImg" class="pt-2">
-                        <img :src="addServiceImg" class="w-full h-24 object-cover rounded-lg border border-purple-700/60" @error="$el.style.display='none'">
+                        <img :src="addServiceImg" class="w-full h-24 object-cover rounded-lg border border-purple-700/60" x-on:error="$el.style.display='none'">
                     </div>
                 </div>
 
@@ -522,7 +522,7 @@
                         </div>
                     </div>
                     <div x-show="editServiceImg" class="pt-2">
-                        <img :src="editServiceImg" class="w-full h-24 object-cover rounded-lg border border-purple-700/60" @error="$el.style.display='none'">
+                        <img :src="editServiceImg" class="w-full h-24 object-cover rounded-lg border border-purple-700/60" x-on:error="$el.style.display='none'">
                     </div>
                 </div>
 
